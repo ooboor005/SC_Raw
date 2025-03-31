@@ -1,0 +1,11 @@
+getgenv().Configuration = {
+    ['Auto Sell'] = {
+        ['At Wave'] = 20,
+        ['Auto Leave'] = false,
+    },
+    ['RedeemCode'] = true,
+    ['Claim Quest'] = true,
+    ['Claim Battle Pass'] = true,
+};
+getgenv().key = 'bedaa37e-d861-4b60-8966-ae3d47512846'
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Xenon-Trash/Loader/main/Loader.lua'))()
