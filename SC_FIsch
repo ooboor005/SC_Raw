@@ -100,7 +100,7 @@ _G.Configs = {
 			["Min Money Doing"] = 2000000, -- < Number > Min Money For Do Rod Of The Depths
 			["Rod In Vertigo"] = "Midas Rod", -- < String > Name Rod For Use In Vertigo Pool
 			["Rod In Whitepool"] = "Aurora Rod", -- < String > Name Rod For Use In Vertigo Pool
-			["Level Doing"] = 200, -- < Number > Level For Starting Doing The Depths Rod
+			["Level Doing"] = 400, -- < Number > Level For Starting Doing The Depths Rod
 		},
 		["Magma Rod"] = {
 			["Allow Doing"] = false, -- < Boolean > Enabled Do Magma Rod
@@ -129,13 +129,13 @@ _G.Configs = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Forgotten Fang Rod ( Req Lv 750 )
 			["Min Money Doing"] = 3000000, -- < Number > Min Money For Do Forgotten Fang Rod
 			["Using Rod"] = "Ethereal Prism Rod", -- < String > Name Rod For Use In Clam ( Change 1/650 Recommend Luckily )
-			["Level Doing"] = 1000, -- < Number > Level For Starting Doing Forgotten Fang ( Level > 750 Only )
+			["Level Doing"] = 500, -- < Number > Level For Starting Doing Forgotten Fang ( Level > 750 Only )
 		},
 		["Rod of The Eternal King"] = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Eternal King Rod ( Req Lv 650 )
 			["Min Money Doing"] = 3000000, -- < Number > Min Money For Do Eternal King Rod
 			["Rod In Clam"] = "Ethereal Prism Rod", -- < String > Name Rod For Use In Clam ( Change 1/650 Recommend Luckily )
-			["Level Doing"] = 1000, -- < Number > Level For Starting Doing Eternal King ( Level > 650 Only )
+			["Level Doing"] = 400, -- < Number > Level For Starting Doing Eternal King ( Level > 650 Only )
 		}
 	}, 
 	["Second Sea"] = {
