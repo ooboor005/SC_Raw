@@ -100,7 +100,7 @@ _G.Configs = {
 			["Min Money Doing"] = 2000000, -- < Number > Min Money For Do Rod Of The Depths
 			["Rod In Vertigo"] = "Midas Rod", -- < String > Name Rod For Use In Vertigo Pool
 			["Rod In Whitepool"] = "Aurora Rod", -- < String > Name Rod For Use In Vertigo Pool
-			["Level Doing"] = 1000, -- < Number > Level For Starting Doing The Depths Rod
+			["Level Doing"] = 200, -- < Number > Level For Starting Doing The Depths Rod
 		},
 		["Magma Rod"] = {
 			["Allow Doing"] = false, -- < Boolean > Enabled Do Magma Rod
