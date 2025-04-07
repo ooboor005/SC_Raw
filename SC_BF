@@ -113,4 +113,8 @@ _G.GunSettings = { -- ปืนที่จะทำ
     ['SoulGuitar'] = false
 }
 
+_G.Hop_Settings = {
+    ["Find Tushita"] = false
+}
+
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/fca4ea7a7a2272f8726ead938acc34db.lua"))()
