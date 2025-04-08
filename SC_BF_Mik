@@ -1,0 +1,21 @@
+repeat task.wait() until game:IsLoaded()
+
+getgenv().Mode = "OneClick"
+getgenv().Setting = {
+    ["Fruits"] = {
+        ["Primary"] = {
+            "Dough-Dough",
+            "Blizzard-Blizzard",
+            "Human-Human: Buddha",
+        },
+        ["Normal"] = {
+            "Ice-Ice",
+            "Light-Light",
+            "Dark-Dark",
+            "Magma-Magma"
+        }
+    }
+};
+
+-- List ผล https://pastebin.com/raw/PdtewMW0
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
