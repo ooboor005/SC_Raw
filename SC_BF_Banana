@@ -16,10 +16,10 @@ getgenv().Key = "be9f2319660feaad3dd3ddac"
                 },
             },
         },
-        ["White Screen"] = false,
+        ["White Screen"] = true,
         ["Lock Fps"] = {
-            ["Enabled"] = false,
-            ["FPS"] = 20,
+            ["Enabled"] = true,
+            ["FPS"] = 10,
         },
         ["Get Items"] = {
             ["Saber"] = true,
@@ -51,13 +51,13 @@ getgenv().Key = "be9f2319660feaad3dd3ddac"
         },
         ["Farm Mastery"] = {
             ["Melee"] = true,
-            ["Sword"] = false,
+            ["Sword"] = true,
         },
         ["Buy Haki"] = {
-            ["Enhancement"] = false,
-            ["Skyjump"] = false,
-            ["Flash Step"] = false,
-            ["Observation"] = false,
+            ["Enhancement"] = true,
+            ["Skyjump"] = true,
+            ["Flash Step"] = true,
+            ["Observation"] = true,
         },
         ["Sniper Fruit Shop"] = {
             ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
