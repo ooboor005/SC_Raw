@@ -109,30 +109,30 @@ _G.Configs = {
 			["Min Money Doing"] = 2000000, -- < Number > Min Money For Do Rod Of The Depths
 			["Rod In Vertigo"] = "Midas Rod", -- < String > Name Rod For Use In Vertigo Pool
 			["Rod In Whitepool"] = "Aurora Rod", -- < String > Name Rod For Use In Vertigo Pool
-			["Level Doing"] = 520, -- < Number > Level For Starting Doing The Depths Rod
+			["Level Doing"] = 505, -- < Number > Level For Starting Doing The Depths Rod
 		},
 		["Magma Rod"] = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Magma Rod
 			["Min Money Doing"] = 0, -- < Number > Min Money For Do Magma Rod
 			["Rod In Puffer Pool"] = "Aurora Rod",  -- < String > Name Rod For Use In Puffer Pool
-			["Level Doing"] = 520, -- < Number > Level For Starting Doing Magma Rod
+			["Level Doing"] = 505, -- < Number > Level For Starting Doing Magma Rod
 		},
 		["Fungal Rod"] = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Fungal Rod
 			["Min Money Doing"] = 0, -- < Number > Min Money For Do Fungal Rod
 			["Rod In Alligator"] = "Aurora Rod",  -- < String > Name Rod For Use In Alligator Pool
-			["Level Doing"] = 520, -- < Number > Level For Starting Doing Fungal Rod
+			["Level Doing"] = 505, -- < Number > Level For Starting Doing Fungal Rod
 		},
 		["Heaven Rod"] = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Heaven Rod
 			["Min Money Doing"] = 3000000, -- < Number > Min Money For Do Heaven Rod
 			["Hopserver"] = false, -- < Boolean > Enabled Hopserver For Crystal Not Spawn
-			["Level Doing"] = 520, -- < Number > Level For Starting Doing Heaven Rod
+			["Level Doing"] = 505, -- < Number > Level For Starting Doing Heaven Rod
 		},
 		["Leviathan's Fang Rod"] = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Leviathan's Fang Rod
 			["Min Money Doing"] = 3000000, -- < Number > Min Money For Do Leviathan's Fang Rod
-			["Level Doing"] = 800, -- < Number > Level For Starting Doing Leviathan's Fang Rod
+			["Level Doing"] = 600, -- < Number > Level For Starting Doing Leviathan's Fang Rod
 		},
 		["Rod of The Forgotten Fang"] = {
 			["Allow Doing"] = true, -- < Boolean > Enabled Do Forgotten Fang Rod ( Req Lv 750 )
