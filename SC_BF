@@ -35,7 +35,7 @@ getgenv().Key = "be9f2319660feaad3dd3ddac"
             ["Fragment"] = 50000,
         },
         ["Auto Chat"] = {
-            ["Enabled"] = true,
+            ["Enabled"] = false,
             ["Text"] = "joejoeshop.xyz",
         },
         ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
