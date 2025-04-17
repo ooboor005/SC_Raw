@@ -49,7 +49,7 @@ _G.Configs = {
 			["Auto Using"] = true, -- < Boolean > Auto Using Aurora Totem
 			["Full Aurora"] = true, -- < Boolean > Auto Using Sundial Totem
 			["Auto Buy"] = true, -- < Boolean > Auto Buy Aurora / Sundial
-			["Min Money"] = 20000000 -- < Number > Min Money Buy Aurora / Sundial
+			["Min Money"] = 10000000 -- < Number > Min Money Buy Aurora / Sundial
 		},
 		["Farm Level"] = {
 			["Allow Farm Level"] = true,  -- < Boolean > Enabled Mode Farm Level
