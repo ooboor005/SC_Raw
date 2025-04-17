@@ -3,6 +3,7 @@ loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main
 repeat task.wait() until game:IsLoaded() and game.CreatorId == 7381705
 repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui.loading.Enabled == false
 
+
 local waitFn = task.wait
 local httpService = game:GetService("HttpService")
 local postRequest = getgenv().request or function(...) return ... end
@@ -17,7 +18,7 @@ if type(env.task.spawn) == "function" then
 	env.task.spawn(function()
 		while true do
 			waitFn()
-			pcall(function()
+			local x, p = pcall(function()
 				local player = game:GetService("Players").LocalPlayer
 				local gui = player.PlayerGui
 				local inventory = gui.hud.safezone.backpack.inventory.scroll
@@ -76,7 +77,12 @@ if type(env.task.spawn) == "function" then
 						table.insert(rodsList, frame.Name)
 					end
 				end
-				local moneyText = player.leaderstats["C$"].Value
+                local moneyText = ""
+                if game.PlaceId ~= 72907489978215 then 
+                    moneyText = player.leaderstats["C$"].Value
+                else 
+                    moneyText = player.leaderstats["E$"].Value
+                end
 				local money = parseStack(moneyText)
 				postRequest({
 					Url = "http://45.136.254.74:8080/api/user",
@@ -93,7 +99,6 @@ if type(env.task.spawn) == "function" then
 						machine = "PC-8"
 					})
 				})
-
 				task.wait(3)
 			end)
 		end
