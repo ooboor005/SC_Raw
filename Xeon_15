@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Maru_%E0%B8%AB%E0%B8%B2%E0%B9%80%E0%B8%9C%E0%B9%88%E0%B8%B2_Cyborg"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
