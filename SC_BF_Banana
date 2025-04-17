@@ -1,5 +1,5 @@
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-getgenv().Key = "1c333a872b02124930ce4e1d"
+getgenv().Key = "be9f2319660feaad3dd3ddac"
     getgenv().SettingFarm ={
         ["Hide UI"] = false,
         ["Reset Teleport"] = {
@@ -16,7 +16,7 @@ getgenv().Key = "1c333a872b02124930ce4e1d"
                 },
             },
         },
-        ["White Screen"] = true,
+        ["White Screen"] = false,
         ["Lock Fps"] = {
             ["Enabled"] = true,
             ["FPS"] = 10,
@@ -25,8 +25,8 @@ getgenv().Key = "1c333a872b02124930ce4e1d"
             ["Saber"] = true,
             ["Godhuman"] =  true,
             ["Skull Guitar"] = false,
-            ["Mirror Fractal"] = false,
-            ["Cursed Dual Katana"] = false,
+            ["Mirror Fractal"] = true,
+            ["Cursed Dual Katana"] = true,
             ["Upgrade Race V2-V3"] = false,
             ["Auto Pull Lever"] = true,
         },
@@ -36,17 +36,17 @@ getgenv().Key = "1c333a872b02124930ce4e1d"
         },
         ["Auto Chat"] = {
             ["Enabled"] = false,
-            ["Text"] = "",
+            ["Text"] = "joejoeshop.xyz",
         },
         ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
         ["Select Hop"] = { -- 70% will have it
             ["Hop Server If Have Player Near"] = false, 
-            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = true, 
+            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = false, 
             ["Hop Find Dough King Get Mirror Fractal"] = false,
-            ["Hop Find Raids Castle [CDK]"] = true,
-            ["Hop Find Cake Queen [CDK]"] = true,
-            ["Hop Find Soul Reaper [CDK]"] = true,
-            ["Hop Find Darkbeard [SG]"] = true,
+            ["Hop Find Raids Castle [CDK]"] = false,
+            ["Hop Find Cake Queen [CDK]"] = false,
+            ["Hop Find Soul Reaper [CDK]"] = false,
+            ["Hop Find Darkbeard [SG]"] = false,
             ["Hop Find Mirage [ Pull Lever ]"] = false,
         },
         ["Farm Mastery"] = {
