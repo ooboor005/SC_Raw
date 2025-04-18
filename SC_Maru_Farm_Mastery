@@ -1,114 +1,250 @@
-_G.Team = "Pirate" -- Marine / Pirate
-getgenv().Script_Mode = "Kaitun_Script"
-_G.MainSettings = {
-        ["EnabledHOP"] = true, -- เปิด HOP ( มันไม่มีอยู่ละใส่มาเท่ๆ )
-        ["UseGun"] = true,
-        ['FPSBOOST'] = true, -- ภาพกาก
-        ["FPSLOCKAMOUNT"] = 10, -- จำนวน FPS
-        ['WhiteScreen'] = false, -- จอขาว
-        ['CloseUI'] = true, -- ปิด Ui
-        ["NotifycationExPRemove"] = true, -- ลบ ExP ที่เด้งตอนฆ่ามอน
-        ['AFKCheck'] = 60, -- ถ้ายืนนิ่งเกินวิที่ตั้งมันจะรีเกม
-        ["LockFragments"] = 30000, -- ล็อคเงินม่วง
-        ["LockFruitsRaid"] = { -- ล็อคผลที่ไม่เอาไปลงดัน
-            [1] = "Dough-Dough",
-            [2] = "Dragon-Dragon",
-            [3] = "Leopard-Leopard",
-            [4] = "Mammoth-Mammoth",
-            [5] = "Kitsune-Ribbon",
-            [6] = "Buddha-Buddha",
-            [7] = "Portal-Portal",
-            [8] = "T-Rex-T-Rex",
-            [9] = "Shadow-Shadow",
-            [10] = "Venom-Venom",
-            [11] = "Control-Control",
-            [12] = "Spirit-Spirit"
-        }
-    }
-_G.Fruits_Settings = { -- ตั้งค่าผล
-    ['Main_Fruits'] = {}, -- ผลหลัก ถ้ายังไม่ใช่ค่าที่ตั้งมันจะกินจนกว่าจะใช่หรือซื้อ
-    ['Select_Fruits'] = {"Flame-Flame", "Ice-Ice", "Magma-Magma", "Light-Light", "Dark-Dark","Dough-Dough"} -- กินหรือซื้อตอนไม่มีผล
+local HttpService = game:GetService("HttpService")
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
+getgenv().id = "354662781859004417"
+
+repeat
+    task.wait()
+until game:IsLoaded()
+
+local MaruhubConfig = {
+    InstanceStats = false,
+    AutoBuyFruitsAdvanceStock = false,
+    AutoClick = false,
+    FastAttack = true,
+    SemiMinkRace = false,
+    AutoFindIslandMamma = false,
+    AutoFarmChests = false,
+    BringMob = true,
+    SelectCombat = "",
+    EnabledResetCharacter = false,
+    AutoFarmSeaEvents = false,
+    EnabledDriveBoats = false,
+    AutoAwakenerFruits = false,
+    AutoFarmGhostShip = false,
+    HopUntilFoundGodChalice = false,
+    AutoRandomFruits = false,
+    AutoTrident = false,
+    LimitValues = false,
+    ByPassTP = false,
+    AutoRainbowHaki = false,
+    PlayersESP = false,
+    AutoRaceCyborg = false,
+    FovSize = 350,
+    AimbotSkill = false,
+    AutoFinishTrail = false,
+    EnabledFullBright = false,
+    AutoCollectBlazeEmber = false,
+    AutoFarmSeaBeasts = false,
+    MysteriousManESP = false,
+    AutoEvoRacev2 = false,
+    EnabledSpawnCakePrince = true,
+    EnabledRiskModeChests = false,
+    EnabledChestsHOP = false,
+    Version = "MARUNEWUIBF20NEWUI",
+    AutoFindFullMoon = false,
+    AutoObservationv2 = false,
+    EnabledKillPlayers = false,
+    DistBring = 150,
+    SelectIgnore = {},
+    SelectMethodSword = "600 Mastery",
+    EnabledMysitcIslandHOP = false,
+    AutoFarmPlayer = false,
+    SaveEmuChange = false,
+    SelectSkills = {"Z", "X", "C"},
+    AutoFarmBoneMasteryFruits = false,
+    SelectWeapon = "Melee",
+    AutoElectricClaw = false,
+    AutoFarmBone = false,
+    AutoCakePrince = true,
+    AutoFarmLevel = false,
+    AutoCollectDragonEggs = false,
+    SkillDelayZ = 1,
+    AutoAncientOneQuest = false,
+    EnabledFovAimbot = false,
+    SelectStats = {},
+    BoneSurprise = false,
+    SkillDelayC = 1,
+    EnabledHOPFindFruits = false,
+    AutoCollectFireFlowers = false,
+    AutoTradeSweetChalice = false,
+    AutoFarmDarkFragments = false,
+    SelectDungeons = "",
+    PointsUP = 1,
+    AutoFarmCandy = false,
+    AutoBuyFruits = false,
+    LimitAmount = 1,
+    AutoFarmBoneMasteryGun = false,
+    AutoPullLever = true,
+    AutoActiveHelper = false,
+    SkillDelayV = 1,
+    AutoFarmEctoplasm = false,
+    DisabledCanCanCollideBoat = false,
+    EnabledZouQuests = false,
+    AutoFarmFruitsMastery = true,
+    AutoFarmObservation = false,
+    EnabledBuyOrderBossChip = false,
+    AutoRelicEvents = false,
+    EnabledRaceTransformed = false,
+    AutoSelcetDungeons = false,
+    AutoValkyrie = false,
+    SelectBosses = {},
+    EnabledFullMoonHOP = false,
+    SelectSeaZones = "",
+    AutoCraftSharkAnchor = false,
+    AutoTushita = false,
+    EnabledFarmDungeonHOP = false,
+    AutoWarriorHelmet = false,
+    SelectMaterials = {},
+    AutoSharkmanKarate = false,
+    WhiteScreen = false,
+    AutoFarmGunMastery = false,
+    SemiNoClip = false,
+    SemiNoBusyCharacter = false,
+    AutoBuyEnchancementColor = false,
+    ImageKaitun = "",
+    JobId = "",
+    AutoFarmCakePiratesMasteryFruits = false,
+    AutoFarmMirrorFractral = false,
+    AutoFindAdvanceFruitsDealer = false,
+    AutoTTK = false,
+    EnabledDriveBoatsShip = false,
+    AutoChangeLastGear = false,
+    AutoFarmAllSwordMastery = false,
+    AutoRengoku = false,
+    AutoCollectAzureEmber = false,
+    DistanceX = 5,
+    AutoCollectDragonBones = false,
+    AutoFarmBosses = false,
+    EnabledBuyLegendarySwordHOP = false,
+    AutoRaceGhoul = false,
+    MobAura = false,
+    AutoGodhuman = true,
+    AutoStats = false,
+    FruitCost = 1000000,
+    SpeedBoat = 250,
+    IslandESP = false,
+    SkillDelayX = 1,
+    EnabledAcceptQuestsBones = false,
+    AutoFinishDoughAwaken = false,
+    AutoMidnightBlade = false,
+    EnabledUsingBoat = false,
+    SelectEnchancementsColor = {},
+    AutoMusketeer = false,
+    GearESP = false,
+    SelectGears = "",
+    AutoFarmCakePiratesMasteryGun = false,
+    AutoBuddy_Sword = false,
+    TweenSpeed = 300,
+    AutoTyrant = false,
+    AutoCollectBerries = false,
+    AimbotGunNearMonster = false,
+    MasterofAurasESP = false,
+    EnabledBuyGears = false,
+    AutoCameraToMoon = false,
+    AutoEvoRacev3 = false,
+    EnabledFarmSeaBeastsHOP = false,
+    EnabledAcceptQuests = false,
+    AimbotGun = false,
+    PryBone = false,
+    AutoDeathStep = false,
+    EnabledFarmBountyHOP = false,
+    AutoCraftVolcanicMagnet = false,
+    DistanceY = 28,
+    MaxDisc = 2500,
+    AutoSuperhuman = false,
+    SelectLimit = "",
+    AutoYama = false,
+    SelectBoats = "",
+    SpectatePlayers = false,
+    AutoFarmMaterials = false,
+    AutoSoulGuiTar = false,
+    EnabledBringFruits = false,
+    DriveForWard = false,
+    SpawmJoin = false,
+    EnabledTweenToRaceDoors = false,
+    AutoFindMysticIsland = false,
+    AutoCavander = false,
+    AutoDojoQuests = false,
+    AutoFinishPhoenixAwaken = false,
+    SelectIsland = "",
+    TryluckBone = false,
+    EnabledBuyChips = false,
+    AutoFinishQuestsYama = false,
+    NoCooldownAbilities = false,
+    AutoFinishQuestsTushita = false,
+    AimbotMethod = "",
+    AimbotMethodMonster = "",
+    AutoCollectBerriesHOP = false,
+    EnabledFarmObservationHOP = false,
+    EnabledHOPEliteHunter = false,
+    EnabledKillAura = false,
+    DisabledDamageText = true,
+    AutoBisento2 = false,
+    EnabledCastleRaid = false,
+    SelectAbilities = {},
+    AutoPole = false,
+    AutoFarmOrderBoss = false,
+    AutoSwanGlasses = false,
+    RemoveRocks = false,
+    AutoFarmMysticIslandChests = false,
+    TeleportPlayers = false,
+    AutoEliteHunter = false,
+    AutoDragonTalon = false,
+    EnabledCursedChests = false,
+    EnabledDressrosaQuests = false,
+    LegendarySwordDealerESP = false,
+    AutoStoredFruits = false,
+    AutoCursedDualKatana = false,
+    AutoFarmBounty = false,
+    AutoDragonHunter = false,
+    AutoDragonTrident = false,
+    EnabledTweenToFruits = false,
+    AutoActiveRaces = false,
+    EnabledHOPServerItems = false,
+    SelectPlayer = "",
+    AutoHallowScythe = false,
+    AutoSaber = false,
+    DontShowEmuChange = false,
+    HopInTime = 200,
+    TeleportIsland = false,
+    IgnoreMonsters = {},
+    AutoSerpent_Bow = false,
+    EnabledBuyEnchancementColorHOP = false,
+    EnabledFactoryFarm = false,
+    DistanceZ = 5,
+    NextPlayerIn = 6,
+    AutoPressW = false,
+    KillAtForMastery = 50,
+    MysticIslandESP = false,
+    AutoBuyLegendarySword = false,
+    Fly = false,
+    AutoFarmDungeon = false,
+    EnabledStartDungeon = false,
+    SelectDevilFruits = {},
+    WalkOnWater = false,
+    RTXMode = false,
+    DamageAura = false,
+    AutoShoot = false,
+    EnabledPvP = false,
+    EnabledTradeWithSpy = false,
+    AutoWhiteScreen = false,
+    FruitsESP = false,
+    AutoCollectPresent = false,
+    SelectHost = "",
+    EnabledRemoveFogs = false,
+    EnabledUnstoreFruits = false,
+    SafeMode = false,
 }
 
-_G.Quests_Settings = { -- ตั้งค่าเควสหลักๆ
-    ['Rainbow_Haki'] = true,
-    ["MusketeerHat"] = true,
-    ["PullLever"] = true,
-    ['DoughQuests_Mirror'] = {
-        ['Enabled'] = true,
-        ['UseFruits'] = true
-    }        
-}
-_G.Races_Settings = { -- ตั้งค่าเผ่า
-    ['Race'] = {
-        ['EnabledEvo'] = false,
-        ["v2"] = false,
-        ["v3"] = false,
-        ["Races_Lock"] = {
-            ["Races"] = { -- Select Races U want
-                ["Mink"] = false,
-                ["Human"] = false,
-                ["Fishman"] = false
-            },
-            ["RerollsWhenFragments"] = 200000 -- Random Races When Your Fragments is >= Settings
-        }
-    }
-}
+if not isfolder("Maru Hub Premium Scripts") then
+    makefolder("Maru Hub Premium Scripts")
+end
 
-_G.Settings_Melee = { -- หมัดที่จะทำ
-    ['Superhuman'] = true,
-    ['DeathStep'] = true,
-    ['SharkmanKarate'] = true,
-    ['ElectricClaw'] = true,
-    ['DragonTalon'] = true,
-    ['Godhuman'] = true
-}
+writefile("Maru Hub Premium Scripts/Blox_Fruits-" .. game.Players.LocalPlayer.Name ..".json", HttpService:JSONEncode(MaruhubConfig))
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
-_G.FarmMastery_Settings = {
-    ['Melee'] = true,
-    ['Sword'] = false,
-    ['DevilFruits'] = true,
-    ['Select_Swords'] = {
-        ["AutoSettings"] = false, -- ถ้าเปิดอันนี้มันจะเลือกดาบให้เองหรือฟาร์มทุกดาบนั่นเอง
-        ["ManualSettings"] = { -- ถ้าปรับ AutoSettings เป็น false มันจะฟาร์มดาบที่เลือกตรงนี้ ตัวอย่างข้างล่าง
-            "Cursed Dual Katana",
-            "Shark Anchor",
-            "Tushita",
-            "Yama",
-            "HallowScryte"
-        }
-    }
-}
+repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team ~= nil
 
-_G.SwordSettings = { -- ดาบที่จะทำ
-    ['Saber'] = false,
-    ["Pole"] = false,
-    ['MidnightBlade'] = false,
-    ['Shisui'] = false,
-    ['Saddi'] = false,
-    ['Wando'] = false,
-    ['Yama'] = true,
-    ['Rengoku'] = false,
-    ['Canvander'] = false,
-    ['BuddySword'] = false,
-    ['TwinHooks'] = false,
-    ['HallowScryte'] = true,
-    ['TrueTripleKatana'] = false,
-    ['CursedDualKatana'] = true
-}
-
-_G.SharkAnchor_Settings = {
-    ["Enabled_Farm"] = false,
-    ['FarmAfterMoney'] = 2500000
-}
-
-_G.GunSettings = { -- ปืนที่จะทำ
-    ['Kabucha'] = false,
-    ['SerpentBow'] = false,
-    ['SoulGuitar'] = false
-}
-
-_G.Hop_Settings = {
-    ["Find Tushita"] = false
-}
-loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
+if game.PlaceId ~= 7449423635 then
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+end
