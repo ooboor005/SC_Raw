@@ -1,0 +1,59 @@
+getgenv().Fruits_Settings = {
+    ['Main_Fruits'] = {
+        'Dough-Dough', 
+        'Magma-Magma', 
+        'Buddha-Buddha'
+    },
+}
+
+local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
+local bestFruit = nil
+local bestPriority = math.huge
+local plr = game.Players.LocalPlayer
+
+function getFruitName()
+    for _, v in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+        if v.ClassName == 'Tool' and string.find(v.Name, 'Fruit') then
+            local FruitName = v:GetAttribute("OriginalName")
+            if FruitName then
+                if not table.find(getgenv().Fruits_Settings['Main_Fruits'], FruitName) then
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", FruitName, v)
+                    wait(0.5)
+                else
+                   return FruitName, v.Name
+                end
+            end
+        end
+    end
+end
+
+spawn(function()
+    while true do task.wait(1)
+        for i, v in pairs(inventory) do
+            if v.Type == 'Blox Fruit' then
+                local priority = table.find(getgenv().Fruits_Settings['Main_Fruits'], v.Name)
+                if priority and priority < bestPriority then
+                    bestFruit = v.Name
+                    bestPriority = priority
+                end
+            end
+        end
+    end
+end)
+
+spawn(function()    
+    while true do task.wait()
+        local FruitName, ToolName = getFruitName()
+        if FruitName and ToolName and plr.Data.DevilFruit.Value ~= ToolName then
+            local toolTip = plr.Character:FindFirstChild(ToolName) or plr.Backpack:FindFirstChild(ToolName)
+            plr.Character.Humanoid:EquipTool(plr.Backpack:FindFirstChild(ToolName))
+            wait()
+            if toolTip.EatRemote:InvokeServer("Eat") then
+                repeat task.wait() until plr.Data.DevilFruit.Value == ToolName
+            end
+        elseif bestFruit and not table.find(getgenv().Fruits_Settings['Main_Fruits'], plr.Data.DevilFruit.Value) then
+            print("Load Fruits - "..bestFruit)
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("LoadFruit", bestFruit) -- LoadFruits
+        end
+    end
+end)
