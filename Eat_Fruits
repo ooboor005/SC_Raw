@@ -1,7 +1,5 @@
 getgenv().Fruits_Settings = {
     ['Main_Fruits'] = {
-        'Blizzard-Blizzard', 
-        'Rumble-Rumble', 
         'Light-Light',
         'Magma-Magma', 
         'Ice-Ice',
