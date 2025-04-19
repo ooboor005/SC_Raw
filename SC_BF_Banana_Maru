@@ -101,7 +101,7 @@ task.spawn(function()
             local lever = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CheckTempleDoor")
             local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
 
-            if level >= 2600 then
+            if level >= 2500 then
                 _G.DoneList['MAX_LEVEL'] = true
             end
             if godhuman then
