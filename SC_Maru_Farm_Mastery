@@ -1,104 +1,22 @@
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players
-repeat task.wait() until game.Players.LocalPlayer
-repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-_G.Team = "Pirate" -- Marine / Pirate
-getgenv().Script_Mode = "Kaitun_Script"
-_G.MainSettings = {
-    ["EnabledHOP"] = true,
-    ['FPSBOOST'] = true,
-    ["FPSLOCKAMOUNT"] = 60,
-    ['WhiteScreen'] = false,
-    ['CloseUI'] = false,
-    ["NotifycationExPRemove"] = true,
-    ['AFKCheck'] = 150,
-    ["LockFragments"] = 20000,
-    ["LockFruitsRaid"] = {
-        [1] = "Dough-Dough",
-        [2] = "Dragon-Dragon",        
-    }
-}
-_G.SharkAnchor_Settings = {
-    ["Enabled_Farm"] = false,
-    ['FarmAfterMoney'] = 2500000
-}
-_G.Quests_Settings = {        
-    ['Rainbow_Haki'] = true,
-    ["MusketeerHat"] = true,
-    ["PullLever"] = true,
-    ['DoughQuests_Mirror'] = {
-        ['Enabled'] = true,
-        ['UseFruits'] = true
-    }        
-}
-_G.Races_Settings = {
-    ['Race'] = {
-        ['EnabledEvo'] = false,
-        ["v2"] = false,
-        ["v3"] = false,
-        ["Races_Lock"] = {
-            ["Races"] = {
-                ["Mink"] = false,
-                ["Human"] = false,
-                ["Fishman"] = false
-            },
-            ["RerollsWhenFragments"] = 20000
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Eat_Fruits"))()
+
+getgenv().Mode = "OneClick"
+getgenv().Setting = {
+    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
+    ["FucusOnLevel"] = true,
+    ["Fruits"] = {  -- setting for fruits u want
+        ["Primary"] = { -- if current fruit is not in this list, eat/buy
+            -- u can configs add mores/remove and must end with , (comma symbol)
+        },
+        ["Normal"] = { -- it just a normal fruit list
+            "Flame-Flame",
+            "Light-Light",
+            "Magma-Magma",
+            -- u can configs add mores/remove and must end with , (comma symbol)
         }
-    }
-}
+        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
+    },
+    ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
+};
 
-_G.Fruits_Settings = {
-    ['Main_Fruits'] = {},
-    ['Select_Fruits'] = {"Flame-Flame", "Ice-Ice", "Light-Light", "Dark-Dark","Rumble-Rumble", "Magma-Magma"}
-}
-
-_G.Settings_Melee = {
-    ['Superhuman'] = true,
-    ['DeathStep'] = true,
-    ['SharkmanKarate'] = true,
-    ['ElectricClaw'] = true,
-    ['DragonTalon'] = true,
-    ['Godhuman'] = true
-}
-_G.SwordSettings = {
-    ['Saber'] = false,
-    ["Pole"] = false,
-    ['MidnightBlade'] = false,
-    ['Shisui'] = false,
-    ['Saddi'] = false,
-    ['Wando'] = false,
-    ['Yama'] = false,
-    ['Rengoku'] = false,
-    ['Canvander'] = false,
-    ['BuddySword'] = false,
-    ['TwinHooks'] = false,
-    ['HallowScryte'] = false,
-    ['TrueTripleKatana'] = false,
-    ['CursedDualKatana'] = false
-}
-_G.GunSettings = {
-    ['Kabucha'] = false,
-    ['SerpentBow'] = false,
-    ['SoulGuitar'] = false
-}
-_G.FarmMastery_Settings = {
-    ['Melee'] = true,
-    ['Sword'] = true,
-    ['DevilFruits'] = true,
-    ['Select_Swords'] = {
-        ["AutoSettings"] = true,
-        ["ManualSettings"] = {
-            "Saber",
-            "Buddy Sword"
-        }
-    }
-}
-_G.Hop_Settings = {
-    ["Find Tushita"] = false
-}
--- Script Here !!!
-
-getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
-getgenv().id = "354662781859004417"
-getgenv().Script_Mode = "Kaitun_Script"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
