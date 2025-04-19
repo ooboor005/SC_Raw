@@ -1,5 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Eat_Fruits"))()
-
 local HttpService = game:GetService("HttpService")
 getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
 getgenv().id = "354662781859004417"
