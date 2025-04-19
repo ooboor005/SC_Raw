@@ -1,8 +1,8 @@
 getgenv().Fruits_Settings = {
     ['Main_Fruits'] = {
-        'Light-Light',
+        'Light-Light', 
         'Magma-Magma', 
-        'Ice-Ice',
+        'Ice-Ice', 
         'Dark-Dark', 
         'Flame-Flame'
     },
