@@ -1,21 +1,34 @@
-repeat task.wait() until game:IsLoaded()
-
 getgenv().Mode = "OneClick"
 getgenv().Setting = {
-    ["Fruits"] = {
-        ["Primary"] = {
-            "Dough-Dough",
-            "Blizzard-Blizzard",
-            "Human-Human: Buddha",
-        },
-        ["Normal"] = {
-            "Ice-Ice",
-            "Light-Light",
-            "Dark-Dark",
-            "Magma-Magma"
-        }
-    }
-};
+    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
+    ["FucusOnLevel"] = true,
+    ["Fruits"] = {  -- setting for fruits u want
 
--- List ผล https://pastebin.com/raw/PdtewMW0
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
+        ["Primary"] = { -- if current fruit is not in this list, eat/buy
+        "",
+        -- u can configs add mores/remove and must end with , (comma symbol)
+        },
+
+        ["Normal"] =  {
+            "Flame-Flame",
+            "Ice-Ice",
+            "Magma-Magma",
+            "Light-Light",
+            "Dark-Dark",}
+        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
+    },
+
+    ["Lock Fruits"] = { -- don't use or eat fruits in this list
+        "Dough-Dough",
+        "Dragon-Dragon",
+        "Leopard-Leopard",
+        "Mammoth-Mammoth",
+        "Kitsune-Ribbon",
+        "Buddha-Buddha",
+        "Portal-Portal",
+        "T-Rex-T-Rex",
+    },
+    ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
+};
+script_key = "cohJQvzVBsByYFaMuZoFfsyYIzHJTFLm"
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7249ea0a31d1ad6a0b78ae62d3357e73.lua"))()
