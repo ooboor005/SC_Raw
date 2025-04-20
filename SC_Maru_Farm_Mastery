@@ -1,4 +1,3 @@
-
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
@@ -32,7 +31,7 @@ _G.MainSettings = {
     }
 _G.Fruits_Settings = { -- ตั้งค่าผล
     ['Main_Fruits'] = {}, -- ผลหลัก ถ้ายังไม่ใช่ค่าที่ตั้งมันจะกินจนกว่าจะใช่หรือซื้อ
-    ['Select_Fruits'] = {"Light-Light", "Magma-Magma", "Dark-Dark","Ice-Ice","Flame-Flame"} -- กินหรือซื้อตอนไม่มีผล
+    ['Select_Fruits'] = {"Flame-Flame", "Ice-Ice", "Magma-Magma", "Light-Light", "Dark-Dark","Dough-Dough"} -- กินหรือซื้อตอนไม่มีผล
 }
 
 _G.Quests_Settings = { -- ตั้งค่าเควสหลักๆ
@@ -76,6 +75,11 @@ _G.FarmMastery_Settings = {
     ['Select_Swords'] = {
         ["AutoSettings"] = false, -- ถ้าเปิดอันนี้มันจะเลือกดาบให้เองหรือฟาร์มทุกดาบนั่นเอง
         ["ManualSettings"] = { -- ถ้าปรับ AutoSettings เป็น false มันจะฟาร์มดาบที่เลือกตรงนี้ ตัวอย่างข้างล่าง
+            "Cursed Dual Katana",
+            "Shark Anchor",
+            "Tushita",
+            "Yama",
+            "HallowScryte"
         }
     }
 }
@@ -87,18 +91,18 @@ _G.SwordSettings = { -- ดาบที่จะทำ
     ['Shisui'] = false,
     ['Saddi'] = false,
     ['Wando'] = false,
-    ['Yama'] = false,
+    ['Yama'] = true,
     ['Rengoku'] = false,
     ['Canvander'] = false,
     ['BuddySword'] = false,
     ['TwinHooks'] = false,
-    ['HallowScryte'] = false,
+    ['HallowScryte'] = true,
     ['TrueTripleKatana'] = false,
-    ['CursedDualKatana'] = false
+    ['CursedDualKatana'] = true
 }
 
 _G.SharkAnchor_Settings = {
-    ["Enabled_Farm"] = false,
+    ["Enabled_Farm"] = true,
     ['FarmAfterMoney'] = 2500000
 }
 
@@ -111,6 +115,7 @@ _G.GunSettings = { -- ปืนที่จะทำ
 _G.Hop_Settings = {
     ["Find Tushita"] = false
 }
+
 getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
 getgenv().id = "354662781859004417"
 getgenv().Script_Mode = "Kaitun_Script"
