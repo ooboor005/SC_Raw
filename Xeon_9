@@ -1,5 +1,4 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/%E0%B8%9F%E0%B8%B2%E0%B8%A1%E0%B9%80%E0%B8%87%E0%B8%B4%E0%B8%99"))()
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF"))()
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
 __script__host = "http://45.136.254.74/api/account"
