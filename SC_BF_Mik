@@ -5,7 +5,20 @@ getgenv().Setting = {
     ["Fruits"] = {  -- setting for fruits u want
 
         ["Primary"] = { -- if current fruit is not in this list, eat/buy
-        "",
+            "Flame-Flame",
+            "Ice-Ice",
+            "Magma-Magma",
+            "Light-Light",
+            "Dark-Dark",
+            "Dough-Dough",
+            "Dragon-Dragon",
+            "Leopard-Leopard",
+            "Mammoth-Mammoth",
+            "Kitsune-Ribbon",
+            "Buddha-Buddha",
+            "Portal-Portal",
+            "T-Rex-T-Rex",
+            
         -- u can configs add mores/remove and must end with , (comma symbol)
         },
 
