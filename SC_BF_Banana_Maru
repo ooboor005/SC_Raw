@@ -145,9 +145,8 @@ task.spawn(function()
             if _G.BananaIsloaded then
     
                 -- Scripts Banana Here
-
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Banana"))()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Eat_Fruits"))()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Banana"))()
                 break
             end
             if _G.MaruHubIsloaded then
