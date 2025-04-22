@@ -1,4 +1,6 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Mik"))()
+getgenv().Key = "MARU-157L3-ANC5-XCEOG-267H-X6O3A"
+getgenv().id = "354662781859004417"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
