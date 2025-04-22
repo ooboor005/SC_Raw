@@ -1,4 +1,49 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF"))()
+getgenv().Mode = "OneClick"
+getgenv().Setting = {
+    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
+    ["FucusOnLevel"] = true,
+    ["Fruits"] = {  -- setting for fruits u want
+
+        ["Primary"] = { -- if current fruit is not in this list, eat/buy
+            "Flame-Flame",
+            "Ice-Ice",
+            "Magma-Magma",
+            "Light-Light",
+            "Dark-Dark",
+            "Dough-Dough",
+            "Dragon-Dragon",
+            "Leopard-Leopard",
+            "Mammoth-Mammoth",
+            "Kitsune-Ribbon",
+            "Buddha-Buddha",
+            "Portal-Portal",
+            "T-Rex-T-Rex",
+            
+        -- u can configs add mores/remove and must end with , (comma symbol)
+        },
+
+        ["Normal"] =  {
+            "Flame-Flame",
+            "Ice-Ice",
+            "Magma-Magma",
+            "Light-Light",
+            "Dark-Dark",}
+        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
+    },
+
+    ["Lock Fruits"] = { -- don't use or eat fruits in this list
+        "Dough-Dough",
+        "Dragon-Dragon",
+        "Leopard-Leopard",
+        "Mammoth-Mammoth",
+        "Kitsune-Ribbon",
+        "Buddha-Buddha",
+        "Portal-Portal",
+        "T-Rex-T-Rex",
+    },
+};
+script_key = "cohJQvzVBsByYFaMuZoFfsyYIzHJTFLm"
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7249ea0a31d1ad6a0b78ae62d3357e73.lua"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
