@@ -1,6 +1,128 @@
-getgenv().Key = "MARU-157L3-ANC5-XCEOG-267H-X6O3A"
+_G.Settings_V4 = {
+    ["LockTiers"] = 10,
+    ["Lever"] = true,
+    ["InVIPServ"] = true,
+    ["HelperNameList"] = {
+        "JOE1_2WZZK",
+        "JOE3_F8QUA"
+    },
+    ["V4FarmList"] = {
+        "Haze_HANOyd",
+        "Rock_YaheJ2",
+        "Glow_IjprEJ",
+        "Bolt_29LcXO",
+        "Twist_pBV7CG",
+        "Blaze_iyOxve",
+        "Bolt_THenhI",
+        "Vibe_fuY6qN",
+        "Peak_pk4KD7",
+        "Flint_3r1Ct3",
+        "Elf_bhxxud",
+        "Shade_JdMVkB",
+        "Drift_reNB3m",
+        "Padazov23",
+        "Fawn_pkb4cZ",
+        "Tree_UuqN30",
+        "Tide_ixxL7U",
+        "Peak_W3MkIn",
+        "Shade_Xvf0r9",
+        "Frost_CRLoRc",
+        "Dawn_RHiKm7",
+        "Yahahok56",
+        "Drift_AquwUj",
+        "Leaf_ZjyTyD",
+        "Peak_uZzKeH",
+        "Fadalutaxo10",
+        "Buwaciboya4",
+        "Clash_Ca1k2F",
+        "Shade_k4SrZU",
+        "Petifek86",
+        "Xexikiqiga6",
+        "Powibev69",
+        "Clash_KQ7WkO",
+        "Cloud_QVDUI6",
+        "Qodesud30",
+        "Beguyonive9",
+        "Vudiyeh37",
+        "Hush_xxw8n3",
+        "Volt_WlFwFy",
+        "Joy_UcHPfI",
+        "Dawn_6hKceT",
+        "Drift_kdmYam",
+        "Joy_7UA2QD",
+        "Tide_kJZY62",
+        "Hawk_2oRAYH",
+        "Bazimin08",
+        "Fawn_WyFeke",
+        "Fire_RB6QIP",
+        "Famuqav56",
+        "Flint_yDGqNQ",
+        "Shade_12VyDN",
+        "Tunoyewego5",
+        "Bolt_ig68HB",
+        "Flash_QaDH0t",
+        "Frost_zT0qAH",
+        "Glow_jUo8jc",
+        "Soul_R6vBjm",
+        "Frost_KfPz0B",
+        "Rays_kJIgeQ",
+        "Bolt_kuL7X7",
+        "Glow_LjfyRb",
+        "Gold_fbghfC",
+        "Gezeziq23",
+        "Bolt_enhSYi",
+        "Plum_9sWYpS",
+        "Grim_aDsK0s",
+        "Hush_fUpU6M",
+        "Fuvalaz50",
+        "Drum_hVM4fO",
+        "Clash_KbW83t",
+        "Bird_hW510n",
+        "Jolejat06",
+        "Koneben01",
+        "Biwaniduke5",
+        "Moss_z4xsnQ",
+        "Volt_8rBB8u",
+        "Noravid12",
+        "Omen_kltXfT",
+        "Clash_zy0DqS",
+        "Rush_ENnnMv",
+        "Seas_kjrrj8",
+        "Snap_yxh9qW",
+        "Snap_qZlI3a",
+        "Snow_B8ASmZ",
+        "Dazagol35",
+        "Soul_BQiFCN",
+        "Dash_nJYR1J",
+        "Spin_jaQLVj",
+        "Whale_UmwbKC",
+        "Tide_vZNlO2",
+        "Puyemim22",
+        "Tree_2AuScH",
+        "Rawinul73",
+        "Tusk_5Vo7lJ",
+        "Rays_WEfrro",
+        "Twist_meyKfy",
+        "Megezoquvo7",
+        "Twist_QtfnjA",
+        "Soul_Hh0N2w",
+        "Vibe_ZOfIaH",
+        "Drift_bfA8pS",
+        "Vine_12gkFU",
+        "Clash_0ChDop",
+        "Volt_4eYQ60",
+        "Rush_KWIkBT",
+        "Weniqej16",
+        "Dawn_Lw9bpE",
+        "Zinc_RJ3Bk3",
+        "Moss_ekStGn",
+        "Rush_hiju06"
+    }
+}
+
+getgenv().Key = "MARU_V4-PQWHKORMJNJ7H3O"
 getgenv().id = "354662781859004417"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MasterPClient/main/Loader.lua"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
@@ -8,4 +130,13 @@ __script__host = "http://45.136.254.74/api/account"
 __script__token = "PC-1"
 __script__machine = "PC-9"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
+end)
+
+local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+task.spawn(function()
+    if Private_Server == "StandardServer" then
+        game:GetService("Players").LocalPlayer:Kick("Private Server Not Detected");
+        task.wait(3)
+        game:Shutdown()
+    end
 end)
