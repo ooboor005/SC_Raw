@@ -43,7 +43,7 @@ getgenv().Setting = {
     },
 };
 script_key = "cohJQvzVBsByYFaMuZoFfsyYIzHJTFLm"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7249ea0a31d1ad6a0b78ae62d3357e73.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/refs/heads/main/Blox%20Fruits/Extenstion/934139130588fd33b0d8c183574e1f8d.lua"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
