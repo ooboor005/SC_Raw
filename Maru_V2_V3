@@ -1,23 +1,5 @@
-if game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"].ChooseTeam then
-    print("true")
-    repeat
-        task.wait()
-        local chooseTeamGui = game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"].ChooseTeam
- 
-        -- ตรวจสอบว่า GUI ChooseTeam ปรากฏอยู่หรือไม่
-        if chooseTeamGui.Visible then
-            for _, v in pairs(getconnections(chooseTeamGui.Container.Pirates.Frame.TextButton.Activated)) do
-                pcall(function()
-                    v.Function()
-                end)
-            end
-        end
-    -- ทำซ้ำจนกว่า Player จะมีทีมและเกมโหลดเสร็จ
-    until game.Players.LocalPlayer.Team ~= nil and game:IsLoaded()
-end
-
 local HttpService = game:GetService("HttpService")
-getgenv().Key = "MARU-157L3-ANC5-XCEOG-267H-X6O3A"
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
 getgenv().id = "354662781859004417"
 
 
@@ -25,22 +7,6 @@ repeat
     task.wait()
 until game:IsLoaded()
 
-function SwitchSword()
-    local Inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
-    local Sword = nil
-    for i,v in pairs(Inventory) do
-        if v["Name"] == "Saber" then
-            Sword = "Saber"
-        elseif v["Name"] == "Cursed Dual Katana" and Sword == nil then
-            Sword = "Cursed Dual Katana"
-        end
-    end
-    if Sword ~= nil then
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("LoadItem",tostring(Sword))
-    end
-end
-
-SwitchSword()
 
 local MaruhubConfig = {
     InstanceStats = false,
@@ -78,7 +44,7 @@ local MaruhubConfig = {
     EnabledBuyLegendarySwordHOP = false,
     Version = "MARUNEWUIBF20NEWUI",
     AutoFindFullMoon = false,
-    AutoObservationv2 = false,
+    AutoObservationv2 = true,
     SelectIgnore = {},
     AutoFarmPlayer = false,
     AutoFarmBoneMasteryFruits = false,
@@ -220,7 +186,7 @@ local MaruhubConfig = {
     AutoEliteHunter = false,
     AutoDragonTalon = false,
     EnabledCursedChests = false,
-    AutoEvoRacev3 = true,
+    AutoEvoRacev3 = false,
     AutoFinishQuestsYama = false,
     AutoStoredFruits = false,
     AutoCursedDualKatana = false,
@@ -271,14 +237,4 @@ end
 writefile("Maru Hub Premium Scripts/Blox_Fruits-" .. game.Players.LocalPlayer.Name ..".json", HttpService:JSONEncode(MaruhubConfig))
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
-repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team ~= nil
-local plr = game.Players.LocalPlayer
-local placeid = game.PlaceId
-
-while true do task.wait()
-    repeat task.wait()
-        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
-        task.wait(1)
-    until placeid == 4442272183
-end
 
