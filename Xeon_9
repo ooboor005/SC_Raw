@@ -1,3 +1,12 @@
+task.spawn(function()
+repeat task.wait() until game:IsLoaded()
+__script__host = "http://45.136.254.74/api/account"
+__script__token = "PC-1"
+__script__machine = "PC-9"
+loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
+end)
+
+
 getgenv().Kusnokix = {
     ["LockedRace"] = {
         ["Enabled"] = true,
@@ -26,11 +35,3 @@ getgenv().Kusnokix = {
 loadstring(game:HttpGet "https://raw.githubusercontent.com/Hiromabashi/loader/refs/heads/main/26a2a9cb5a0d8b04e91dbfbc08d6ac46.lua") { function(...) end, "03f1fb2f-490d-4b16-a07b-e952561e3d88", "old"}
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Maru_V2_V3"))()
-
-task.spawn(function()
-repeat task.wait() until game:IsLoaded()
-__script__host = "http://45.136.254.74/api/account"
-__script__token = "PC-1"
-__script__machine = "PC-9"
-loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
-end)
