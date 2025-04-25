@@ -5,4 +5,5 @@ __script__token = "PC-1"
 __script__machine = "PC-9"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
 end)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Banana_Maru"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Maru_V2_V3"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/%E0%B8%A3%E0%B8%B5%E0%B9%80%E0%B8%9C%E0%B9%88%E0%B8%B2"))()
