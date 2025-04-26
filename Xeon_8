@@ -23,7 +23,7 @@ task.spawn(function()
         })
     end
 end)
-
+task.wait(10)
 local PlaceId = {
     [116495829188952] = function() 
         getgenv().key = {57024,22888,19691,13098,44206,76716}
