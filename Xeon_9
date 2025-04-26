@@ -42,5 +42,11 @@ task.wait(10)
 
 if PlaceId[game.PlaceId] then
     PlaceId[game.PlaceId]()
+else
+    script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
 end
+
+
+
 
