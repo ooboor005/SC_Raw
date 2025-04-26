@@ -1,3 +1,11 @@
+repeat task.wait() until game:IsLoaded()
+local HttpService = game:GetService("HttpService")
+local Client = game:GetService("ReplicatedStorage").Client;
+local PlayerDataController = require(Client.Controllers.PlayerDataController);
+while not PlayerDataController.isPlayerDataLoaded() do
+    task.wait();
+end;
+
 local PlaceId = {
     [116495829188952] = function() 
         getgenv().key = {57024,22888,19691,13098,44206,76716}
@@ -12,13 +20,6 @@ if PlaceId[game.PlaceId] then
     PlaceId[game.PlaceId]()
 end
 
-repeat task.wait() until game:IsLoaded()
-local HttpService = game:GetService("HttpService")
-local Client = game:GetService("ReplicatedStorage").Client;
-local PlayerDataController = require(Client.Controllers.PlayerDataController);
-while not PlayerDataController.isPlayerDataLoaded() do
-    task.wait();
-end;
 local PlayerDataReplica = PlayerDataController.getPlayerDataReplica();
 task.spawn(function() 
     while true do task.wait(6) 
