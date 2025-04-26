@@ -32,6 +32,9 @@ local PlaceId = {
     [70876832253163] = function()
         script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+        task.wait(15)
+        script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
     end
 }
 
