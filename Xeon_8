@@ -68,7 +68,7 @@ local PlaceId = {
             
         task.spawn(function() 
             repeat task.wait()
-                if Retry >= 5 then 
+                if Retry >= 3 then 
                     if Money.Value == 20 then
                         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
                     end
