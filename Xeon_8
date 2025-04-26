@@ -76,7 +76,7 @@ local PlaceId = {
                 else 
                     Retry += 1
                 end
-                task.wait(60)
+                task.wait(10)
             until Money.Value ~= 20 or getgenv().Fluent
         end)
         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
