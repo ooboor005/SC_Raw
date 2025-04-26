@@ -7,22 +7,6 @@ while not PlayerDataController.isPlayerDataLoaded() do
     task.wait();
 end;
 
-local PlaceId = {
-    [116495829188952] = function() 
-        getgenv().key = {57024,22888,19691,13098,44206,76716}
-        loadstring(game:HttpGet('https://api.luarmor.net/files/v3/loaders/965cbb37d5a810609ee8cf51fba2ebea.lua'))()
-    end,
-    [70876832253163] = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
-    end
-}
-
-task.wait(10)
-
-if PlaceId[game.PlaceId] then
-    PlaceId[game.PlaceId]()
-end
-
 local PlayerDataReplica = PlayerDataController.getPlayerDataReplica();
 task.spawn(function() 
     while true do task.wait(6) 
@@ -39,3 +23,20 @@ task.spawn(function()
         })
     end
 end)
+
+local PlaceId = {
+    [116495829188952] = function() 
+        getgenv().key = {57024,22888,19691,13098,44206,76716}
+        loadstring(game:HttpGet('https://api.luarmor.net/files/v3/loaders/965cbb37d5a810609ee8cf51fba2ebea.lua'))()
+    end,
+    [70876832253163] = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+    end
+}
+
+task.wait(10)
+
+if PlaceId[game.PlaceId] then
+    PlaceId[game.PlaceId]()
+end
+
