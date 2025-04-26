@@ -1,3 +1,4 @@
+
 repeat task.wait() until game:IsLoaded()
 local HttpService = game:GetService("HttpService")
 local Client = game:GetService("ReplicatedStorage").Client;
@@ -15,6 +16,8 @@ local PlaceId = {
         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
     end
 }
+
+task.wait(10)
 
 if PlaceId[game.PlaceId] then
     PlaceId[game.PlaceId]()
