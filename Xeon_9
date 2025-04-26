@@ -12,10 +12,6 @@ if PlaceId[game.PlaceId] then
     PlaceId[game.PlaceId]()
 end
 
-
-
-
-
 repeat task.wait() until game:IsLoaded()
 local HttpService = game:GetService("HttpService")
 local Client = game:GetService("ReplicatedStorage").Client;
