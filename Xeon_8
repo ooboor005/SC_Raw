@@ -30,12 +30,61 @@ local PlaceId = {
         loadstring(game:HttpGet('https://api.luarmor.net/files/v3/loaders/965cbb37d5a810609ee8cf51fba2ebea.lua'))()
     end,
     [70876832253163] = function()
+        repeat task.wait() until game:IsLoaded()
+        local Money : NumberValue = game:GetService("Players").LocalPlayer.leaderstats:WaitForChild("Money")
+        local Retry = 0
+        local gs = game:GetService 'GuiService'
+        local reconnectDisabledList = {
+            [Enum.ConnectionError.DisconnectLuaKick] = true,
+            [Enum.ConnectionError.DisconnectSecurityKeyMismatch] = true,
+            [Enum.ConnectionError.DisconnectNewSecurityKeyMismatch] = true,
+            [Enum.ConnectionError.DisconnectDuplicateTicket] = true,
+            [Enum.ConnectionError.DisconnectWrongVersion] = true,
+            [Enum.ConnectionError.DisconnectProtocolMismatch] = true,
+            [Enum.ConnectionError.DisconnectBadhash] = true,
+            [Enum.ConnectionError.DisconnectIllegalTeleport] = true,
+            [Enum.ConnectionError.DisconnectDuplicatePlayer] = true,
+            [Enum.ConnectionError.DisconnectCloudEditKick] = true,
+            [Enum.ConnectionError.DisconnectOnRemoteSysStats] = true,
+            [Enum.ConnectionError.DisconnectRaknetErrors] = true,
+            [Enum.ConnectionError.PlacelaunchFlooded] = true,
+            [Enum.ConnectionError.PlacelaunchHashException] = true,
+            [Enum.ConnectionError.PlacelaunchHashExpired] = true,
+            [Enum.ConnectionError.PlacelaunchUnauthorized] = true,
+            [Enum.ConnectionError.PlacelaunchUserLeft] = true,
+            [Enum.ConnectionError.PlacelaunchRestricted] = true,
+        }
+
+        gs.ErrorMessageChanged:connect(function()
+            local error_code = gs:GetErrorCode()
+            local error_type = gs:GetErrorType()
+            if error_type == Enum.ConnectionError.DisconnectErrors and not reconnectDisabledList[error_code] then
+                print('Disconnect registered!')
+                while task.wait(5) do
+                    game:GetService 'TeleportService':TeleportToPlaceInstance(game.PlaceId, game.JobId)
+                end
+            end
+        end)
+            
+        task.spawn(function() 
+            repeat task.wait()
+                if Retry >= 5 then 
+                    if Money.Value == 20 then
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+                    end
+                    Retry = 0
+                else 
+                    Retry += 1
+                end
+                task.wait(60)
+            until Money.Value ~= 20 or getgenv().Fluent
+        end)
         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
     end
 }
 
-task.wait(10)
-
 if PlaceId[game.PlaceId] then
     PlaceId[game.PlaceId]()
+else
+  PlaceId[70876832253163]()
 end
