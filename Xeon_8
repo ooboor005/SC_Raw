@@ -78,6 +78,7 @@ local PlaceId = {
                     Retry += 1
                 end
                 task.wait(10)
+                print("123")
             until Money.Value ~= 20 or getgenv().Fluent
         end)
         script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
