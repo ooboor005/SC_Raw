@@ -1,9 +1,96 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF"))()
 
-task.spawn(function()
 repeat task.wait() until game:IsLoaded()
-__script__host = "http://45.136.254.74/api/account"
-__script__token = "PC-1"
-__script__machine = "PC-20"
-loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
+local HttpService = game:GetService("HttpService")
+local Client = game:GetService("ReplicatedStorage").Client;
+local PlayerDataController = require(Client.Controllers.PlayerDataController);
+while not PlayerDataController.isPlayerDataLoaded() do
+    task.wait();
+end;
+
+local PlayerDataReplica = PlayerDataController.getPlayerDataReplica();
+task.spawn(function() 
+    while true do task.wait(6) 
+        local r = request({
+            Url = "http://45.136.254.74:7847/",
+            Method = "POST",
+            Body = HttpService:JSONEncode({
+                ["account"] = game.Players.LocalPlayer.Name,
+                ["bonds"] = PlayerDataReplica.Data.bonds
+            }),
+            Headers = {
+                ["Content-Type"] = "application/json"
+            }
+        })
+    end
 end)
+task.wait(10)
+local PlaceId = {
+    [116495829188952] = function() 
+        print("116495829188952")
+        getgenv().key = {57024,22888,19691,13098,44206,76716}
+        loadstring(game:HttpGet('https://api.luarmor.net/files/v3/loaders/965cbb37d5a810609ee8cf51fba2ebea.lua'))()
+    end,
+    [70876832253163] = function()
+        repeat task.wait() until game:IsLoaded()
+        print("70876832253163")
+        local Money : NumberValue = game:GetService("Players").LocalPlayer.leaderstats:WaitForChild("Money")
+        local Retry = 0
+        local gs = game:GetService 'GuiService'
+        local reconnectDisabledList = {
+            [Enum.ConnectionError.DisconnectLuaKick] = true,
+            [Enum.ConnectionError.DisconnectSecurityKeyMismatch] = true,
+            [Enum.ConnectionError.DisconnectNewSecurityKeyMismatch] = true,
+            [Enum.ConnectionError.DisconnectDuplicateTicket] = true,
+            [Enum.ConnectionError.DisconnectWrongVersion] = true,
+            [Enum.ConnectionError.DisconnectProtocolMismatch] = true,
+            [Enum.ConnectionError.DisconnectBadhash] = true,
+            [Enum.ConnectionError.DisconnectIllegalTeleport] = true,
+            [Enum.ConnectionError.DisconnectDuplicatePlayer] = true,
+            [Enum.ConnectionError.DisconnectCloudEditKick] = true,
+            [Enum.ConnectionError.DisconnectOnRemoteSysStats] = true,
+            [Enum.ConnectionError.DisconnectRaknetErrors] = true,
+            [Enum.ConnectionError.PlacelaunchFlooded] = true,
+            [Enum.ConnectionError.PlacelaunchHashException] = true,
+            [Enum.ConnectionError.PlacelaunchHashExpired] = true,
+            [Enum.ConnectionError.PlacelaunchUnauthorized] = true,
+            [Enum.ConnectionError.PlacelaunchUserLeft] = true,
+            [Enum.ConnectionError.PlacelaunchRestricted] = true,
+        }
+
+        gs.ErrorMessageChanged:connect(function()
+            local error_code = gs:GetErrorCode()
+            local error_type = gs:GetErrorType()
+            if error_type == Enum.ConnectionError.DisconnectErrors and not reconnectDisabledList[error_code] then
+                print('Disconnect registered!')
+                while task.wait(5) do
+                    game:GetService 'TeleportService':TeleportToPlaceInstance(game.PlaceId, game.JobId)
+                end
+            end
+        end)
+            
+        task.spawn(function() 
+            repeat task.wait()
+                if Retry >= 3 then 
+                    if Money.Value == 20 then
+                        script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+                    end
+                    Retry = 0
+                else 
+                    Retry += 1
+                end
+                task.wait(10)
+                print("Money 20")
+            until Money.Value ~= 20 or getgenv().Fluent
+        end)
+        script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+    end
+}
+
+if PlaceId[game.PlaceId] then
+    PlaceId[game.PlaceId]()
+else
+    print("PlaceId[70876832253163]()")
+    PlaceId[70876832253163]()
+end
