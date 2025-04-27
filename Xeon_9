@@ -1,4 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Maru_V2_V3"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
@@ -7,3 +6,5 @@ __script__token = "PC-1"
 __script__machine = "PC-9"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
 end)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/Maru_V2_V3"))()
