@@ -54,9 +54,10 @@ task.spawn(function()
                         Url = BaseURL .. string.format("/actions/%s", LocalPlayer.Name),
                         Method = "GET"
                     })
+                    print(Action.Body)
                     if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12  then 
                         request({
-                            Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer,Name,
+                            Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name,
                             Method = "GET",
                         })
                         task.wait(5)
