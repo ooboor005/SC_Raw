@@ -11,9 +11,6 @@ task.spawn(function()
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
     local SkinController = require(game:GetService("ReplicatedStorage").Controllers.SkinController)
-    local Tool = Instance.new("Tool")
-    Tool.Name = "God's Chalice"
-    Tool.Parent = LocalPlayer.Backpack
     function findAura(AuraList: {string}) 
         local Skin = SkinController:GetInventory()
         if not Skin then
