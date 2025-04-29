@@ -1,0 +1,118 @@
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+
+-- ฟังก์ชัน server_hop สำหรับย้ายไปเซิร์ฟเวอร์ที่มีผู้เล่นน้อยที่สุด
+local function server_hop(max_attempts)
+    max_attempts = max_attempts or 3
+    for attempt = 1, max_attempts do
+        print("Attempt " .. attempt .. " of " .. max_attempts)
+        
+        local success, result = pcall(function()
+            return HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
+        end)
+        
+        if not success or not result.data then
+            warn("Failed to fetch servers: " .. tostring(result))
+            if attempt < max_attempts then
+                task.wait(5)
+                continue
+            end
+            warn("Max attempts reached. No server found.")
+            return false
+        end
+
+        local min_players = math.huge
+        local selected_server = nil
+
+        for _, v in pairs(result.data) do
+            if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+                if v.playing < min_players then
+                    min_players = v.playing
+                    selected_server = v.id
+                end
+            end
+        end
+
+        if selected_server then
+            local teleport_success, teleport_error = pcall(function()
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, selected_server)
+            end)
+            if teleport_success then
+                print("Teleporting to server with " .. min_players .. " players")
+                return true
+            else
+                warn("Teleport failed: " .. tostring(teleport_error))
+                if attempt < max_attempts then
+                    task.wait(5)
+                end
+            end
+        else
+            warn("No suitable servers found on attempt " .. attempt)
+            if attempt < max_attempts then
+                task.wait(5)
+            end
+        end
+    end
+    
+    warn("Failed to hop to a new server after " .. max_attempts .. " attempts.")
+    return false
+end
+
+-- ตรวจสอบการเคลื่อนไหวของผู้เล่น
+local function check_movement()
+    local player = Players.LocalPlayer
+    if not player then
+        warn("LocalPlayer not found.")
+        return
+    end
+
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then
+        warn("HumanoidRootPart not found.")
+        return
+    end
+
+    local last_position = humanoidRootPart.Position
+    local idle_time = 0
+    local check_interval = 1 -- ตรวจสอบทุก 1 วินาที
+    local idle_threshold = 10 -- ระยะเวลาที่ถือว่าอยู่กับที่ (10 วินาที)
+    local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนที่ (หน่วย Roblox)
+
+    while true do
+        task.wait(check_interval)
+        
+        -- ตรวจสอบว่า character และ HumanoidRootPart ยังมีอยู่
+        character = player.Character
+        humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then
+            warn("HumanoidRootPart not found. Stopping movement check.")
+            break
+        end
+
+        -- เปรียบเทียบตำแหน่งปัจจุบันกับตำแหน่งก่อนหน้า
+        local current_position = humanoidRootPart.Position
+        local distance_moved = (current_position - last_position).Magnitude
+
+        if distance_moved < movement_threshold then
+            idle_time = idle_time + check_interval
+            if idle_time >= idle_threshold then
+                print("Player idle for " .. idle_time .. " seconds. Attempting server hop.")
+                local success = server_hop(3)
+                if success then
+                    break -- ออกจากลูปเมื่อย้ายเซิร์ฟเวอร์สำเร็จ
+                else
+                    idle_time = 0 -- รีเซ็ตเวลา idle หากย้ายไม่สำเร็จ
+                end
+            end
+        else
+            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อมีการเคลื่อนไหว
+        end
+
+        last_position = current_position
+    end
+end
+
+-- เริ่มการตรวจสอบการเคลื่อนไหว
+task.spawn(check_movement)
