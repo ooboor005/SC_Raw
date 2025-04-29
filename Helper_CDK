@@ -120,8 +120,13 @@ task.spawn(function()
                         local Retry = 0 
                         repeat task.wait()
                             game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",v)
-                            task.wait(2)
-                        until Retry > 120
+                            task.wait(10)
+                            Retry += 1
+                        until Retry > 10
+                        request({
+                            Url = BaseURL .. "/actions/delete/" .. v,
+                            Method = "GET",
+                        })
                    end
                 end
             end
@@ -135,8 +140,13 @@ task.spawn(function()
                     local Retry = 0 
                     repeat task.wait()
                         game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",ServerTarget.Body)
-                        task.wait(2)
-                    until Retry > 120
+                        task.wait(10)
+                        Retry += 10
+                    until Retry > 10
+                    request({
+                        Url = BaseURL .. "/actions/delete/" .. ServerTarget.Body,
+                        Method = "GET",
+                    })
                 end
             end
             for i, v in pairs(workspace.Map["Boat Castle"].Summoner.Circle:GetChildren()) do 
