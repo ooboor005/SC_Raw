@@ -1,16 +1,25 @@
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
 -- ตัวแปรควบคุมสถานะการเทเลพอร์ต
 local is_teleporting = false
 local last_teleport_attempt = 0
-local teleport_cooldown = 10 -- รอ 10 วินาทีก่อนลองเทเลพอร์ตใหม่
+local teleport_cooldown = 15 -- เพิ่มเป็น 15 วินาทีเพื่อลดโอกาสเกมปิด
+local loop_delay = 5 -- ดีเลย์ 5 วินาทีในลูป server_hop
 
 -- ฟังก์ชัน server_hop สำหรับย้ายไปเซิร์ฟเวอร์ที่มีผู้เล่นน้อยที่สุด
 local function server_hop()
     if is_teleporting or tick() - last_teleport_attempt < teleport_cooldown then
-        warn("Teleport on cooldown or in progress.")
+        warn("Teleport on cooldown or in progress. Time left: " .. math.ceil(teleport_cooldown - (tick() - last_teleport_attempt)) .. " seconds")
+        return false
+    end
+
+    -- ตรวจสอบว่าผู้เล่นยังอยู่ในเกม
+    local player = Players.LocalPlayer
+    if not player or not player.Parent then
+        warn("Player not in game. Aborting server hop.")
         return false
     end
 
@@ -18,14 +27,22 @@ local function server_hop()
 
     while true do
         print("Attempting server hop...")
-        
+
+        -- ตรวจสอบสถานะเกมก่อนเรียก API
+        if not RunService:IsRunning() then
+            warn("Game is not running. Aborting server hop.")
+            is_teleporting = false
+            last_teleport_attempt = tick()
+            return false
+        end
+
         local success, result = pcall(function()
             return HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
         end)
-        
+
         if not success or not result.data then
             warn("Failed to fetch servers: " .. tostring(result))
-            task.wait(3) -- หน่วงเวลา 3 วินาทีก่อนลองใหม่
+            task.wait(loop_delay)
             continue
         end
 
@@ -43,10 +60,11 @@ local function server_hop()
 
         if selected_server then
             local teleport_success, teleport_error = pcall(function()
+                print("Attempting to teleport to server: " .. selected_server .. " with " .. min_players .. " players")
                 TeleportService:TeleportToPlaceInstance(game.PlaceId, selected_server)
             end)
             if teleport_success then
-                print("Teleporting to server with " .. min_players .. " players")
+                print("Teleport initiated successfully")
                 is_teleporting = false
                 last_teleport_attempt = tick()
                 return true
@@ -57,7 +75,7 @@ local function server_hop()
             warn("No suitable servers found.")
         end
 
-        task.wait(3) -- หน่วงเวลา 3 วินาทีก่อนลองรอบถัดไป
+        task.wait(loop_delay) -- หน่วงเวลา 5 วินาทีในลูป
     end
 end
 
@@ -84,7 +102,7 @@ local function check_movement()
 
     while true do
         task.wait(check_interval)
-        
+
         -- ตรวจสอบว่า character และ HumanoidRootPart ยังมีอยู่
         character = player.Character
         humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
