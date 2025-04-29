@@ -117,17 +117,12 @@ local function check_movement()
             if idle_time >= idle_threshold then
                 print("Player idle for " .. idle_time .. " seconds. Attempting server hop.")
                 local success = server_hop(3)
-                if success then
-                    break -- ออกจากลูปเมื่อย้ายสำเร็จ
-                else
+                if not success then
                     idle_time = 0 -- รีเซ็ตเวลา idle เพื่อลองใหม่ในรอบถัดไป
                 end
             end
         else
-            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อเคลื่อนไหว
-        end
-
-        last_position = current_position
+            idle_time = 0 -- รีเซ็ต            last_position = current_position
     end
 end
 
