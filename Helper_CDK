@@ -1,190 +1,72 @@
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
-
-local IP = "45.136.254.74"
-local PORT = "4135"
-local BaseURL = string.format("http://%s:%s", IP, PORT)
-local __NoClip = false
-local HttpService = game:GetService("HttpService")
-
 task.spawn(function() 
-    repeat task.wait() 
-        pcall(function() 
-            if game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"].ChooseTeam.Container.Pirates then 
-                for i, v in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"].ChooseTeam.Container.Pirates.Frame.TextButton.Activated)) do 
-                    v.Function()
+    repeat task.wait() until game:IsLoaded()
+
+    local IP = "45.136.254.74"
+    local PORT = "4135"
+    local BaseURL = string.format("http://%s:%s", IP, PORT)
+    local CacheInventory = {
+        Data = {},
+        Time = 0
+    }
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    local SkinController = require(game:GetService("ReplicatedStorage").Controllers.SkinController)
+    function findAura(AuraList: {string}) 
+        local Skin = SkinController:GetInventory()
+        if not Skin then
+            return false
+        end
+        local A = 0
+        for i, v in pairs(Skin) do 
+            if v["Type"] == "AuraSkin" and table.find(AuraList, v.DisplayName) and v.Count > 0 then 
+                A += 1
+            end
+        end
+        return A == #AuraList
+    end
+
+    function findItem(item: string)
+        if (tick() - CacheInventory.Time) < 120 then
+            for i , v in pairs(CacheInventory.Data) do 
+                if v.Name == item then 
+                    return true
                 end
             end
-        end)
-    until (game.Players.LocalPlayer.Neutral == false) == true
-    repeat task.wait() until (game.Players.LocalPlayer.Neutral == false) == true
-    while true do task.wait()
-        if __NoClip then 
-            pcall(function() 
-                 for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do 
-                    if v:IsA("BasePart") or v:IsA("Part") or v:IsA("MeshPart") then 
-                        v.CanCollide = false
-                    end
-                end
-                local Torso : Part? = game.Players.LocalPlayer.Character.UpperTorso
-                if Torso then 
-                     if not Torso:FindFirstChildOfClass('BodyVelocity') then
-                        local BodyVelocity = Instance.new("BodyVelocity", Torso)
-                        BodyVelocity.Velocity, BodyVelocity.MaxForce, BodyVelocity.P = Vector3.new(0, 0, 0), Vector3.new(10000, 10000, 10000), 1000
-                    end
-                    if not Torso:FindFirstChildOfClass('BodyAngularVelocity') then
-                        local BodyGyro = Instance.new("BodyAngularVelocity", Torso)
-                        BodyGyro.AngularVelocity, BodyGyro.MaxTorque, BodyGyro.P = Vector3.new(0, 0, 0), Vector3.new(10000, 10000, 10000), 1000
-                    end
-                end
-            end)
-        else 
-            pcall(function() 
-                for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do 
-                    if v:IsA("BasePart") or v:IsA("Part") then 
-                        v.CanCollide = true
-                    end
-                end
-                local Torso : Part? = game.Players.LocalPlayer.Character.UpperTorso
-                if Torso then 
-                    local BodVelocity, BodyAngularVelocity = Torso:FindFirstChild('BodyVelocity'), Torso:FindFirstChild('BodyAngularVelocity')
-                    if  BodVelocity then
-                        BodVelocity:Destroy()
-                    end
-                    if  BodyAngularVelocity then
-                        BodyAngularVelocity:Destroy()
-                    end
-                end
-            end)
+            return false
         end
-    end
-end)
+        local RequestGetInvertory = nil
+        RequestGetInvertory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
+        CacheInventory.Data = RequestGetInvertory
+        CacheInventory.Time = tick()
+        for i , v in pairs(RequestGetInvertory) do 
+            if v.Name == item then 
+                return true
+            end
+        end
+        return false
+    end 
 
-function Tween(...)
-    local RealtargetPos = {...}
-    local targetPos = RealtargetPos[1]
-    local RealTarget
-    if type(targetPos) == "vector" then
-        RealTarget = CFrame.new(targetPos)
-    elseif type(targetPos) == "userdata" then
-        RealTarget = targetPos
-    elseif type(targetPos) == "number" then
-        RealTarget = CFrame.new(RealtargetPos[1], RealtargetPos[2], RealtargetPos[3])
-    end
-    local InstanceTarget = nil
-    if typeof(RealtargetPos[4]) == "Instance" then
-        InstanceTarget = RealtargetPos[4]
-    elseif typeof(RealtargetPos[2]) == "Instance" then
-        InstanceTarget = RealtargetPos[2]
-    end
-    RealtargetPos = RealTarget.Position
-    if game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Health == 0 then if tween then tween:Cancel() end repeat wait() until game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Health > 0; wait(0.2) end
-    
-
-    if game.Players.LocalPlayer.Character.Humanoid.Sit == true and InstanceTarget == nil  then
-        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-    end
-
-    local TweenService = game:GetService("TweenService")
-    local err, tween = pcall(function(RealTarget, Speed, InstanceTarget)
-        local info = TweenInfo.new((RealTarget.Position - game:GetService("Players").LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).Magnitude/350, Enum.EasingStyle.Linear)
-        local tween = TweenService:Create(InstanceTarget or game.Players.LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = RealTarget})
-        tween:Play()
-        return tween;
-    end, RealTarget, 350, InstanceTarget)
-    if not err then warn(tween); return tween; end
-    return tween
-end
-
-
-
-task.spawn(function() 
-    while true do task.wait(math.random(1,10)) 
-        local IsJoin = request({
-            Url = BaseURL .. '/actions/'  .. game.Players.LocalPlayer.Name .. "/" .. game.JobId,
-            Method = "GET"
-        })
-        if IsJoin.Body == "REQUIRED_HOP" then
-            local Respone = request({
-                Url = BaseURL .. "/actions",
-                Method = "GET"
-            })
-            for i, v in pairs(HttpService:JSONDecode(Respone.Body)) do 
-                if v ~= "" then 
-                   local Queued = request({
-                        Url  = BaseURL .. "/actions/queue/" .. game.Players.LocalPlayer.Name .. '/' .. v,
+    task.spawn(function() 
+        while true do task.wait() 
+            if not findItem("Tushita") and not findAura({"Pure Red", "Winter Sky", "Snow White"}) then 
+                if LocalPlayer.Backpack:FindFirstChild("God's Chalice") or (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("God's Chalice")) then 
+                    local Action = request({
+                        Url = BaseURL .. string.format("/actions/%s", LocalPlayer.Name),
                         Method = "GET"
-                   })
-                   if Queued.Body == "OK" then
-                        local Retry = 0 
-                        repeat task.wait()
-                            game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",v)
-                            task.wait(2)
-                        until Retry > 120
-                   end
-                end
-            end
-        else 
-            local ServerTarget = request({
-                Url = BaseURL .. "/actions/check/" .. game.Players.LocalPlayer.Name,
-                Method = "GET"
-            })
-            if ServerTarget.Body ~= "" then 
-                if game.JobId ~= ServerTarget.Body then 
-                    game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",ServerTarget.Body)
-                end
-            end
-            for i, v in pairs(workspace.Map["Boat Castle"].Summoner.Circle:GetChildren()) do 
-                if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("TouchInterest") then 
-                    if v.Part.Color == Color3.fromRGB(99, 95, 98) then 
-                        if v.Color == Color3.fromRGB(255, 0, 0) then 
-                            game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RF/FruitCustomizerRF"):InvokeServer({
-                                ["StorageName"] = "Pure Red",
-                                ["Type"] = "AuraSkin",
-                                ["Context"] = "Equip"
-                            })
-                            task.wait(.5)
-                            __NoClip = true
-                            repeat task.wait()
-                                Tween(v.Part.CFrame)
-                            until v.Part.Color ~= Color3.fromRGB(99, 95, 98)
-                            __NoClip = false
-                        elseif v.Color == Color3.fromRGB(187, 187, 187) then 
-                            game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RF/FruitCustomizerRF"):InvokeServer({
-                                ["StorageName"] = "Snow White",
-                                ["Type"] = "AuraSkin",
-                                ["Context"] = "Equip"
-                            })
-                            task.wait(.5)
-                            __NoClip = true
-                            repeat task.wait()
-                                Tween(v.Part.CFrame)
-                            until v.Part.Color ~= Color3.fromRGB(99, 95, 98)
-                            __NoClip = false
-                        else 
-                            game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("Net"):WaitForChild("RF/FruitCustomizerRF"):InvokeServer({
-                                ["StorageName"] = "Winter Sky",
-                                ["Type"] = "AuraSkin",
-                                ["Context"] = "Equip"
-                            })
-                            task.wait(.5)
-                            __NoClip = true
-                            repeat task.wait()
-                                Tween(v.Part.CFrame)
-                            until v.Part.Color ~= Color3.fromRGB(99, 95, 98)
-                            __NoClip = false
-                        end
+                    })
+                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12  then 
+                        request({
+                            Url = BaseURL .. "/actions/update/" .. game.JobId,
+                            Method = "GET",
+                        })
+                        task.wait(5)
                     end
                 end
+            else
+                print("Has tushita stop")
+                break 
             end
-            pcall(function() 
-                game.Players.LocalPlayer.Character.Humanoid.Health = 0 
-            end)
-            request({
-                Url = BaseURL .. "/actions/delete/" .. game.JobId,
-                Method = "GET",
-            })
-            task.wait()
         end
-    end
+    end)
+
 end)
