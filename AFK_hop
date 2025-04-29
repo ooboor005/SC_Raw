@@ -2,9 +2,21 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 
+-- ตัวแปรควบคุมสถานะการเทเลพอร์ต
+local is_teleporting = false
+local last_teleport_attempt = 0
+local teleport_cooldown = 10 -- รอ 10 วินาทีก่อนลองเทเลพอร์ตใหม่
+
 -- ฟังก์ชัน server_hop สำหรับย้ายไปเซิร์ฟเวอร์ที่มีผู้เล่นน้อยที่สุด
 local function server_hop(max_attempts)
+    if is_teleporting or tick() - last_teleport_attempt < teleport_cooldown then
+        warn("Teleport on cooldown or in progress.")
+        return false
+    end
+
+    is_teleporting = true
     max_attempts = max_attempts or 3
+
     for attempt = 1, max_attempts do
         print("Attempt " .. attempt .. " of " .. max_attempts)
         
@@ -18,7 +30,8 @@ local function server_hop(max_attempts)
                 task.wait(5)
                 continue
             end
-            warn("Max attempts reached. No server found.")
+            is_teleporting = false
+            last_teleport_attempt = tick()
             return false
         end
 
@@ -40,6 +53,8 @@ local function server_hop(max_attempts)
             end)
             if teleport_success then
                 print("Teleporting to server with " .. min_players .. " players")
+                is_teleporting = false
+                last_teleport_attempt = tick()
                 return true
             else
                 warn("Teleport failed: " .. tostring(teleport_error))
@@ -56,6 +71,8 @@ local function server_hop(max_attempts)
     end
     
     warn("Failed to hop to a new server after " .. max_attempts .. " attempts.")
+    is_teleporting = false
+    last_teleport_attempt = tick()
     return false
 end
 
@@ -77,8 +94,8 @@ local function check_movement()
     local last_position = humanoidRootPart.Position
     local idle_time = 0
     local check_interval = 1 -- ตรวจสอบทุก 1 วินาที
-    local idle_threshold = 10 -- ระยะเวลาที่ถือว่าอยู่กับที่ (10 วินาที)
-    local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนที่ (หน่วย Roblox)
+    local idle_threshold = 10 -- อยู่นิ่ง 10 วินาที
+    local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนไหว
 
     while true do
         task.wait(check_interval)
@@ -91,7 +108,7 @@ local function check_movement()
             break
         end
 
-        -- เปรียบเทียบตำแหน่งปัจจุบันกับตำแหน่งก่อนหน้า
+        -- เปรียบเทียบตำแหน่ง
         local current_position = humanoidRootPart.Position
         local distance_moved = (current_position - last_position).Magnitude
 
@@ -101,18 +118,26 @@ local function check_movement()
                 print("Player idle for " .. idle_time .. " seconds. Attempting server hop.")
                 local success = server_hop(3)
                 if success then
-                    break -- ออกจากลูปเมื่อย้ายเซิร์ฟเวอร์สำเร็จ
+                    break -- ออกจากลูปเมื่อย้ายสำเร็จ
                 else
-                    idle_time = 0 -- รีเซ็ตเวลา idle หากย้ายไม่สำเร็จ
+                    idle_time = 0 -- รีเซ็ตเวลา idle เพื่อลองใหม่ในรอบถัดไป
                 end
             end
         else
-            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อมีการเคลื่อนไหว
+            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อเคลื่อนไหว
         end
 
         last_position = current_position
     end
 end
 
--- เริ่มการตรวจสอบการเคลื่อนไหว
-task.spawn(check_movement)
+-- จัดการเมื่อตัวละครโหลดใหม่
+Players.LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(1) -- รอให้ตัวละครโหลดสมบูรณ์
+    task.spawn(check_movement)
+end)
+
+-- เริ่มการตรวจสอบหากตัวละครมีอยู่แล้ว
+if Players.LocalPlayer.Character then
+    task.spawn(check_movement)
+end
