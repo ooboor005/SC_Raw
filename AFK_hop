@@ -8,17 +8,16 @@ local last_teleport_attempt = 0
 local teleport_cooldown = 10 -- รอ 10 วินาทีก่อนลองเทเลพอร์ตใหม่
 
 -- ฟังก์ชัน server_hop สำหรับย้ายไปเซิร์ฟเวอร์ที่มีผู้เล่นน้อยที่สุด
-local function server_hop(max_attempts)
+local function server_hop()
     if is_teleporting or tick() - last_teleport_attempt < teleport_cooldown then
         warn("Teleport on cooldown or in progress.")
         return false
     end
 
     is_teleporting = true
-    max_attempts = max_attempts or 3
 
-    for attempt = 1, max_attempts do
-        print("Attempt " .. attempt .. " of " .. max_attempts)
+    while true do
+        print("Attempting server hop...")
         
         local success, result = pcall(function()
             return HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. game.PlaceId .. '/servers/Public?sortOrder=Asc&limit=100'))
@@ -26,13 +25,8 @@ local function server_hop(max_attempts)
         
         if not success or not result.data then
             warn("Failed to fetch servers: " .. tostring(result))
-            if attempt < max_attempts then
-                task.wait(5)
-                continue
-            end
-            is_teleporting = false
-            last_teleport_attempt = tick()
-            return false
+            task.wait(3) -- หน่วงเวลา 3 วินาทีก่อนลองใหม่
+            continue
         end
 
         local min_players = math.huge
@@ -58,22 +52,13 @@ local function server_hop(max_attempts)
                 return true
             else
                 warn("Teleport failed: " .. tostring(teleport_error))
-                if attempt < max_attempts then
-                    task.wait(5)
-                end
             end
         else
-            warn("No suitable servers found on attempt " .. attempt)
-            if attempt < max_attempts then
-                task.wait(5)
-            end
+            warn("No suitable servers found.")
         end
+
+        task.wait(3) -- หน่วงเวลา 3 วินาทีก่อนลองรอบถัดไป
     end
-    
-    warn("Failed to hop to a new server after " .. max_attempts .. " attempts.")
-    is_teleporting = false
-    last_teleport_attempt = tick()
-    return false
 end
 
 -- ตรวจสอบการเคลื่อนไหวของผู้เล่น
@@ -116,13 +101,16 @@ local function check_movement()
             idle_time = idle_time + check_interval
             if idle_time >= idle_threshold then
                 print("Player idle for " .. idle_time .. " seconds. Attempting server hop.")
-                local success = server_hop(3)
+                local success = server_hop()
                 if not success then
                     idle_time = 0 -- รีเซ็ตเวลา idle เพื่อลองใหม่ในรอบถัดไป
                 end
             end
         else
-            idle_time = 0 -- รีเซ็ต            last_position = current_position
+            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อเคลื่อนไหว
+        end
+
+        last_position = current_position
     end
 end
 
