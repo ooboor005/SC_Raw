@@ -6,7 +6,7 @@ local RunService = game:GetService("RunService")
 -- ตัวแปรควบคุมสถานะการเทเลพอร์ต
 local is_teleporting = false
 local last_teleport_attempt = 0
-local teleport_cooldown = 15 -- เพิ่มเป็น 15 วินาทีเพื่อลดโอกาสเกมปิด
+local teleport_cooldown = 20 -- เพิ่มเป็น 20 วินาทีเพื่อลดโอกาสเกมปิด
 local loop_delay = 5 -- ดีเลย์ 5 วินาทีในลูป server_hop
 
 -- ฟังก์ชัน server_hop สำหรับย้ายไปเซิร์ฟเวอร์ที่มีผู้เล่นน้อยที่สุด
@@ -97,7 +97,7 @@ local function check_movement()
     local last_position = humanoidRootPart.Position
     local idle_time = 0
     local check_interval = 1 -- ตรวจสอบทุก 1 วินาที
-    local idle_threshold = 10 -- อยู่นิ่ง 10 วินาที
+    local idle_threshold = 20 -- อยู่นิ่ง 20 วินาที
     local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนไหว
 
     while true do
