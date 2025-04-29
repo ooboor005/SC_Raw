@@ -1,3 +1,10 @@
 getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
 getgenv().id = "354662781859004417"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+
+while true do task.wait()
+    repeat task.wait()
+        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
+        task.wait(1)
+    until placeid == 4442272183
+end
