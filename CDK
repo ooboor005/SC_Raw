@@ -45,7 +45,16 @@ task.spawn(function()
         end
         return false
     end 
-
+    function allPressPlate()
+        for i, v in pairs(workspace.Map["Boat Castle"].Summoner.Circle:GetChildren()) do 
+            if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("TouchInterest") then 
+                if v.Part.Color == Color3.fromRGB(99, 95, 98) then 
+                    return false
+                end
+            end
+        end
+        return true
+    end
     task.spawn(function() 
         while true do task.wait() 
             if not findItem("Tushita") and not findAura({"Pure Red", "Winter Sky", "Snow White"}) then 
@@ -54,8 +63,7 @@ task.spawn(function()
                         Url = BaseURL .. string.format("/actions/%s", LocalPlayer.Name),
                         Method = "GET"
                     })
-                    print(Action.Body)
-                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12  then 
+                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12 and not allPressPlate() then 
                         request({
                             Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name,
                             Method = "GET",
