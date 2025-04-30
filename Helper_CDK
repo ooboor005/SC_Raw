@@ -130,7 +130,7 @@ task.spawn(function()
                    end
                 end
             end
-        else 
+        elseif IsJoin.Body == "DO_ACTION" then
             local ServerTarget = request({
                 Url = BaseURL .. "/actions/check/" .. game.Players.LocalPlayer.Name,
                 Method = "GET"
@@ -200,7 +200,10 @@ task.spawn(function()
                 Method = "GET",
             })
             task.wait()
+        else
+            task.wait(30)
         end
+        task.wait(math.random(2,30)) 
     end
 end)
 
