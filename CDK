@@ -63,12 +63,27 @@ task.spawn(function()
                         Url = BaseURL .. string.format("/actions/%s", LocalPlayer.Name),
                         Method = "GET"
                     })
-                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12 and not allPressPlate() then 
-                        request({
-                            Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name,
-                            Method = "GET",
-                        })
-                        task.wait(5)
+                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12 then 
+                        if not allPressPlate() then 
+                            request({
+                                Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name,
+                                Method = "GET",
+                            })
+                            task.wait(5)
+                        else 
+                            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then 
+                                local BP = LocalPlayer.Backpack:FindFirstChild("God's Chalice")
+                                if BP then
+                                    LocalPlayer.Character:FindFirstChild("Humanoid"):EquipTool(BP)
+                                    task.wait(1)
+                                end
+                                if LocalPlayer.Character:FindFirstChild("God's Chalice") then 
+                                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 0)
+                                    task.wait(1)
+                                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 1)
+                                end
+                            end
+                        end
                     end
                 end
             else
