@@ -240,3 +240,69 @@ task.spawn(function()
         end
     end
 end)
+
+
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- ตรวจสอบการเคลื่อนไหวของผู้เล่น
+local function check_movement()
+    local player = Players.LocalPlayer
+    if not player then
+        warn("LocalPlayer not found.")
+        return
+    end
+
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then
+        warn("HumanoidRootPart not found.")
+        return
+    end
+
+    local last_position = humanoidRootPart.Position
+    local idle_time = 0
+    local check_interval = 1 -- ตรวจสอบทุก 1 วินาที
+    local idle_threshold = 10 -- อยู่นิ่ง 20 วินาที
+    local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนไหว
+
+    while true do
+        task.wait(check_interval)
+
+        -- ตรวจสอบว่า character และ HumanoidRootPart ยังมีอยู่
+        character = player.Character
+        humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then
+            warn("HumanoidRootPart not found. Stopping movement check.")
+            break
+        end
+
+        -- เปรียบเทียบตำแหน่ง
+        local current_position = humanoidRootPart.Position
+        local distance_moved = (current_position - last_position).Magnitude
+
+        if distance_moved < movement_threshold then
+            idle_time = idle_time + check_interval
+            if idle_time >= idle_threshold then
+                game:Shutdown()
+            end
+        else
+            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อเคลื่อนไหว
+        end
+
+        last_position = current_position
+    end
+end
+
+-- จัดการเมื่อตัวละครโหลดใหม่
+Players.LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(1) -- รอให้ตัวละครโหลดสมบูรณ์
+    task.spawn(check_movement)
+end)
+
+-- เริ่มการตรวจสอบหากตัวละครมีอยู่แล้ว
+if Players.LocalPlayer.Character then
+    task.spawn(check_movement)
+end
