@@ -18,7 +18,7 @@ print("Debug: Step2")
 
 _G.RefundStat = false
 _G.CheckList = {
-    ['MAX_LEVEL'] = false,
+    ['MAX_LEVEL'] = true,
     ['GOT_GODHUMAN'] = false,
     ['GOT_LEVER'] = false,
     ['GOT_CDK'] = true,
