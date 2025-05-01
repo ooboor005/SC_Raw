@@ -36,6 +36,14 @@ while true do task.wait()
     until placeid == 4442272183
 end
 
+local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+task.spawn(function()
+    if Private_Server == "StandardServer" then
+        game:GetService("Players").LocalPlayer:Kick("Private Server Not Detected");
+        task.wait(3)
+        game:Shutdown()
+    end
+end)
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
