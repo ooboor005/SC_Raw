@@ -93,7 +93,6 @@ local CheckProgressAgainstGoals = function()
         end
     end
 
-    -- print("😍 Progress: " .. completedGoals .. "/" .. totalGoals)
     if completedGoals == totalGoals then
         -- print("🎉 Success!")
         _G.SuccessAll = true
