@@ -1,6 +1,6 @@
 _G.Settings_V4 = {
     ["LockTiers"] = 11, -- เตะตอนเทียร์เท่านั้นหรือมากกว่า
-    ["Lever"] = false, -- ออโต้ดึงคันโยก
+    ["Lever"] = true, -- ออโต้ดึงคันโยก
     ["InVIPServ"] = true, -- รีเซิฟให้ฟูลมูนรี
     ["HelperNameList"] = { -- ตัวช่วยได้ 2 ตัว
         "Hufujac02",
