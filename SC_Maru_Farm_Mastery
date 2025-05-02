@@ -94,7 +94,7 @@ local MaruhubConfig = {
     AutoFarmFruitsMastery = true,
     SkillDelayC = 1,
     SelectGears = "",
-    KillAtForMastery = 40,
+    KillAtForMastery = 30,
     SkillDelayX = 1,
     AutoFarmDungeon = false,
     JobId = "",
@@ -237,3 +237,9 @@ end
 writefile("Maru Hub Premium Scripts/Blox_Fruits-" .. game.Players.LocalPlayer.Name ..".json", HttpService:JSONEncode(MaruhubConfig))
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
+while true do task.wait()
+    repeat task.wait()
+        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
+        task.wait(1)
+    until placeid == 4442272183
+end
