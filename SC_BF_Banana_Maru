@@ -19,9 +19,9 @@ print("Debug: Step2")
 _G.RefundStat = false
 _G.CheckList = {
     ['MAX_LEVEL'] = true,
-    ['GOT_GODHUMAN'] = false,
+    ['GOT_GODHUMAN'] = true,
     ['GOT_LEVER'] = false,
-    ['GOT_CDK'] = true,
+    ['GOT_CDK'] = false,
     ['GOT_CDK_350'] = false,
     ['GOT_MIR+VH'] = false,
 }
@@ -101,7 +101,7 @@ task.spawn(function()
             local lever = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CheckTempleDoor")
             local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
 
-            if level >= 1900 then
+            if level >= 2650 then
                 _G.DoneList['MAX_LEVEL'] = true
             end
             if godhuman then
@@ -161,7 +161,7 @@ task.spawn(function()
                 end
 
                 -- Scripts Maru hub Here
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Maru"))()
+                loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Mastery"))()
                 break
             end
         end
