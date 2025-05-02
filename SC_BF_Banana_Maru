@@ -161,7 +161,7 @@ task.spawn(function()
                 end
 
                 -- Scripts Maru hub Here
-                loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Mastery"))()
+                loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
                 break
             end
         end
