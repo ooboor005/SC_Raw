@@ -12,10 +12,3 @@ __script__token = "PC-1"
 __script__machine = "PC-18"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
 end
-
-while true do task.wait()
-    repeat task.wait()
-        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
-        task.wait(1)
-    until placeid == 4442272183
-end
