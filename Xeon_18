@@ -1,3 +1,10 @@
+
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B8%A3%E0%B8%B5%E0%B9%80%E0%B8%9C%E0%B9%88%E0%B8%B2"))()
+
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
+getgenv().id = "354662781859004417"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
 __script__host = "http://45.136.254.74/api/account"
@@ -5,12 +12,6 @@ __script__token = "PC-1"
 __script__machine = "PC-18"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
 end
-
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B8%A3%E0%B8%B5%E0%B9%80%E0%B8%9C%E0%B9%88%E0%B8%B2"))()
-
-getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
-getgenv().id = "354662781859004417"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
 while true do task.wait()
     repeat task.wait()
