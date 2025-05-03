@@ -1,61 +1,33 @@
-_G.Settings_V4 = {
-    ["LockTiers"] = 11, -- เตะตอนเทียร์เท่านั้นหรือมากกว่า
-    ["Lever"] = true, -- ออโต้ดึงคันโยก
-    ["InVIPServ"] = false, -- รีเซิฟให้ฟูลมูนรี
-    ["HelperNameList"] = { -- ตัวช่วยได้ 2 ตัว
-        "Hufujac02",
-        "Makariy2401"
+getgenv().Kusnokix = {
+    ["LockedRace"] = {
+        ["Enabled"] = true,
+        ["Rerace until fragments"] = 4000,
+        ["Enable rerace until fragments"] = true,
+        ["Race"] = {
+            "Skypiea"
+        },
+        ["Reroll when evo"] = false,
+        ["Teleport to island"] = true,
+        ["PosTeleport"] = CFrame.new(100, 100, 616),
+        ["Auto Find Fragments"] = true,
+        ["Minimum Fragments"] = 30000,
+        ["Helper Skypiea"] = {"Pasaqoj6851"},
+        ["Helper Ghoul"] = {},
+        ["Helper Auto Enbale PVP"] = true,
+        ["Helper Teleport to pos"] = true,
+        ["AutoFindPlayer"] = true
     },
-    ["V4FarmList"] = {
-        "Qogofal56",
-        "Dasehih4097",
-        "Qunagoz45",
-        "Buresar6912",
-        "Mamuvab9680",
-        "Tahafoj63",
-        "Nafupiy7847",
-        "Yiwakuq9057",
-        "Qeqawom7772",
-        "Nezixek52",
-        "Yaqukan65",
-        "Fufocoz6742",
-        "Jacexon4508",
-        "Namoyub02",
-        "Pivisox89",
-        "Becevam42",
-        "Kuhatad37",
-        "Xexikiqiga6",
-        "Mozokuj0938",
-        "Rizazil2082",
-        "Vagenov58",
-        "Tesuqiw41",
-        "Loyelum3338",
-        "Dovizoz75",
-        "Kulejis31",
-        "Mopewid0746",
-        "Piwoqul1373",
-        "Fodajay49",
-        "Qonituv6635",
-        "Tajicin69",
-        "Hekeguf8579",
-        "Xopujev0670",
-        "Qareloy1966",
-        "Huzikev1147",
-        "Safazih4481",
-        "Quxiwuq0487",
-        "Wuzales22",
-        "Pelatuf21",
-        "Pejovuc8819",
-        "Muduvij7516",
-        "Ranikek9371",
-        "Yeyuyis7986",
-        "Cabijon6455"
+    ["Auto Evo Race"] = true,
+    ["Fast Attack"] = {
+        ["Duration"] = 2,
+        ["Delay"] = .3
     }
 }
-getgenv().Key = "MARU_V4-PQWHKORMJNJ7H3O"
-getgenv().id = "354662781859004417"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MasterPClient/main/Loader.lua"))()
+loadstring(game:HttpGet "https://raw.githubusercontent.com/Hiromabashi/loader/refs/heads/main/26a2a9cb5a0d8b04e91dbfbc08d6ac46.lua") { function(...) end, "03f1fb2f-490d-4b16-a07b-e952561e3d88", "old"}
 
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
+getgenv().id = "354662781859004417"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
