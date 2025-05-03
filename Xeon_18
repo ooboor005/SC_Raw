@@ -6,11 +6,29 @@ __script__machine = "PC-18"
 loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
 end)
 
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_V2_V3"))()
-
-while true do task.wait()
-    repeat task.wait()
-        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
-        task.wait(1)
-    until placeid == 4442272183
-end
+getgenv().Kusnokix = {
+    ["LockedRace"] = {
+        ["Enabled"] = true,
+        ["Rerace until fragments"] = 4000,
+        ["Enable rerace until fragments"] = true,
+        ["Race"] = {
+            "Human"
+        },
+        ["Reroll when evo"] = false,
+        ["Teleport to island"] = true,
+        ["PosTeleport"] = CFrame.new(100, 100, 616),
+        ["Auto Find Fragments"] = false,
+        ["Minimum Fragments"] = 30000,
+        ["Helper Skypiea"] = {},
+        ["Helper Ghoul"] = {},
+        ["Helper Auto Enbale PVP"] = true,
+        ["Helper Teleport to pos"] = true,
+        ["AutoFindPlayer"] = false
+    },
+    ["Auto Evo Race"] = true,
+    ["Fast Attack"] = {
+        ["Duration"] = 2,
+        ["Delay"] = .3
+    }
+}
+loadstring(game:HttpGet "https://raw.githubusercontent.com/Hiromabashi/loader/refs/heads/main/26a2a9cb5a0d8b04e91dbfbc08d6ac46.lua") { function(...) end, "03f1fb2f-490d-4b16-a07b-e952561e3d88", "old"}
