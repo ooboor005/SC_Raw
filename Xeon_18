@@ -7,3 +7,10 @@ loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/
 end)
 
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_V2_V3"))()
+
+while true do task.wait()
+    repeat task.wait()
+        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
+        task.wait(1)
+    until placeid == 4442272183
+end
