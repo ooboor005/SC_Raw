@@ -23,7 +23,6 @@ task.spawn(function()
         })
     end
 end)
-task.wait(10)
 
 script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
 loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
