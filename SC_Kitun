@@ -118,7 +118,7 @@ end
 
 -- ลูปตรวจสอบเป้าหมาย
 task.spawn(function()
-    while true do task.wait(60)
+    while true do task.wait(1)
         if not _G.SuccessAll then
             local level = game:GetService("Players").LocalPlayer.Data.Level.Value
             local godhuman = MeleeCheck("BuyGodhuman")
@@ -164,7 +164,7 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while true do task.wait(60)
+    while true do task.wait(5)
         if _G.CheckedAll then
             if _G.BananaIsloaded then
     
@@ -201,7 +201,7 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while true do task.wait(60)
+    while true do task.wait(5)
         if _G.SuccessAll and _G.BananaIsloaded then
             print('Rejoining...')
             game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
