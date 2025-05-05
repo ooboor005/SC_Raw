@@ -22,6 +22,3 @@ task.spawn(function()
         })
     end
 end)
-
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AFK_hop_30"))()
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Dead_Rails"))()
