@@ -1,9 +1,28 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF"))()
 
-task.spawn(function()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Dead_Rails"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AFK_hop_30"))()
+
 repeat task.wait() until game:IsLoaded()
-__script__host = "http://45.136.254.74/api/account"
-__script__token = "PC-1"
-__script__machine = "PC-14"
-loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
+local HttpService = game:GetService("HttpService")
+local Client = game:GetService("ReplicatedStorage").Client;
+local PlayerDataController = require(Client.Controllers.PlayerDataController);
+while not PlayerDataController.isPlayerDataLoaded() do
+    task.wait();
+end;
+
+local PlayerDataReplica = PlayerDataController.getPlayerDataReplica();
+task.spawn(function() 
+    while true do task.wait(6) 
+        local r = request({
+            Url = "http://45.136.254.74:7847/",
+            Method = "POST",
+            Body = HttpService:JSONEncode({
+                ["account"] = game.Players.LocalPlayer.Name,
+                ["bonds"] = PlayerDataReplica.Data.bonds
+            }),
+            Headers = {
+                ["Content-Type"] = "application/json"
+            }
+        })
+    end
 end)
