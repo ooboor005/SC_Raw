@@ -193,6 +193,12 @@ task.spawn(function()
                     if _G.SC_Maru_Farm_Mastery == false then
                         _G.SC_Maru_Farm_Mastery = true
                         loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
+                        while true do task.wait()
+                            repeat task.wait()
+                                game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
+                                task.wait(1)
+                            until placeid == 4442272183
+                        end
                     end
                 end
             end
