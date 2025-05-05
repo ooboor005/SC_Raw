@@ -45,6 +45,7 @@ _G.BananaIsloaded = false
 _G.MaruHubIsloaded = false
 _G.Valkyrie = false
 _G.Mirror = false
+_G.SC_Maru_Farm_Mastery= false
 
 function getAwakend()
     Awakened = {}
@@ -189,7 +190,10 @@ task.spawn(function()
                     loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Mastery"))()
                     break
                 else
-                    loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
+                    if _G.SC_Maru_Farm_Mastery == false then
+                        _G.SC_Maru_Farm_Mastery = true
+                        loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
+                    end
                 end
             end
         end
