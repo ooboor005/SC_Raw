@@ -1,7 +1,4 @@
 
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Dead_Rails"))()
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AFK_hop_30"))()
-
 repeat task.wait() until game:IsLoaded()
 local HttpService = game:GetService("HttpService")
 local Client = game:GetService("ReplicatedStorage").Client;
@@ -26,3 +23,6 @@ task.spawn(function()
         })
     end
 end)
+
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AFK_hop_30"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Dead_Rails"))()
