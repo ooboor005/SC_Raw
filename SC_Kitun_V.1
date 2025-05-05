@@ -1,0 +1,226 @@
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild('Main (minimal)') or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild('Main')
+
+print("Debug: Step1")
+
+task.wait(3)
+
+pcall(function()
+    if game.Players.LocalPlayer.Team == nil then
+        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Pirates")
+    end
+end)
+
+print("Debug: Step2")
+
+_G.RefundStat = false
+_G.CheckList = {
+    ['MAX_LEVEL'] = true,
+    ['GOT_GODHUMAN'] = true,
+    ['GOT_LEVER'] = false,
+    ['GOT_CDK'] = false,
+    ['GOT_CDK_350'] = false,
+    ['GOT_MIR+VH'] = false,
+}
+
+local _Request_ = http_request or request or HttpPost or (syn and syn.request)
+
+-- Don't touch
+
+_G.DoneList = {
+    ['MAX_LEVEL'] = false,
+    ['GOT_GODHUMAN'] = false,
+    ['GOT_LEVER'] = false,
+    ['GOT_CDK'] = false,
+    ['GOT_CDK_350'] = false,
+    ['GOT_MIR+VH'] = false,
+}
+
+_G.CheckedAll = false
+_G.SuccessAll = false
+_G.BananaIsloaded = false
+_G.MaruHubIsloaded = false
+_G.Valkyrie = false
+_G.Mirror = false
+
+function getAwakend()
+    Awakened = {}
+    Skill = 0
+    if game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("AwakeningChanger", "Check") then
+        Remote_Awaken = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getAwakenedAbilities")
+        for i, v in pairs(Remote_Awaken) do
+            Skill = Skill + 1
+            if v["Key"] then
+                if v["Awakened"] then
+                    if i ~= "X" then
+                        table.insert(Awakened, v["Key"])
+                    else
+                        table.insert(Awakened, v["Key"])
+                    end
+                end
+            end
+        end
+    end
+    if tonumber(#Awakened) == tonumber(Skill) and tonumber(Skill) ~= 0 then
+        return {"Awakened"}
+    end
+    return Awakened
+end
+
+function getSword()
+    local SwordList, RequestGetInvertory = {}, nil
+    RequestGetInvertory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
+    for _, v in pairs(RequestGetInvertory) do 
+        if v['Type'] == "Sword" then 
+            if v['Rarity'] >= 3 then
+                table.insert(SwordList, v['Name'].." ["..v.Mastery.."]")
+            end
+        end
+    end
+    return SwordList
+end
+
+-- ฟังก์ชันตรวจสอบความคืบหน้า
+local CheckProgressAgainstGoals = function()
+    local totalGoals = 0
+    local completedGoals = 0
+    for key, isWanted in pairs(_G.CheckList) do
+        if isWanted then
+            totalGoals = totalGoals + 1
+            local done = _G.DoneList[key]
+            if done then
+                completedGoals = completedGoals + 1
+                _G.MaruHubIsloaded = true
+            else
+                _G.BananaIsloaded = true
+            end
+        end
+    end
+    if completedGoals == totalGoals then
+        _G.SuccessAll = true
+    end
+end
+
+-- ฟังก์ชันตรวจสอบ Melee
+local MeleeCheck = function(...)
+    local ResponeData
+    if #{...} > 1 then
+        ResponeData = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(...)
+    else
+        ResponeData = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(..., true)
+    end
+    if ResponeData == 1 or ResponeData == 2 then
+        return true
+    end
+    return false
+end
+
+-- ลูปตรวจสอบเป้าหมาย
+task.spawn(function()
+    while true do task.wait(1)
+        if not _G.SuccessAll then
+            local level = game:GetService("Players").LocalPlayer.Data.Level.Value
+            local godhuman = MeleeCheck("BuyGodhuman")
+            local lever = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CheckTempleDoor")
+            local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
+            if level >= 2650 then
+                _G.DoneList['MAX_LEVEL'] = true
+            end
+            if godhuman then
+                _G.DoneList['GOT_GODHUMAN'] = true
+            end
+            if lever then
+                _G.DoneList['GOT_LEVER'] = true
+            end
+            for i, v in pairs(inventory) do
+                if v.Type == "Sword" then
+                    if string.find(v.Name, 'Cursed Dual Katana') then
+                        _G.DoneList['GOT_CDK'] = true
+                        if v.Mastery >= 350 then
+                            _G.DoneList['GOT_CDK_350'] = true
+                        end
+                    end
+                end
+                if v.Type == "Wear" then
+                    if string.find(v.Name, "Valkyrie Helm") then
+                        _G.Valkyrie = true
+                    end
+                end
+                if v.Type == "Material" then
+                    if string.find(v.Name, "Mirror Fractal") then
+                        _G.Mirror = true
+                    end
+                end
+            end
+            if _G.Valkyrie and _G.Mirror then
+                _G.DoneList['GOT_MIR+VH'] = true
+            end
+            CheckProgressAgainstGoals()
+            _G.CheckedAll = true
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do task.wait(5)
+        if _G.CheckedAll then
+            if _G.BananaIsloaded then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/SC_BF_Banana"))()
+                break
+            end
+            if _G.MaruHubIsloaded then
+                if game:GetService("Players").LocalPlayer.Data.StatRefunds.Value > 0 and _G.RefundStat then
+                    print("Refund")
+                    if game:GetService("Players").LocalPlayer.Data.Stats["Demon Fruit"].Level.Value <= 1 then
+                        local args = {"redeemRefundPoints", "Refund Points"}
+                        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))
+                    end
+                end
+                local Sword = getSword()
+                local hasTushita = false
+                for _, sword in pairs(Sword) do
+                    if string.find(sword, "Tushita") then
+                        hasTushita = true
+                        break
+                    end
+                end
+                if hasTushita then
+                    if _G.DoneList['GOT_CDK_350'] == true then
+                        local A = getAwakend()
+                        if table.find(A, "Awakened") then
+                            print("Loading Maru Farm Mastery script...")
+                            loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Mastery"))()
+                            break
+                        else
+                            print("Loading Maru Farm Awakend script...")
+                            loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
+                        end
+                    end
+                else
+                    local A = getAwakend()
+                    if table.find(A, "Awakened") then
+                        print("Loading Maru Farm Mastery script...")
+                        loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Mastery"))()
+                        break
+                    else
+                        print("Loading Maru Farm Awakend script...")
+                        loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
+                    end
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do task.wait(5)
+        if _G.SuccessAll and _G.BananaIsloaded then
+            print('Rejoining...')
+            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+            break
+        end
+    end
+end)
