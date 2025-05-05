@@ -187,11 +187,10 @@ task.spawn(function()
                 A = getAwakend()
                 if table.find(A, "Awakened") then
                     loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Mastery"))()
+                    break
                 else
                     loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
                 end
-
-                break
             end
         end
     end
