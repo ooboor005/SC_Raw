@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Kitun"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Maru_Farm_Awakend"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
