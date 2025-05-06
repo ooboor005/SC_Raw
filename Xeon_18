@@ -1,17 +1,24 @@
-
-task.spawn(function()
 repeat task.wait() until game:IsLoaded()
-__script__host = "http://45.136.254.74/api/account"
-__script__token = "PC-1"
-__script__machine = "PC-18"
-loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/Log_BF/main/Log_BF.lua'){__script__host, __script__token, __script__machine}
-end)
+local HttpService = game:GetService("HttpService")
+local Client = game:GetService("ReplicatedStorage").Client;
+local PlayerDataController = require(Client.Controllers.PlayerDataController);
+while not PlayerDataController.isPlayerDataLoaded() do
+    task.wait();
+end;
 
-local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
-task.spawn(function()
-    if Private_Server == "StandardServer" then
-        game:GetService("Players").LocalPlayer:Kick("Private Server Not Detected");
-        task.wait(3)
-        game:Shutdown()
+local PlayerDataReplica = PlayerDataController.getPlayerDataReplica();
+task.spawn(function() 
+    while true do task.wait(6) 
+        local r = request({
+            Url = "http://45.136.254.74:7847/",
+            Method = "POST",
+            Body = HttpService:JSONEncode({
+                ["account"] = game.Players.LocalPlayer.Name,
+                ["bonds"] = PlayerDataReplica.Data.bonds
+            }),
+            Headers = {
+                ["Content-Type"] = "application/json"
+            }
+        })
     end
 end)
