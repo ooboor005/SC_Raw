@@ -94,7 +94,7 @@ if type(env.task.spawn) == "function" then
 						rods = rodsList,
 						relic = enchantRelicCount,
 						bait = baitCrateCount,
-						machine = "PC-13"
+						machine = "PC-22"
 					})
 				})
 				task.wait(3)
