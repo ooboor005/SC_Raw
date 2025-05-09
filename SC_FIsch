@@ -8,7 +8,7 @@ _G.Configs = {
 	},
 	Setting = {
 		["Perfect Catch"] = 100, -- < String > Style Perfect Catch [ Percent ]
-		["Style Selected Object Shake"] = false, -- < Boolean > Not Recommended Enabled For Fix Shake Bug 
+		["Style Selected Object Shake"] = true, -- < Boolean > Not Recommended Enabled For Fix Shake Bug 
 		["Reducing Cpu Usage"] = {
 			["Black Screen"] = false, -- < Boolean > Auto Open / Close Black Screen
 			["Enabled"] = true, -- < Boolean > Using Cpu less 20
