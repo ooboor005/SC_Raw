@@ -19,8 +19,8 @@ if type(env.task.spawn) == "function" then
 			local x, p = pcall(function()
 				local player = game:GetService("Players").LocalPlayer
 				local gui = player.PlayerGui
-				local inventory = gui.hud.safezone.backpack.inventory.scroll
-				local hotbar = gui.hud.safezone.backpack.hotbar
+				local inventory = gui.backpack.inventory.scroll
+				local hotbar = gui.backpack.hotbar
 				local rodsScroll = gui.hud.safezone.equipment.rods.scroll.safezone
 				local fishList, rodsList = {}, {}
 				local enchantRelicCount, baitCrateCount = 0, 0
@@ -99,6 +99,7 @@ if type(env.task.spawn) == "function" then
 				})
 				task.wait(3)
 			end)
+			if not x then warn(p) end 
 		end
 	end)
 end
