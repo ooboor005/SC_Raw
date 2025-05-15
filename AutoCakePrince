@@ -256,3 +256,9 @@ local HttpService = game:GetService("HttpService")
 writefile("Maru Hub Premium Scripts/Blox_Fruits-" .. game.Players.LocalPlayer.Name .. ".json", HttpService:JSONEncode(MaruhubConfig))
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+
+repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team ~= nil
+ 
+if game.PlaceId ~= 7449423635 then
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+end
