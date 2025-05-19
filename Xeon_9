@@ -1,7 +1,8 @@
-repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team ~= nil
- 
-if game.PlaceId ~= 7449423635 then
-    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+while true do task.wait()
+    repeat task.wait()
+        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
+        task.wait(1)
+    until placeid == 4442272183
 end
 
 getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
