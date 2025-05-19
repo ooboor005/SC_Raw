@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AutoCakePrince"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B8%A3%E0%B8%B5%E0%B9%80%E0%B8%9C%E0%B9%88%E0%B8%B2"))()
 
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
