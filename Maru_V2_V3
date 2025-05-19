@@ -12,7 +12,7 @@ local MaruhubConfig = {
     SafeMode = false,
     AutoFindIslandMamma = false,
     AutoFarmChests = false,
-    BringMob = false,
+    BringMob = true,
     AimbotGun = false,
     EnabledResetCharacter = false,
     AutoFarmSeaEvents = false,
@@ -129,7 +129,7 @@ local MaruhubConfig = {
     AutoSoulGuiTar = false,
     AutoCameraToMoon = false,
     AutoRaceGhoul = false,
-    MobAura = false,
+    MobAura = true,
     SkillDelayZ = 1,
     AutoFarmBounty = false,
     FruitCost = 1000000,
@@ -245,7 +245,7 @@ local MaruhubConfig = {
     AutoCollectFireFlowers = false,
     EnabledRemoveFogs = false,
     AutoCollectPresent = false,
-    AutoBuyFruits = true
+    AutoBuyFruits = false
 }
 
 if not isfolder("Maru Hub Premium Scripts") then
