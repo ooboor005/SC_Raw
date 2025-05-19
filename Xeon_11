@@ -1,5 +1,5 @@
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_V2_V3"))()
-task.wait(30)
+
 task.spawn(function()
 repeat task.wait() until game:IsLoaded()
 __script__host = "http://45.136.254.74/api/account"
