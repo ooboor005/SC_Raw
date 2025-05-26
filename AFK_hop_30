@@ -97,7 +97,7 @@ local function check_movement()
     local last_position = humanoidRootPart.Position
     local idle_time = 0
     local check_interval = 1 -- ตรวจสอบทุก 1 วินาที
-    local idle_threshold = 120 -- อยู่นิ่ง 20 วินาที
+    local idle_threshold = 300 -- อยู่นิ่ง 20 วินาที
     local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนไหว
 
     while true do
