@@ -1,2 +1,3 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Log_Fisch"))()
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_FIsch"))()
+getgenv().key = {57024,22888,19691,13098,44206,76716}
+loadstring(game:HttpGet('https://api.luarmor.net/files/v3/loaders/965cbb37d5a810609ee8cf51fba2ebea.lua'))()
+loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AFK_hop_30'))()
