@@ -72,7 +72,7 @@ local PlaceId = {
             repeat task.wait()
                 if Retry >= 3 then 
                     if Money.Value == 20 then
-                        script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
+                        script_key="nCLqrpmPVbAWqnaiqrbvFwDvZVUCGZPo";
                         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
                     end
                     Retry = 0
@@ -83,7 +83,7 @@ local PlaceId = {
                 print("Money 20")
             until Money.Value ~= 20 or getgenv().Fluent
         end)
-        script_key="qauiHaQoxxNvMltzNmvlpcTiCXwgOtcL";
+        script_key="nCLqrpmPVbAWqnaiqrbvFwDvZVUCGZPo";
         loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
     end
 }
