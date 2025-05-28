@@ -1,8 +1,6 @@
 task.wait(10)
-
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B9%81%E0%B8%A1%E0%B8%9E%E0%B8%A3%E0%B8%96%E0%B9%84%E0%B8%9F"))()
-
-
+getgenv().key = {57024,22888,19691,13098,44206,76716}
+loadstring(game:HttpGet('https://api.luarmor.net/files/v3/loaders/965cbb37d5a810609ee8cf51fba2ebea.lua'))()
 
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
