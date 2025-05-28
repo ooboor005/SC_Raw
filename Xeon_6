@@ -1,7 +1,7 @@
 task.wait(10)
 
-script_key="nCLqrpmPVbAWqnaiqrbvFwDvZVUCGZPo";
-loadstring(game:HttpGet("https://raw.githubusercontent.com/thiennrb7/Script/refs/heads/main/autobond"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B9%81%E0%B8%A1%E0%B8%9E%E0%B8%A3%E0%B8%96%E0%B9%84%E0%B8%9F"))()
+
 
 
 local HttpService = game:GetService("HttpService")
