@@ -85,7 +85,7 @@ _G.FarmMastery_Settings = {
 }
 
 _G.SwordSettings = { -- ดาบที่จะทำ
-    ['Saber'] = false,
+    ['Saber'] = true,
     ["Pole"] = false,
     ['MidnightBlade'] = false,
     ['Shisui'] = false,
