@@ -43,6 +43,6 @@ getgenv().Setting = {
     },
     ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
 };
-script_key = "1507b36f70a1d0ba612fc2994d4c94ba"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
+getgenv().serial_key = "0616647d0b7689517768e78baf8afec9"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/refs/heads/main/Blox%20Fruits/Oneclick.lua"))()
 
