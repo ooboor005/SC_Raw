@@ -44,4 +44,4 @@ getgenv().Setting = {
     ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
 };
 script_key = "1507b36f70a1d0ba612fc2994d4c94ba"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/Loader.lua"))()
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7249ea0a31d1ad6a0b78ae62d3357e73.lua"))()
