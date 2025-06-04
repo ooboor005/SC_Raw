@@ -257,6 +257,7 @@ writefile("Maru Hub Premium Scripts/Blox_Fruits-" .. game.Players.LocalPlayer.Na
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
 
+
 repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team ~= nil
  
 if game.PlaceId ~= 7449423635 then
