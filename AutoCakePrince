@@ -1,6 +1,6 @@
 repeat task.wait() until game:IsLoaded()
 
-getgenv().Key = "MARU-VWVI-ET16W-DYJ7-97NJB-K6BV"
+getgenv().Key = "MARU-8AWK-PNL0G-HAKI-CPFL3-C4D5"
 getgenv().id = "354662781859004417"
 
 
