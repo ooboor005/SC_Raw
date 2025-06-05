@@ -255,13 +255,9 @@ end
 local HttpService = game:GetService("HttpService")
 writefile("Maru Hub Premium Scripts/Blox_Fruits-" .. game.Players.LocalPlayer.Name .. ".json", HttpService:JSONEncode(MaruhubConfig))
 
-repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team ~= nil
-local plr = game.Players.LocalPlayer
-local placeid = game.PlaceId
+repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer.Team
 
-while true do task.wait()
-    repeat task.wait()
-        game:GetService("ReplicatedStorage").Remotes:FindFirstChild("CommF_"):InvokeServer("TravelDressrosa")
-        task.wait(1)
-    until placeid == 4442272183
+if game.PlaceId ~= 4442272183 then
+    task.wait(5)
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
 end
