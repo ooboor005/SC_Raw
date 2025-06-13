@@ -76,7 +76,6 @@ _G.FarmMastery_Settings = {
         ["AutoSettings"] = false, -- ถ้าเปิดอันนี้มันจะเลือกดาบให้เองหรือฟาร์มทุกดาบนั่นเอง
         ["ManualSettings"] = { -- ถ้าปรับ AutoSettings เป็น false มันจะฟาร์มดาบที่เลือกตรงนี้ ตัวอย่างข้างล่าง
             "Cursed Dual Katana",
-            "Shark Anchor",
             "Tushita",
             "Yama",
             "HallowScryte"
@@ -102,7 +101,7 @@ _G.SwordSettings = { -- ดาบที่จะทำ
 }
 
 _G.SharkAnchor_Settings = {
-    ["Enabled_Farm"] = true,
+    ["Enabled_Farm"] = false,
     ['FarmAfterMoney'] = 2500000
 }
 
