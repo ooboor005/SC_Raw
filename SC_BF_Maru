@@ -115,5 +115,7 @@ _G.Hop_Settings = {
     ["Find Tushita"] = false
 }
 
+_G.JoeJoeKaitun = true
+
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/fca4ea7a7a2272f8726ead938acc34db.lua"))()
 
