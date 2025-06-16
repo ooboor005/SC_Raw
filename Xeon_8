@@ -20,7 +20,7 @@ getgenv().Kusnokix = {
     ["Auto Evo Race"] = true,
     ["Fast Attack"] = {
         ["Duration"] = 2,
-        ["Delay"] = .3
+        ["Delay"] = .4
     }
 }
 loadstring(game:HttpGet "https://raw.githubusercontent.com/Hiromabashi/loader/refs/heads/main/26a2a9cb5a0d8b04e91dbfbc08d6ac46.lua") { function(...) end, "03f1fb2f-490d-4b16-a07b-e952561e3d88", "old"}
