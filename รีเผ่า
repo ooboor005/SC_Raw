@@ -4,14 +4,14 @@ getgenv().Kusnokix = {
         ["Rerace until fragments"] = 4000,
         ["Enable rerace until fragments"] = true,
         ["Race"] = {
-            "Fishman"
+            "Skypiea"
         },
         ["Reroll when evo"] = false,
         ["Teleport to island"] = true,
         ["PosTeleport"] = CFrame.new(100, 100, 616),
         ["Auto Find Fragments"] = false,
         ["Minimum Fragments"] = 30000,
-        ["Helper Skypiea"] = {},
+        ["Helper Skypiea"] = {"Cenamat1312","Wiloneyls0021"},
         ["Helper Ghoul"] = {},
         ["Helper Auto Enbale PVP"] = true,
         ["Helper Teleport to pos"] = true,
