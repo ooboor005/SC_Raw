@@ -1,3 +1,4 @@
+
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
 
@@ -6,6 +7,8 @@ local PORT = "4135"
 local BaseURL = string.format("http://%s:%s", IP, PORT)
 local __NoClip = false
 local HttpService = game:GetService("HttpService")
+
+
 
 
 task.spawn(function() 
@@ -19,6 +22,12 @@ task.spawn(function()
         end)
     until (game.Players.LocalPlayer.Neutral == false) == true
     repeat task.wait() until (game.Players.LocalPlayer.Neutral == false) == true
+	if game.PlaceId ~= 7449423635 then 
+		game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TravelZou")
+		repeat
+			task.wait()
+		until game.PlaceId == 7449423635 
+	end
     while true do task.wait()
         if __NoClip then 
             pcall(function() 
@@ -101,6 +110,11 @@ end
 
 task.spawn(function() 
     while true do task.wait(math.random(1,10)) 
+		if game.PlaceId ~= 7449423635 then 
+			repeat
+				task.wait()
+			until game.PlaceId == 7449423635 
+		end
         local IsJoin = request({
             Url = BaseURL .. '/actions/'  .. game.Players.LocalPlayer.Name .. "/" .. game.JobId,
             Method = "GET"
