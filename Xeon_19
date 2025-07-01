@@ -1,3 +1,4 @@
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/CDK"))()
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Key = "5966dc8992e5d0140bd6743f"
     getgenv().SettingFarm ={
