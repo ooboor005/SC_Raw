@@ -1,1 +1,50 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_V3"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_Cyborg"))()
+local server_hop = function()
+	local get_random = {}
+	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
+		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+			get_random[#get_random + 1] = v.id
+		end
+		if #get_random > 0 then
+			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, get_random[math.random(1, #get_random)])
+		end
+	end
+end
+
+local get_nearest = function()
+	local distance = 150
+	local target
+	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+		if v ~= game:GetService('Players').LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+			local magnitude = (game:GetService("Players").LocalPlayer.Character.PrimaryPart.CFrame.p - v.Character:FindFirstChild("HumanoidRootPart").Position).magnitude
+			if magnitude < distance then
+				target = v
+				distance = magnitude
+			end
+		end
+	end
+	return target
+end
+
+local check_nearby_player = function()
+	local target = get_nearest()
+	if target then
+		local startTime = tick()
+		while tick() - startTime < 10 do
+			local nearest = get_nearest()
+			if nearest ~= target or not nearest then
+				return
+			end
+			wait(1)
+		end
+		server_hop()
+	end
+end
+
+task.spawn(function()
+	while task.wait() do
+		xpcall(function()
+			check_nearby_player()
+		end,print)
+	end
+end)
