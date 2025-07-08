@@ -1,4 +1,5 @@
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_Cyborg"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AFK_hop_30"))()
 local server_hop = function()
 	local get_random = {}
 	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
