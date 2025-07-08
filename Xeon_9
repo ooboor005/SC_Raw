@@ -1,52 +1,22 @@
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Maru_Cyborg"))()
-
-
-local lastTeleportTime = 0
-local minTeleportInterval = 30 -- วินาที
-
 local server_hop = function()
-	if tick() - lastTeleportTime < minTeleportInterval then
-		warn("Teleport too soon. Please wait.")
-		return
-	end
-	
-	local success, result = pcall(function()
-		local get_random = {}
-		local data = game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data
-		for i, v in pairs(data) do
-			if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
-				get_random[#get_random + 1] = v.id
-			end
+	local get_random = {}
+	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
+		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
+			get_random[#get_random + 1] = v.id
 		end
-		return get_random
-	end)
-	
-	if success and #result > 0 then
-		local success_teleport, err = pcall(function()
-			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, result[math.random(1, #result)])
-		end)
-		if success_teleport then
-			lastTeleportTime = tick()
-		else
-			warn("Teleport failed: " .. tostring(err))
+		if #get_random > 0 then
+			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, get_random[math.random(1, #get_random)])
 		end
-		task.wait(5) -- หน่วงเวลาเพื่อป้องกันการเทเลพอร์ตซ้ำเร็วเกินไป
-	else
-		warn("Failed to fetch servers or no valid servers found")
 	end
 end
 
 local get_nearest = function()
 	local distance = 150
 	local target
-	local localPlayer = game:GetService("Players").LocalPlayer
-	if not localPlayer.Character or not localPlayer.Character:FindFirstChild("PrimaryPart") then
-		return nil
-	end
-	
-	for i, v in pairs(game:GetService("Players"):GetPlayers()) do
-		if v ~= localPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-			local magnitude = (localPlayer.Character.PrimaryPart.CFrame.p - v.Character:FindFirstChild("HumanoidRootPart").Position).magnitude
+	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+		if v ~= game:GetService('Players').LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+			local magnitude = (game:GetService("Players").LocalPlayer.Character.PrimaryPart.CFrame.p - v.Character:FindFirstChild("HumanoidRootPart").Position).magnitude
 			if magnitude < distance then
 				target = v
 				distance = magnitude
@@ -65,26 +35,16 @@ local check_nearby_player = function()
 			if nearest ~= target or not nearest then
 				return
 			end
-			task.wait(0.5) -- ลดหน่วงเพื่อประสิทธิภาพ
+			wait(1)
 		end
 		server_hop()
 	end
 end
 
 task.spawn(function()
-	local running = true
-	game:GetService("Players").LocalPlayer.AncestryChanged:Connect(function()
-		running = false -- หยุดเมื่อผู้เล่นออกจากเกม
-	end)
-	
-	while running and task.wait(0.1) do
-		local success, err = xpcall(function()
+	while task.wait() do
+		xpcall(function()
 			check_nearby_player()
-		end, function(error)
-			warn("Error in check_nearby_player: " .. tostring(error))
-		end)
-		if not success then
-			task.wait(2) -- หน่วงเพิ่มหากเกิดข้อผิดพลาด
-		end
+		end,print)
 	end
 end)
