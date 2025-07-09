@@ -1,0 +1,72 @@
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function server_hop()
+    local attempted = {} -- จำว่าเคยลอง teleport ไปแล้ว
+
+    while true do
+        local success, response = pcall(function()
+            return HttpService:JSONDecode(game:HttpGet(
+                'https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100'
+            ))
+        end)
+
+        if success and response and response.data then
+            local bestServerId = nil
+            local lowestPlayers = math.huge
+
+            for _, server in pairs(response.data) do
+                if type(server) == "table"
+                   and server.id ~= game.JobId
+                   and server.playing <= 6
+                   and server.playing < server.maxPlayers
+                   and not attempted[server.id] then
+
+                    if server.playing < lowestPlayers then
+                        lowestPlayers = server.playing
+                        bestServerId = server.id
+                    end
+                end
+            end
+
+            if bestServerId then
+                attempted[bestServerId] = true
+
+                local teleportSuccess, teleportError = pcall(function()
+                    TeleportService:TeleportToPlaceInstance(game.PlaceId, bestServerId, LocalPlayer)
+                end)
+
+                if teleportSuccess then
+                    break -- ย้ายสำเร็จ → จบ
+                else
+                    warn("Teleport failed: ", teleportError)
+                end
+            else
+                warn("No new suitable servers found. Clearing attempted list and retrying in 5 seconds...")
+                attempted = {} -- เคลียร์ลิสต์ที่จำไว้ เพื่อให้ลองใหม่
+            end
+        else
+            warn("Failed to fetch server list. Retrying in 5 seconds...")
+        end
+
+        task.wait(5)
+    end
+end
+
+task.spawn(function()
+    local server_type
+    local ok, result = pcall(function()
+        return game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+    end)
+    if ok then
+        server_type = result
+    else
+        warn("Failed to get server type:", result)
+    end
+
+    if server_type == "StandardServer" then
+        server_hop()
+    end
+end)
