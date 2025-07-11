@@ -13,17 +13,15 @@ local server_hop = function()
 	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
 		if type(v) == "table" 
 		   and v.maxPlayers > v.playing 
-		   and v.playing <= 8 
+		   and v.playing <= 10 
 		   and v.playing >= 2  -- 👈 เปลี่ยนเป็น >= 2
 		   and v.id ~= game.JobId 
 		   and not triedServers[v.id] then
 			get_random[#get_random + 1] = v.id
 		end
-	end
-	if #get_random > 0 then
-		local chosen = get_random[math.random(1, #get_random)]
-		triedServers[chosen] = true  -- บันทึกว่าใช้ไปแล้ว
-		game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, chosen)
+		if #get_random > 0 then
+			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, get_random[math.random(1, #get_random)])
+		end
 	end
 end
 
