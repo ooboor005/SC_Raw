@@ -11,7 +11,12 @@ local triedServers = {}
 local server_hop = function()
 	local get_random = {}
 	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
-		if type(v) == "table" and v.maxPlayers > v.playing and v.playing <= 7 and v.playing >= 3 and v.id ~= game.JobId and not triedServers[v.id] then
+		if type(v) == "table" 
+		   and v.maxPlayers > v.playing 
+		   and v.playing <= 8 
+		   and v.playing >= 2  -- 👈 เปลี่ยนเป็น >= 2
+		   and v.id ~= game.JobId 
+		   and not triedServers[v.id] then
 			get_random[#get_random + 1] = v.id
 		end
 	end
