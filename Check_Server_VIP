@@ -1,4 +1,4 @@
-task.wait(10)
+task.wait(60)
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
@@ -11,7 +11,7 @@ local triedServers = {}
 local server_hop = function()
 	local get_random = {}
 	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
-		if type(v) == "table" and v.maxPlayers > v.playing and v.playing <= 8  and v.id ~= game.JobId and not triedServers[v.id] then
+		if type(v) == "table" and v.maxPlayers > v.playing and v.playing <= 7 and v.playing >= 3 and v.id ~= game.JobId and not triedServers[v.id] then
 			get_random[#get_random + 1] = v.id
 		end
 	end
@@ -24,6 +24,9 @@ end
 
 task.spawn(function()
     if Private_Server ~= "StandardServer" then
-        server_hop()
+        while true do
+            server_hop()
+            task.wait(10)
+        end
     end
 end)
