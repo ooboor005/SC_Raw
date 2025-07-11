@@ -8,7 +8,7 @@ local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:
 local server_hop = function()
 	local get_random = {}
 	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
-		if type(v) == "table" and v.maxPlayers > v.playing  and v.playing <= 7 and v.id ~= game.JobId then
+		if type(v) == "table" and v.maxPlayers > v.playing  and v.playing <= 7 and v.playing >= 3 and v.id ~= game.JobId then
 			get_random[#get_random + 1] = v.id
 		end
 		if #get_random > 0 then
