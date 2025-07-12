@@ -1,0 +1,137 @@
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+local Gems = 0
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Mods = ReplicatedStorage:WaitForChild("Mods")
+local HttpService = game:GetService("HttpService")
+local Workspace = game:GetService("Workspace")
+local IP = "localhost"
+local PORT = "3000"
+local GetFunction = ReplicatedStorage.Remotes.GetFunction -- RemoteFunction
+if Workspace:GetAttribute("IsLobby") then
+	local Cash = require(Mods.Cash)
+
+	local function getGems()
+		return Cash.Get(true)
+	end
+	Gems = getGems()
+	task.spawn(function()
+		while true do
+			task.wait()
+			local Units = GetFunction:InvokeServer({
+				Type = "Inventory",
+				Mode = "Units",
+			})
+			local MappingUnits = {}
+			for i, v in pairs(Units) do
+				table.insert(MappingUnits, {
+					displayName = v.DisplayName,
+					name = v.Name,
+					level = v.Lv,
+					dmg = v.Stats.Damage,
+					rng = v.Stats.Range,
+					spd = v.Stats.Speed,
+					key = v.Key,
+				})
+			end
+			local Inventory = GetFunction:InvokeServer({
+				Mode = "Get",
+				Type = "Inventory",
+			})
+			local MappingItem = {}
+			for i, v in pairs(Inventory) do
+				table.insert(MappingItem, {
+					name = v.Name,
+					quantity = v.Owned,
+				})
+			end
+			request({
+				Url = string.format("http://%s:%s/api/v1/user/%s", IP, PORT, LocalPlayer.Name),
+				Method = "POST",
+				Body = HttpService:JSONEncode({
+					gems = getGems(),
+					units = MappingUnits,
+					inventory = MappingItem,
+				}),
+				Headers = {
+					["Content-Type"] = "application/json",
+				},
+			})
+			task.wait(5)
+		end
+	end)
+else
+	local function getGems()
+		return HttpService:JSONDecode(request({
+			Url = string.format("http://%s:%s/api/v1/user/%s", IP, PORT, LocalPlayer.Name),
+		}).Body).gems
+	end
+	Gems = getGems()
+	game:GetService("ReplicatedStorage").Remotes.UpdateEvent.OnClientEvent:Connect(function(data)
+		if data.Type == "Game" and data.Mode == "Result" then
+			for i, v in pairs(data.Info.Result.Rewards) do
+				if v.Type == "Cash" and v.CashType == "Premium" then
+					request({
+						Url = string.format("http://%s:%s/api/v1/user/%s/update/gems", IP, PORT, LocalPlayer.Name),
+						Method = "POST",
+						Headers = {
+							["Content-Type"] = "application/json",
+						},
+						Body = HttpService:JSONEncode({
+							gems = v.Amount,
+						}),
+					})
+					Gems = getGems()
+				end
+			end
+		end
+	end)
+	task.spawn(function()
+		while true do
+			task.wait()
+			local Units = GetFunction:InvokeServer({
+				Type = "Inventory",
+				Mode = "Units",
+			})
+			local MappingUnits = {}
+			for i, v in pairs(Units) do
+				table.insert(MappingUnits, {
+					displayName = v.DisplayName,
+					name = v.Name,
+					level = v.Lv,
+					dmg = v.Stats.Damage,
+					rng = v.Stats.Range,
+					spd = v.Stats.Speed,
+					key = v.Key,
+				})
+			end
+			local Inventory = GetFunction:InvokeServer({
+				Mode = "Get",
+				Type = "Inventory",
+			})
+			local MappingItem = {}
+			for i, v in pairs(Inventory) do
+				table.insert(MappingItem, {
+					name = v.Name,
+					quantity = v.Owned,
+				})
+			end
+			request({
+				Url = string.format("http://%s:%s/api/v1/user/%s", IP, PORT, LocalPlayer.Name),
+				Method = "POST",
+				Body = HttpService:JSONEncode({
+					gems = Gems,
+					units = MappingUnits,
+					inventory = MappingItem,
+				}),
+				Headers = {
+					["Content-Type"] = "application/json",
+				},
+			})
+			task.wait(5)
+		end
+	end)
+end
