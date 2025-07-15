@@ -8,7 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Mods = ReplicatedStorage:WaitForChild("Mods")
 local HttpService = game:GetService("HttpService")
 local Workspace = game:GetService("Workspace")
-local IP = "e00owwokwkc0k00g8ogkgo4c.117.18.127.75.sslip.io"
+local IP = "gs4c88w0oggwsowg0ksggk40.203.159.93.70.sslip.io"
 local GetFunction = ReplicatedStorage.Remotes.GetFunction -- RemoteFunction
 if Workspace:GetAttribute("IsLobby") then
 	local Cash = require(Mods.Cash)
