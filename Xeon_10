@@ -1,73 +1,262 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/CDK"))()
-repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-getgenv().Key = "622025ebe6659bab66994176"
-    getgenv().SettingFarm ={
-        ["Hide UI"] = false,
-        ["Reset Teleport"] = {
-            ["Enabled"] = false,
-            ["Delay Reset"] = 3,
-            ["Item Dont Reset"] = {
-                ["Fruit"] = {
-                    ["Enabled"] = true,
-                    ["All Fruit"] = true, 
-                    ["Select Fruit"] = {
-                        ["Enabled"] = false,
-                        ["Fruit"] = {},
-                    },
-                },
-            },
-        },
-        ["White Screen"] = false,
-        ["Lock Fps"] = {
-            ["Enabled"] = true,
-            ["FPS"] = 10,
-        },
-        ["Get Items"] = {
-            ["Saber"] = true,
-            ["Godhuman"] =  true,
-            ["Skull Guitar"] = false,
-            ["Mirror Fractal"] = true,
-            ["Cursed Dual Katana"] = true,
-            ["Upgrade Race V2-V3"] = false,
-            ["Auto Pull Lever"] = true,
-        },
-        ["Farm Fragments"] = {
-            ["Enabled"]  = false,
-            ["Fragment"] = 50000,
-        },
-        ["Auto Chat"] = {
-            ["Enabled"] = false,
-            ["Text"] = "joejoeshop.xyz",
-        },
-        ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
-        ["Select Hop"] = { -- 70% will have it
-            ["Hop Server If Have Player Near"] = false, 
-            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = false, 
-            ["Hop Find Dough King Get Mirror Fractal"] = false,
-            ["Hop Find Raids Castle [CDK]"] = false,
-            ["Hop Find Cake Queen [CDK]"] = false,
-            ["Hop Find Soul Reaper [CDK]"] = false,
-            ["Hop Find Darkbeard [SG]"] = false,
-            ["Hop Find Mirage [ Pull Lever ]"] = false,
-        },
-        ["Farm Mastery"] = {
-            ["Melee"] = true,
-            ["Sword"] = true,
-        },
-        ["Buy Haki"] = {
-            ["Enhancement"] = true,
-            ["Skyjump"] = true,
-            ["Flash Step"] = true,
-            ["Observation"] = true,
-        },
-        ["Sniper Fruit Shop"] = {
-            ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
-            ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas"},
-        },
-        ["Lock Fruit"] = {"Dough-Dough","Dragon-Dragon","Leopard-Leopard","Mammoth-Mammoth","Kitsune-Ribbon","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
-        ["Webhook"] = {
-            ["Enabled"] = false,
-            ["WebhookUrl"] = "",
-        }
-    }
-loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
+getgenv().ConfigsKaitun = {
+	["Stack Plant"] = true,
+	["Low Cpu"] = true,
+ 
+	["Rejoin When Update"] = true,
+ 
+	["Limit Tree"] = {
+		["Limit"] = 300,
+		["Destroy Untill"] = 250,
+ 
+		["Safe Tree"] = {
+			"Moon Blossom"
+		}
+	},
+ 
+	Seed = {
+		Buy = {
+			Mode = "Auto", -- Custom , Auto
+			Custom = {
+
+			}
+		},
+		Place = {
+			Mode = "Select", -- Select , Lock
+			Select = {
+ 				"Cactus",
+				"Pumpkin",
+				"Strawberry",
+				"Paradise Petals",
+				"Stonebite",
+				"Carrot",
+				"Watermelon",
+				"Bamboo",
+				"Mango",
+				"Apple",
+				"Coconut",
+				"Dragon Fruit",
+				"Paradise Petal",
+				"Horned Dinoshroom",
+				"Boneboo",
+				"Firefly Fern",
+			},
+			Lock = {
+				"Sunflower",
+				"Sugar Apple",
+				"Elephant Ears",
+				"Dragon Pepper",
+				"Burning Bud",
+				"Ember Lily",
+				"Beanstalk",
+				"Feijoa",
+				"Cacao",
+				"Pepper",
+				"Mushroom",
+				"Loquat",
+				"Fossilight",
+				"Giant Pinecone",
+				"Grand Volcania",
+				"Bone Blossom"
+			}
+		}
+	},
+ 
+	["Seed Pack"] = {
+		Locked = {
+ 
+		}
+	},
+ 
+	Events = {
+		Dino = true,
+ 
+		["Traveling Shop"] = {
+            "Night Staff",
+            "Bee Egg",
+            "Star Caller"
+		},
+ 
+		["Summer Harvest"] = {
+			["Do At Money"] = 1000000,
+			["Point Limit"] = 15000,
+		},
+		Craft = {
+			"Ancient Seed Pack",
+			"Stalk Sprout Sprinkler",
+			"Primal Egg",
+			"Dinosaur Egg",
+			"Lightning Rod",
+			"Special Sprays",
+			"Bee Egg",
+			"Anti Bee Egg",
+			"Amber Spine Seed",
+			"Horsetail",
+		},
+		Shop = {
+			"Oasis Egg",
+			"Paradise Egg",
+		}
+	},
+ 
+	Gear = {
+		Buy = { 
+			"Master Sprinkler",
+			"Godly Sprinkler",
+			"Advanced Sprinkler",
+			"Tanning Mirror",
+			"Magnifying Glass",
+			"Lightning Rod",
+			"Level Up Lollipop",
+			"Watering Can",
+			"Trowel",
+			"Star Caller",
+			"Chocolate Sprinkler",
+			"Harvest Tool",
+			"Favorite Tool",
+			"Friendship Pot",
+			"Honey Sprinkler",
+			"Small Treat",
+			"Small Toy",
+			"Reclaimer",
+			"Tropical Mist Sprinkler",
+			"Sweet Soaker Sprinkler",
+			"Stalk Sprout Sprinkler",
+			"Spice Spritzer Sprinkler",
+			"Flower Froster Sprinkler",
+			"Berry Blusher Sprinkler",
+		},
+		Lock = {
+			"Master Sprinkler",
+			"Godly Sprinkler",
+			"Advanced Sprinkler",
+			"Tanning Mirror",
+			"Magnifying Glass",
+			"Lightning Rod",
+			"Level Up Lollipop",
+			"Watering Can",
+			"Trowel",
+			"Star Caller",
+			"Chocolate Sprinkler",
+			"Harvest Tool",
+			"Favorite Tool",
+			"Friendship Pot",
+			"Honey Sprinkler",
+			"Small Treat",
+			"Small Toy",
+			"Reclaimer",
+			"Tropical Mist Sprinkler",
+			"Sweet Soaker Sprinkler",
+			"Stalk Sprout Sprinkler",
+			"Spice Spritzer Sprinkler",
+			"Flower Froster Sprinkler",
+			"Berry Blusher Sprinkler",
+		},
+	},
+ 
+	Eggs = {
+		Place = {
+			"Dinosaur Egg",
+			"Primal Egg",
+			"Oasis Egg",
+			"Anti Bee Egg",
+			"Paradise Egg",
+			"Bug Egg",
+			"Mythical Egg",
+			"Legendary Egg",
+			"Uncommon Egg",
+			"Rare Summer Egg",
+			"Bee Egg",
+			"Rare Egg",
+		},
+		Buy = {
+			"Dinosaur Egg",
+			"Primal Egg",
+			"Oasis Egg",
+			"Bee Egg",
+			"Anti Bee Egg",
+			"Paradise Egg",
+			"Bug Egg",
+			"Mythical Egg",
+			"Legendary Egg",
+			"Uncommon Egg",
+			"Rare Summer Egg",
+			"Rare Egg",
+		}
+	},
+ 
+	Pets = {
+		["Upgrade Slot"] = {
+			["Pet"] = {
+			},
+			["Limit Upgrade"] = 3,
+			["Equip When Done"] = {
+				"Raptor",
+				"Iguanodon",
+				"Rooster",
+				"Ostrich",
+				"Seal",
+			},
+		},
+		Locked = {
+            "T-Rex",
+            "Spinosaurus",
+            "Brontosaurus",
+            "Ankylosaurus",
+            "Dilophosaurus",
+            "Pachycephalosaurus	",
+            "Iguanodon",
+            "Dragonfly",
+            "Night Owl",
+            "Queen Bee",
+            "Raccoon",
+            "Disco Bee",
+            "Fennec Fox",
+            "Disco Bee",
+            "Butterfly",
+            "Mimic Octopus",
+            "Queen Bee",
+            "Red Fox",
+            "Blood Owl",
+            ["Blood Kiwi"] = 5,
+            ["Rooster"] = 5,
+		},
+		LockPet_Weight = 10, -- if Weight >= 10 they will locked,
+		Instant_Sell = {
+				"Dog",
+		}
+	},
+ 
+	Webhook = {
+		UrlPet = "",
+		UrlSeed = "",
+		PcName = "PC",
+ 
+		Noti = {
+			Seeds = {
+				"Sunflower",
+				"Dragon Pepper",
+				"Elephant Ears",
+			},
+			SeedPack = {
+				"Idk",
+			},
+			Pets = {
+				"Dragonfly",
+				"Night Owl",
+				"Queen Bee",
+				"Raccoon",
+				"Disco Bee",
+				"Fennec Fox",
+				"Disco Bee",
+				"Butterfly",
+				"Mimic Octopus",
+				"Red Fox",
+			},
+			Pet_Weight_Noti = true,
+		}
+	},
+}
+
+License = "6XebppOQoPM1LiAwM8PYaDjZr6STY8Kd"
+
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Real-Aya/Loader/main/Init.lua'))()
