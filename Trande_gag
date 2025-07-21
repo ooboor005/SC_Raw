@@ -107,7 +107,7 @@ function Trading()
 			end
 		end
 		if Config.data.type == "ALL" or Config.data.type == "PET" then
-			for i, v in pairs(Workspace:FindFirstChild("PetPhysical"):GetChildren()) do
+			for i, v in pairs(Workspace:FindFirstChild("PetsPhysical"):GetChildren()) do
 				if v:GetAttribute("OWNER") == LocalPlayer.Name then
 					GameEvents.PetsService:FireServer("UnequipPet", v:GetAttribute("UUID"))
 				end
