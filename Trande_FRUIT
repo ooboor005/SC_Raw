@@ -49,6 +49,8 @@ function ScriptLoad()
 		IsScriptLoaded = true
 	end
 	-- Script Here
+    game:Shutdown()
+	
 end
 
 function Trading()
