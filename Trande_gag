@@ -2,14 +2,44 @@ local BaseUrl = "http://e84ggk88gsocgc4k80cskw8g.117.18.127.75.sslip.io"
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
+while not Players.LocalPlayer do
+	task.wait()
+end
+local LocalPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
 local VIM = game:GetService("VirtualInputManager")
 local GuiService = game:GetService("GuiService")
 local Workspace = game:GetService("Workspace")
 local IsScriptLoaded = false
+
+local function loadWait()
+	while not LocalPlayer:GetAttribute("Finished_Loading") do
+		task.wait()
+	end
+	while not LocalPlayer:GetAttribute("DataFullyLoaded") do
+		task.wait()
+	end
+	while not LocalPlayer:GetAttribute("Setup_Finished") do
+		task.wait()
+	end
+	GameEvents.Finish_Loading:FireServer()
+	GameEvents.LoadScreenEvent:FireServer(LocalPlayer)
+	while not LocalPlayer:GetAttribute("Loading_Screen_Finished") do
+		task.wait()
+	end
+	task.wait(1)
+end
+
+if LocalPlayer:GetAttribute("Loading_Screen_Finished") then
+	GameEvents.Finish_Loading:FireServer()
+	GameEvents.LoadScreenEvent:FireServer(LocalPlayer)
+else
+	loadWait()
+end
 
 function ScriptLoad()
 	if IsScriptLoaded then
@@ -19,7 +49,7 @@ function ScriptLoad()
 		IsScriptLoaded = true
 	end
 	-- Script Here
-  	loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
+    loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
 end
 
 function Trading()
@@ -46,10 +76,11 @@ function Trading()
 	local Config: {
 		taskId: string,
 		tarder: string,
-		accpeter: string,
+		accpeter: string | nil,
 		data: {
 			type: "FRUIT" | "PET" | "ALL",
 			pets: { string } | nil,
+			limit: number | nil,
 		},
 	} =
 		HttpService:JSONDecode(ConfigRequest.Body)
@@ -67,20 +98,53 @@ function Trading()
 	if Config.accpeter == Players.LocalPlayer.Name then
 		Mode = "ACCPET"
 	end
-	local TargetPlayer: Player = Players[Mode == "ACCPET" and Config.tarder or Config.accpeter]
+	local TargetPlayer: Player =
+		Players[Mode == "ACCPET" and Config.tarder or typeof(Config.accpeter) == "nil" and Config.tarder or string.len(
+			Config.accpeter or ""
+		) == 0 and Config.tarder or Config.accpeter]
 	repeat
 		task.wait()
-		TargetPlayer = Players[Mode == "ACCPET" and Config.tarder or Config.accpeter]
+		TargetPlayer =
+			Players[Mode == "ACCPET" and Config.tarder or typeof(Config.accpeter) == "nil" and Config.tarder or string.len(
+				Config.accpeter or ""
+			) == 0 and Config.tarder or Config.accpeter]
 	until TargetPlayer
+	local PlayersList = {}
+	local PlayerIndex = 1
+	local LimitTrade = typeof(Config.data.limit) == "number" and Config.data.limit or 0
+	local Limit = 1
+	for i, v in pairs(Players:GetPlayers()) do
+		if v ~= LocalPlayer then
+			table.insert(PlayersList, v)
+		end
+	end
 	if Mode == "TRADER" then
 		if Config.data.type == "ALL" or Config.data.type == "FRUIT" then
 			if Character:FindFirstChildOfClass("Tool") then
 				Humanoid:UnequipTools()
 			end
+			if Config.accpeter == nil or string.len(Config.accpeter) == 0 then
+				if PlayersList[PlayerIndex] == nil then
+					PlayerIndex = 1
+				end
+				TargetPlayer = PlayersList[PlayerIndex]
+			end
 			for i, v in pairs(Players.LocalPlayer.Backpack:GetChildren()) do
-				if typeof(v) == "Instance" and v:IsA("Tool") and v:GetAttribute("b") == "j" then
+				if
+					typeof(v) == "Instance"
+					and v:IsA("Tool")
+					and v:GetAttribute("b") == "j"
+					and (LimitTrade == 0 or Limit < LimitTrade)
+				then
 					local TargetChar = TargetPlayer.Character
-					if TargetChar then
+					local FruitName = v.Name:match("^(.-)%s%[.+%]$")
+					if
+						TargetChar
+						and (
+							Config.data.pets == nil
+							or #Config.data.pets > 0 and table.find(Config.data.pets, FruitName)
+						)
+					then
 						repeat
 							task.wait()
 							LocalPlayer.Character.HumanoidRootPart.CFrame = TargetChar.HumanoidRootPart.CFrame
@@ -102,11 +166,14 @@ function Trading()
 						repeat
 							task.wait()
 						until not NotificationFrame:FindFirstChild("Notification_UI")
+						PlayerIndex += 1
+						Limit += 1
 					end
 				end
 			end
 		end
 		if Config.data.type == "ALL" or Config.data.type == "PET" then
+			Limit = 0
 			for i, v in pairs(Workspace:FindFirstChild("PetsPhysical"):GetChildren()) do
 				if v:GetAttribute("OWNER") == LocalPlayer.Name then
 					GameEvents.PetsService:FireServer("UnequipPet", v:GetAttribute("UUID"))
@@ -117,7 +184,18 @@ function Trading()
 				Humanoid:UnequipTools()
 			end
 			for i, v in pairs(Players.LocalPlayer.Backpack:GetChildren()) do
-				if typeof(v) == "Instance" and v:IsA("Tool") and v:GetAttribute("ItemType") == "Pet" then
+				if
+					typeof(v) == "Instance"
+					and v:IsA("Tool")
+					and v:GetAttribute("ItemType") == "Pet"
+					and (LimitTrade == 0 or Limit < LimitTrade)
+				then
+					if Config.accpeter == nil or string.len(Config.accpeter) == 0 then
+						if PlayersList[PlayerIndex] == nil then
+							PlayerIndex = 1
+						end
+						TargetPlayer = PlayersList[PlayerIndex]
+					end
 					local PetName = v.Name:match("^(.-)%s%[.+%]$")
 					local TargetChar = TargetPlayer.Character
 					if
@@ -145,6 +223,8 @@ function Trading()
 						repeat
 							task.wait()
 						until not NotificationFrame:FindFirstChild("Notification_UI")
+						PlayerIndex += 1
+						Limit += 1
 					end
 				end
 			end
@@ -207,17 +287,23 @@ if game.PlaceId == 126884695634066 then
 			local Config: {
 				taskId: string,
 				tarder: string,
-				accpeter: string,
+				accpeter: string | nil,
 				data: {
 					type: "FRUIT" | "PET" | "ALL",
 					pets: { string },
 				},
 			} =
 				HttpService:JSONDecode(ConfigRequest.Body)
+			VIM:SendKeyEvent(true, 13, false, game)
+			task.wait()
+			VIM:SendKeyEvent(false, 13, false, game)
 			if typeof(Config["_errors"]) == "table" then
 				ScriptLoad()
 				repeat
 					task.wait(10)
+					VIM:SendKeyEvent(true, 13, false, game)
+					task.wait()
+					VIM:SendKeyEvent(false, 13, false, game)
 					ConfigRequest = request({
 						Url = string.format("%s/config/%s", BaseUrl, Players.LocalPlayer.Name),
 						Method = "GET",
