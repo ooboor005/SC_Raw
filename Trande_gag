@@ -98,17 +98,16 @@ function Trading()
 	if Config.accpeter == Players.LocalPlayer.Name then
 		Mode = "ACCPET"
 	end
-	local TargetPlayer: Player =
-		Players[Mode == "ACCPET" and Config.tarder or typeof(Config.accpeter) == "nil" and Config.tarder or string.len(
-			Config.accpeter or ""
-		) == 0 and Config.tarder or Config.accpeter]
-	repeat
-		task.wait()
-		TargetPlayer =
-			Players[Mode == "ACCPET" and Config.tarder or typeof(Config.accpeter) == "nil" and Config.tarder or string.len(
-				Config.accpeter or ""
-			) == 0 and Config.tarder or Config.accpeter]
-	until TargetPlayer
+	local targetName = Mode == "ACCPET" and Config.tarder or (typeof(Config.accpeter) == "nil" or string.len(Config.accpeter or "") == 0) and Config.tarder or Config.accpeter
+
+	-- ถ้าหาไม่เจอ ให้รอจนกว่าผู้เล่นนั้นจะ join
+	local TargetPlayer = Players:FindFirstChild(targetName)
+	while not TargetPlayer do
+	    print("[🕒] รอผู้เล่นเป้าหมาย:", targetName)
+	    Players.PlayerAdded:Wait()
+	    TargetPlayer = Players:FindFirstChild(targetName)
+	end
+
 	local PlayersList = {}
 	local PlayerIndex = 1
 	local LimitTrade = typeof(Config.data.limit) == "number" and Config.data.limit or 0
