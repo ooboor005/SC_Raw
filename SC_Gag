@@ -85,9 +85,9 @@ getgenv().ConfigsKaitun = {
 			"Pet Shard Tranquil",
 			"Koi",
 			"Lightning Rod",
-		}
-		Restocks_limit = 5000000,
-		MinimumChi = 60
+		},
+		Restocks_limit = 10000000,
+		MinimumChi = 60,
 	},
 	
 	Gear = {
