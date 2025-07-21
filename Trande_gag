@@ -19,7 +19,7 @@ function ScriptLoad()
 		IsScriptLoaded = true
 	end
 	-- Script Here
-  loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
+  	loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
 end
 
 function Trading()
