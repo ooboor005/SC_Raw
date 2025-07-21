@@ -10,7 +10,7 @@ local VIM = game:GetService("VirtualInputManager")
 local GuiService = game:GetService("GuiService")
 local Workspace = game:GetService("Workspace")
 local IsScriptLoaded = false
- 
+
 function ScriptLoad()
 	if IsScriptLoaded then
 		return
@@ -21,7 +21,7 @@ function ScriptLoad()
 	-- Script Here
   	loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
 end
- 
+
 function Trading()
 	local LocalPlayer = Players.LocalPlayer
 	local Character = Players.LocalPlayer.Character
