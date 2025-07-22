@@ -15,6 +15,7 @@ local VIM = game:GetService("VirtualInputManager")
 local GuiService = game:GetService("GuiService")
 local Workspace = game:GetService("Workspace")
 local IsScriptLoaded = false
+local IsFruitTrader = false
 
 local function loadWait()
 	while not LocalPlayer:GetAttribute("Finished_Loading") do
@@ -42,8 +43,8 @@ else
 end
 
 function Script()
-	-- Script Here
-	print("Script Here")
+	-- Script HERE
+	print("-- Script HERE")
 end
 
 function ScriptLoad()
@@ -71,27 +72,8 @@ function ScriptLoad()
 	if typeof(Config["_errors"]) == "table" then
 		Script()
 	else
-		local TaskStatusRequest = request({
-			Url = string.format("%s/status/%s", BaseUrl, Config.taskId),
-			Method = "GET",
-		})
-		local Status: {
-			done: boolean,
-		} = HttpService:JSONDecode(TaskStatusRequest.Body)
-		if Status["done"] then
-			task.wait(30)
-			TaskStatusRequest = request({
-				Url = string.format("%s/status/%s", BaseUrl, Config.taskId),
-				Method = "GET",
-			})
-			Status = HttpService:JSONDecode(TaskStatusRequest.Body)
-			if Status["done"] then
-				Script()
-			else
-				ScriptLoad()
-			end
-		else
-			return
+		if Config.data.type ~= "FRUIT" then
+			Script()
 		end
 	end
 end
@@ -182,7 +164,7 @@ function Trading()
 					typeof(v) == "Instance"
 					and v:IsA("Tool")
 					and v:GetAttribute("b") == "j"
-					and (LimitTrade == 0 or Limit < LimitTrade)
+					and (LimitTrade == 0 or Limit <= LimitTrade)
 				then
 					local TargetChar = TargetPlayer.Character
 					local FruitName = v.Name:match("^(.-)%s%[.+%]$")
@@ -190,6 +172,7 @@ function Trading()
 						TargetChar
 						and (
 							Config.data.pets == nil
+							or #Config.data.pets == 0
 							or #Config.data.pets > 0 and table.find(Config.data.pets, FruitName)
 						)
 					then
@@ -236,7 +219,7 @@ function Trading()
 					typeof(v) == "Instance"
 					and v:IsA("Tool")
 					and v:GetAttribute("ItemType") == "Pet"
-					and (LimitTrade == 0 or Limit < LimitTrade)
+					and (LimitTrade == 0 or Limit <= LimitTrade)
 				then
 					if Config.accpeter == nil or string.len(Config.accpeter) == 0 then
 						if PlayersList[PlayerIndex] == nil then
@@ -287,6 +270,9 @@ function Trading()
 				["status"] = true,
 			}),
 		})
+		if Config.data.type ~= "FRUIT" then
+			ScriptLoad()
+		end
 	else
 		local IsDone = false
 		local ResponeData
@@ -351,7 +337,9 @@ if game.PlaceId == 126884695634066 then
 			task.wait()
 			VIM:SendKeyEvent(false, 13, false, game)
 			if typeof(Config["_errors"]) == "table" then
-				ScriptLoad()
+				if not IsFruitTrader then
+					ScriptLoad()
+				end
 				repeat
 					task.wait(10)
 					VIM:SendKeyEvent(true, 13, false, game)
@@ -364,13 +352,10 @@ if game.PlaceId == 126884695634066 then
 					Config = HttpService:JSONDecode(ConfigRequest.Body)
 				until typeof(Config["_errors"]) ~= "table"
 			end
+			if Config.data.type == "FRUIT" then
+				IsFruitTrader = true
+			end
 			Trading()
-			task.spawn(function()
-				while true do
-					task.wait()
-					ScriptLoad()
-				end
-			end)
 		end
 	end)
 end
