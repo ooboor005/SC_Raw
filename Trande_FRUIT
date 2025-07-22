@@ -44,7 +44,7 @@ end
 
 function Script()
 	-- Script HERE
-	print('Script HERE23')
+	print("-- Script HERE")
 end
 
 function ScriptLoad()
@@ -148,6 +148,14 @@ function Trading()
 			table.insert(PlayersList, v)
 		end
 	end
+	local C2 = Players.PlayerAdded:Connect(function(plr)
+		table.insert(plr)
+	end)
+	local C1 = Players.PlayerRemoving:Connect(function(plr)
+		if table.find(PlayersList, plr) then
+			table.remove(PlayersList, plr)
+		end
+	end)
 	if Mode == "TRADER" then
 		if Config.data.type == "ALL" or Config.data.type == "FRUIT" then
 			if Character:FindFirstChildOfClass("Tool") then
@@ -187,12 +195,12 @@ function Trading()
 							repeat
 								task.wait()
 								prompt = TargetChar.HumanoidRootPart:FindFirstChild("ProximityPrompt", true)
-							until prompt
+							until prompt or not TargetChar
 							task.wait(0.75)
 							fireproximityprompt(prompt, 9e9)
 							task.wait(0.75)
 							task.wait(4)
-						until IsTradeDone
+						until IsTradeDone or not TargetChar or not TargetPlayer
 						IsTradeDone = false
 						repeat
 							task.wait()
@@ -244,7 +252,7 @@ function Trading()
 							repeat
 								task.wait()
 								prompt = TargetChar.HumanoidRootPart:FindFirstChild("ProximityPrompt", true)
-							until prompt
+							until prompt or not TargetChar or not TargetPlayer
 							task.wait(0.75)
 							GameEvents.PetGiftingService:FireServer("GivePet", TargetPlayer)
 							task.wait(0.75)
@@ -308,6 +316,8 @@ function Trading()
 			end
 		end)
 	end
+	C1:Disconnect()
+	C2:Disconnect()
 end
 game:GetService("Players").LocalPlayer.Idled:Connect(function()
 	game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
