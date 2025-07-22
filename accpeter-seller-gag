@@ -1,0 +1,50 @@
+if not game:IsLoaded() then
+	game.Loaded:Wait()
+end
+
+local Players = game:GetService("Players")
+while not Players.LocalPlayer do
+	task.wait()
+end
+local VIM = game:GetService("VirtualInputManager")
+local GuiService = game:GetService("GuiService")
+local LimitTrade = 1
+local Trade = 0
+local IsTradeDone = false
+local LocalPlayer = Players.LocalPlayer
+local NotificationFrame: Frame = Players.LocalPlayer.PlayerGui:FindFirstChild("Top_Notification").Frame
+NotificationFrame.ChildAdded:Connect(function(frame)
+	if frame:FindFirstChild("TextLabel") then
+		if frame.TextLabel.Text == "Trade completed!" then
+			IsTradeDone = true
+		end
+	end
+end)
+task.spawn(function()
+	while LimitTrade >= Trade do
+		task.wait()
+		local giftGui = LocalPlayer.PlayerGui:FindFirstChild("Gift_Notification")
+		if giftGui and giftGui:FindFirstChild("Frame") then
+			for _, child in pairs(giftGui.Frame:GetChildren()) do
+				if child:IsA("ImageLabel") then
+					GuiService.SelectedObject = child.Holder.Frame.Accept
+					VIM:SendKeyEvent(true, 13, false, game)
+					task.wait()
+					VIM:SendKeyEvent(false, 13, false, game)
+					task.wait(0.5)
+					GuiService.SelectedObject = nil
+					repeat
+						task.wait()
+					until IsTradeDone
+					LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(87, 3, 0)
+					task.wait(0.75)
+					game:GetService("ReplicatedStorage")
+						:WaitForChild("GameEvents")
+						:WaitForChild("Sell_Inventory")
+						:FireServer()
+					Trade += 1
+				end
+			end
+		end
+	end
+end)
