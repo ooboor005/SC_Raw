@@ -1,4 +1,4 @@
-local BaseUrl = "http://e84ggk88gsocgc4k80cskw8g.117.18.127.75.sslip.io"
+local BaseUrl = "http://127.0.0.1:3000"
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
@@ -41,6 +41,11 @@ else
 	loadWait()
 end
 
+function Script()
+	-- Script Here
+	loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
+end
+
 function ScriptLoad()
 	if IsScriptLoaded then
 		return
@@ -48,8 +53,47 @@ function ScriptLoad()
 	if not IsScriptLoaded then
 		IsScriptLoaded = true
 	end
-	-- Script Here
-    loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
+	local ConfigRequest = request({
+		Url = string.format("%s/config/%s", BaseUrl, Players.LocalPlayer.Name),
+		Method = "GET",
+	})
+	local Config: {
+		taskId: string,
+		tarder: string,
+		accpeter: string | nil,
+		data: {
+			type: "FRUIT" | "PET" | "ALL",
+			pets: { string } | nil,
+			limit: number | nil,
+		},
+	} =
+		HttpService:JSONDecode(ConfigRequest.Body)
+	if typeof(Config["_errors"]) == "table" then
+		Script()
+	else
+		local TaskStatusRequest = request({
+			Url = string.format("%s/status/%s", BaseUrl, Config.taskId),
+			Method = "GET",
+		})
+		local Status: {
+			done: boolean,
+		} = HttpService:JSONDecode(TaskStatusRequest.Body)
+		if Status["done"] then
+			task.wait(30)
+			TaskStatusRequest = request({
+				Url = string.format("%s/status/%s", BaseUrl, Config.taskId),
+				Method = "GET",
+			})
+			Status = HttpService:JSONDecode(TaskStatusRequest.Body)
+			if Status["done"] then
+				Script()
+			else
+				ScriptLoad()
+			end
+		else
+			return
+		end
+	end
 end
 
 function Trading()
@@ -98,16 +142,21 @@ function Trading()
 	if Config.accpeter == Players.LocalPlayer.Name then
 		Mode = "ACCPET"
 	end
-	local targetName = Mode == "ACCPET" and Config.tarder or (typeof(Config.accpeter) == "nil" or string.len(Config.accpeter or "") == 0) and Config.tarder or Config.accpeter
-
-	-- ถ้าหาไม่เจอ ให้รอจนกว่าผู้เล่นนั้นจะ join
-	local TargetPlayer = Players:FindFirstChild(targetName)
-	while not TargetPlayer do
-	    print("[🕒] รอผู้เล่นเป้าหมาย:", targetName)
-	    Players.PlayerAdded:Wait()
-	    TargetPlayer = Players:FindFirstChild(targetName)
-	end
-
+	local TargetPlayer: Player = Players:FindFirstChild(
+		Mode == "ACCPET" and Config.tarder
+			or typeof(Config.accpeter) == "nil" and Config.tarder
+			or string.len(Config.accpeter or "") == 0 and Config.tarder
+			or Config.accpeter
+	)
+	repeat
+		task.wait()
+		TargetPlayer = Players:FindFirstChild(
+			Mode == "ACCPET" and Config.tarder
+				or typeof(Config.accpeter) == "nil" and Config.tarder
+				or string.len(Config.accpeter or "") == 0 and Config.tarder
+				or Config.accpeter
+		)
+	until TargetPlayer
 	local PlayersList = {}
 	local PlayerIndex = 1
 	local LimitTrade = typeof(Config.data.limit) == "number" and Config.data.limit or 0
@@ -238,7 +287,6 @@ function Trading()
 				["status"] = true,
 			}),
 		})
-		ScriptLoad()
 	else
 		local IsDone = false
 		local ResponeData
@@ -275,6 +323,12 @@ function Trading()
 		end)
 	end
 end
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+	game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+	task.wait(1)
+	game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
+
 if game.PlaceId == 126884695634066 then
 	task.spawn(function()
 		while true do
@@ -311,6 +365,12 @@ if game.PlaceId == 126884695634066 then
 				until typeof(Config["_errors"]) ~= "table"
 			end
 			Trading()
+			task.spawn(function()
+				while true do
+					task.wait()
+					ScriptLoad()
+				end
+			end)
 		end
 	end)
 end
