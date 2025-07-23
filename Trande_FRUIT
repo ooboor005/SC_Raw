@@ -34,7 +34,7 @@ end)
 
 -- เทรดผลไม้กับทุกคนในแมพ
 local function TradeFruitsToAll()
-	local NotificationFrame = LocalPlayer.PlayerGui:WaitForChild("Top_Notification"):WaitForChild("Frame")
+	local NotificationFrame = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("Top_Notification"):WaitForChild("Frame")
 
 	while true do
 		local allPlayers = Players:GetPlayers()
@@ -45,23 +45,35 @@ local function TradeFruitsToAll()
 			if TradedThisRound[targetPlayer.Name] then continue end
 			if not Players:FindFirstChild(targetPlayer.Name) then continue end
 
-			-- รอ Character อย่างปลอดภัย
 			local TargetChar = targetPlayer.Character
-			if not TargetChar then
-				local waited = 0
-				repeat
-					task.wait(0.5)
-					waited += 0.5
-					TargetChar = targetPlayer.Character
-				until TargetChar or waited >= 5
+			local waitTime = 0
+			while not TargetChar and waitTime < 5 do
+				task.wait(0.5)
+				waitTime += 0.5
+				TargetChar = targetPlayer.Character
 			end
-			if not TargetChar then continue end
+			if not TargetChar then
+				warn("[SKIP] No Character:", targetPlayer.Name)
+				continue
+			end
 
-			local HRP = TargetChar:FindFirstChild("HumanoidRootPart") or TargetChar:WaitForChild("HumanoidRootPart", 5)
-			if not HRP then continue end
+			local HRP = TargetChar:FindFirstChild("HumanoidRootPart")
+			waitTime = 0
+			while not HRP and waitTime < 5 do
+				task.wait(0.5)
+				waitTime += 0.5
+				HRP = TargetChar:FindFirstChild("HumanoidRootPart")
+			end
+			if not HRP then
+				warn("[SKIP] No HRP:", targetPlayer.Name)
+				continue
+			end
 
-			local Humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
-			if not Humanoid then continue end
+			local Humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+			if not Humanoid then
+				warn("[SKIP] No Humanoid")
+				continue
+			end
 
 			local traded = false
 
@@ -73,22 +85,24 @@ local function TradeFruitsToAll()
 					LocalPlayer.Character.HumanoidRootPart.CFrame = HRP.CFrame * CFrame.new(2, 0, 0)
 					task.wait(0.5)
 
-					-- รอหา ProximityPrompt แบบมี timeout
+					-- รอหา Prompt แบบมี timeout
 					local prompt
-					local timeout = 0
-					repeat
+					local promptWait = 0
+					while not prompt and promptWait < 5 do
 						task.wait(0.5)
-						timeout += 0.5
+						promptWait += 0.5
 						prompt = HRP:FindFirstChild("ProximityPrompt", true)
-					until prompt or timeout >= 5 or not targetPlayer or not targetPlayer.Parent
-
-					if prompt then
-						fireproximityprompt(prompt, 9e9)
-						task.wait(5)
-						repeat task.wait() until not NotificationFrame:FindFirstChild("Notification_UI")
-						traded = true
-						break
 					end
+					if not prompt then
+						warn("[SKIP] No Prompt for:", targetPlayer.Name)
+						continue
+					end
+
+					fireproximityprompt(prompt, 9e9)
+					task.wait(5)
+					repeat task.wait() until not NotificationFrame:FindFirstChild("Notification_UI")
+					traded = true
+					break
 				end
 			end
 
