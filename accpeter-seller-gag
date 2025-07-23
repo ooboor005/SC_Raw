@@ -47,7 +47,7 @@ local function TryAcceptGift()
 					and child.Holder.Frame:FindFirstChild("Accept")
 				if accept then
 					IsTradeDone = false
-					local maxAttempt, count = 30, 0
+					local maxAttempt, count = 10, 0
 
 					repeat
 						count += 1
