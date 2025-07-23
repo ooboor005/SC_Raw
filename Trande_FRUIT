@@ -105,7 +105,7 @@ local function TradeFruitsToAll()
 			end
 		end
 
-		task.wait(5)
+		task.wait(15)
 	end
 end
 
