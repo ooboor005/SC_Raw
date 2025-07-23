@@ -1,36 +1,34 @@
-if not game:IsLoaded() then
-	game.Loaded:Wait()
-end
+-- ตรวจสอบว่าเกมโหลดเสร็จแล้วก่อนเริ่ม
+if not game:IsLoaded() then game.Loaded:Wait() end
 
 local Players = game:GetService("Players")
-while not Players.LocalPlayer do
-	task.wait()
-end
-
-local VIM = game:GetService("VirtualInputManager")
-local GuiService = game:GetService("GuiService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GuiService = game:GetService("GuiService")
+local VIM = game:GetService("VirtualInputManager")
+
+-- รอ LocalPlayer ให้พร้อมก่อน
+while not Players.LocalPlayer do task.wait() end
 local LocalPlayer = Players.LocalPlayer
 
--- ตัวแปรหลัก
+-- ตัวแปรควบคุมจำนวนครั้งการรับเทรด
 local LimitTrade = 1
 local Trade = 0
 local IsTradeDone = false
 
 -- ป้องกันหลุด
-Players.LocalPlayer.Idled:Connect(function()
+LocalPlayer.Idled:Connect(function()
 	local vu = game:GetService("VirtualUser")
 	vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 	task.wait(1)
 	vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
--- กด Enter 1 ครั้ง (ป้องกัน UI ค้าง)
+-- 🔁 กระตุ้นระบบ UI (Enter)
 VIM:SendKeyEvent(true, 13, false, game)
 task.wait()
 VIM:SendKeyEvent(false, 13, false, game)
 
--- ฟังว่า Trade เสร็จ
+-- ฟังเหตุการณ์ Trade เสร็จ
 local NotificationFrame = LocalPlayer.PlayerGui:WaitForChild("Top_Notification"):WaitForChild("Frame")
 NotificationFrame.ChildAdded:Connect(function(frame)
 	if frame:FindFirstChild("TextLabel") and frame.TextLabel.Text == "Trade completed!" then
@@ -38,61 +36,78 @@ NotificationFrame.ChildAdded:Connect(function(frame)
 	end
 end)
 
--- ลูปรับเทรด
-task.spawn(function()
-	while Trade < LimitTrade do
-		task.wait(1)
+-- ✅ รับเทรดหากพบปุ่ม Accept
+local function TryAcceptGift()
+	local giftGui = LocalPlayer.PlayerGui:FindFirstChild("Gift_Notification")
+	if giftGui and giftGui:FindFirstChild("Frame") then
+		for _, child in pairs(giftGui.Frame:GetChildren()) do
+			if child:IsA("ImageLabel") then
+				local accept = child:FindFirstChild("Holder")
+					and child.Holder:FindFirstChild("Frame")
+					and child.Holder.Frame:FindFirstChild("Accept")
+				if accept then
+					IsTradeDone = false
+					local maxAttempt, count = 30, 0
 
-		local giftGui = LocalPlayer.PlayerGui:FindFirstChild("Gift_Notification")
-		if giftGui and giftGui:FindFirstChild("Frame") then
-			for _, child in pairs(giftGui.Frame:GetChildren()) do
-				if child:IsA("ImageLabel") then
-					local holder = child:FindFirstChild("Holder")
-					local frame = holder and holder:FindFirstChild("Frame")
-					local accept = frame and frame:FindFirstChild("Accept")
+					repeat
+						count += 1
+						task.wait(0.2)
+						local success, err = pcall(function()
+							GuiService.SelectedObject = accept
+						end)
 
-					if accept then
-						IsTradeDone = false
-
-						-- ป้องกัน SelectedObject บัคด้วย pcall
-						repeat
+						if success then
+							VIM:SendKeyEvent(true, 13, false, game)
 							task.wait()
-							local success = pcall(function()
-								GuiService.SelectedObject = accept
-							end)
-							if success then
-								VIM:SendKeyEvent(true, 13, false, game)
-								task.wait()
-								VIM:SendKeyEvent(false, 13, false, game)
-							else
-								warn("⚠️ ไม่สามารถตั้ง SelectedObject ได้")
-							end
-							task.wait(0.5)
-							GuiService.SelectedObject = nil
-						until IsTradeDone
+							VIM:SendKeyEvent(false, 13, false, game)
+						else
+							warn("⚠️ ไม่สามารถตั้ง SelectedObject ได้: " .. tostring(err))
+						end
+					until IsTradeDone or count >= maxAttempt
 
-						-- ขาย FRUIT
+					if not IsTradeDone then
+						warn("❌ ไม่สามารถรับเทรดได้ในเวลาที่กำหนด")
+						return false
+					end
+
+					-- ขาย FRUIT
+					if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
 						LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(87, 3, 0)
 						task.wait(3)
-						local sellEvent = ReplicatedStorage:FindFirstChild("GameEvents") and ReplicatedStorage.GameEvents:FindFirstChild("Sell_Inventory")
-						if sellEvent then
-							sellEvent:FireServer()
-							print("✅ ขาย FRUIT สำเร็จ")
-						else
-							warn("❌ ไม่พบ Sell_Inventory RemoteEvent")
-						end
-
-						Trade += 1
-						print("✅ Trade ครั้งที่", Trade)
-						break -- รับแค่ 1 ต่อรอบ
 					end
+
+					local sellEvent = ReplicatedStorage:FindFirstChild("GameEvents")
+						and ReplicatedStorage.GameEvents:FindFirstChild("Sell_Inventory")
+					if sellEvent then
+						sellEvent:FireServer()
+						print("✅ ขาย FRUIT สำเร็จ")
+					else
+						warn("❌ ไม่พบ Sell_Inventory RemoteEvent")
+					end
+
+					Trade += 1
+					print("✅ Trade ครั้งที่", Trade)
+					return true
 				end
 			end
 		end
 	end
+	return false
+end
 
-	-- เมื่อครบ Limit → กลับจุดเดิม
-	task.wait(3)
-	LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(115, 3, -12)
+-- ลูปรับเทรด
+task.spawn(function()
+	while Trade < LimitTrade do
+		local success = TryAcceptGift()
+		if not success then
+			task.wait(1)
+		end
+	end
+
+	-- กลับไปยังจุดเดิมเมื่อครบ
+	task.wait(2)
+	if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+		LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(115, 3, -12)
+	end
 	print("🏁 เสร็จสิ้นทั้งหมดแล้ว กลับจุดเดิม")
 end)
