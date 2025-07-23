@@ -1,3 +1,5 @@
+if not game:IsLoaded() then game.Loaded:Wait() end
+
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameEvents = ReplicatedStorage:WaitForChild("GameEvents")
@@ -5,30 +7,11 @@ local Workspace = game:GetService("Workspace")
 local GuiService = game:GetService("GuiService")
 local VIM = game:GetService("VirtualInputManager")
 
-if not game:IsLoaded() then game.Loaded:Wait() end
-
-while not Players.LocalPlayer do
-	task.wait()
-end
-
-local LocalPlayer = Players.LocalPlayer -- 👉 ย้ายมาไว้หลังจาก Players.LocalPlayer พร้อมแล้ว
-
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-	game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-	task.wait(1)
-	game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-end)
-
-VIM:SendKeyEvent(true, 13, false, game)
-task.wait()
-VIM:SendKeyEvent(false, 13, false, game)
-
-
 -- รอให้ LocalPlayer พร้อม
 while not Players.LocalPlayer do task.wait() end
 local LocalPlayer = Players.LocalPlayer
 
--- รอให้ผู้เล่นโหลดข้อมูลครบ
+-- รอให้โหลดข้อมูลครบ
 local function waitForLoad()
 	while not LocalPlayer:GetAttribute("Finished_Loading") do task.wait() end
 	while not LocalPlayer:GetAttribute("DataFullyLoaded") do task.wait() end
@@ -49,9 +32,9 @@ LocalPlayer.Idled:Connect(function()
 	vu:Button2Up(Vector2.new(0, 0), Workspace.CurrentCamera.CFrame)
 end)
 
--- ฟังก์ชันเทรดผลไม้กับผู้เล่นทั้งหมด
+-- เทรดผลไม้กับทุกคนในแมพ
 local function TradeFruitsToAll()
-	local NotificationFrame = LocalPlayer.PlayerGui:WaitForChild("Top_Notification").Frame
+	local NotificationFrame = LocalPlayer.PlayerGui:WaitForChild("Top_Notification"):WaitForChild("Frame")
 
 	while true do
 		local allPlayers = Players:GetPlayers()
@@ -59,14 +42,20 @@ local function TradeFruitsToAll()
 
 		for _, targetPlayer in ipairs(allPlayers) do
 			if targetPlayer == LocalPlayer then continue end
-			if TradedThisRound[targetPlayer] then continue end
+			if TradedThisRound[targetPlayer.Name] then continue end
 			if not Players:FindFirstChild(targetPlayer.Name) then continue end
 
-			-- รอ Character และ HRP
-			local success, TargetChar = pcall(function()
-				return targetPlayer.Character or targetPlayer.CharacterAdded:Wait()
-			end)
-			if not success or not TargetChar then continue end
+			-- รอ Character อย่างปลอดภัย
+			local TargetChar = targetPlayer.Character
+			if not TargetChar then
+				local waited = 0
+				repeat
+					task.wait(0.5)
+					waited += 0.5
+					TargetChar = targetPlayer.Character
+				until TargetChar or waited >= 5
+			end
+			if not TargetChar then continue end
 
 			local HRP = TargetChar:FindFirstChild("HumanoidRootPart") or TargetChar:WaitForChild("HumanoidRootPart", 5)
 			if not HRP then continue end
@@ -84,11 +73,14 @@ local function TradeFruitsToAll()
 					LocalPlayer.Character.HumanoidRootPart.CFrame = HRP.CFrame * CFrame.new(2, 0, 0)
 					task.wait(0.5)
 
+					-- รอหา ProximityPrompt แบบมี timeout
 					local prompt
+					local timeout = 0
 					repeat
-						task.wait()
+						task.wait(0.5)
+						timeout += 0.5
 						prompt = HRP:FindFirstChild("ProximityPrompt", true)
-					until prompt or not targetPlayer or not targetPlayer.Parent
+					until prompt or timeout >= 5 or not targetPlayer or not targetPlayer.Parent
 
 					if prompt then
 						fireproximityprompt(prompt, 9e9)
@@ -101,17 +93,15 @@ local function TradeFruitsToAll()
 			end
 
 			if traded then
-				TradedThisRound[targetPlayer] = true
+				TradedThisRound[targetPlayer.Name] = true
 			end
 		end
 
-		task.wait(15)
+		task.wait(2)
 	end
 end
 
 -- เริ่มทำงานเมื่อเข้าแมพเป้าหมาย
 if game.PlaceId == 126884695634066 then
-	task.spawn(function()
-		TradeFruitsToAll()
-	end)
+	task.spawn(TradeFruitsToAll)
 end
