@@ -12,6 +12,16 @@ local LimitTrade = 1
 local Trade = 0
 local IsTradeDone = false
 local LocalPlayer = Players.LocalPlayer
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+	game:GetService("VirtualUser"):Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+	task.wait(1)
+	game:GetService("VirtualUser"):Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+end)
+
+VIM:SendKeyEvent(true, 13, false, game)
+task.wait()
+VIM:SendKeyEvent(false, 13, false, game)
+
 local NotificationFrame: Frame = Players.LocalPlayer.PlayerGui:FindFirstChild("Top_Notification").Frame
 NotificationFrame.ChildAdded:Connect(function(frame)
 	if frame:FindFirstChild("TextLabel") then
@@ -21,21 +31,23 @@ NotificationFrame.ChildAdded:Connect(function(frame)
 	end
 end)
 task.spawn(function()
-	while LimitTrade >= Trade do
-		task.wait()
+	while LimitTrade > Trade do
+		task.wait(1)
 		local giftGui = LocalPlayer.PlayerGui:FindFirstChild("Gift_Notification")
 		if giftGui and giftGui:FindFirstChild("Frame") then
 			for _, child in pairs(giftGui.Frame:GetChildren()) do
+
 				if child:IsA("ImageLabel") then
-					GuiService.SelectedObject = child.Holder.Frame.Accept
-					VIM:SendKeyEvent(true, 13, false, game)
-					task.wait()
-					VIM:SendKeyEvent(false, 13, false, game)
-					task.wait(0.5)
-					GuiService.SelectedObject = nil
 					repeat
 						task.wait()
+						GuiService.SelectedObject = child.Holder.Frame.Accept
+						VIM:SendKeyEvent(true, 13, false, game)
+						task.wait()
+						VIM:SendKeyEvent(false, 13, false, game)
+						task.wait(0.5)
+						GuiService.SelectedObject = nil
 					until IsTradeDone
+
 					LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(87, 3, 0)
 					task.wait(0.75)
 					game:GetService("ReplicatedStorage")
@@ -43,6 +55,9 @@ task.spawn(function()
 						:WaitForChild("Sell_Inventory")
 						:FireServer()
 					Trade += 1
+					print("Trade += 1")
+					break
+					
 				end
 			end
 		end
