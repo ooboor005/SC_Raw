@@ -1,4 +1,4 @@
-local BaseUrl = "http://e84ggk88gsocgc4k80cskw8g.117.18.127.75.sslip.io"
+local BaseUrl = "http://mw0owowg4080kkgow08848o4.203.159.93.70.sslip.io"
 if not game:IsLoaded() then
 	game.Loaded:Wait()
 end
