@@ -178,11 +178,11 @@ getgenv().ConfigsKaitun = {
 			},
 		},
 		Locked = {
+			"Kitsune",
 			"Koi",
 			"Tanuki",
 			"Tanchozuru",
 			"Kappa",
-			"Kitsune",
 			"Dilophosaurus",
 			"Moon Cat",
 			"Capybara",
