@@ -117,5 +117,7 @@ _G.Hop_Settings = {
 
 _G.JoeJoeKaitun = false
 
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/fca4ea7a7a2272f8726ead938acc34db.lua"))()
-
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
+getgenv().id = "354662781859004417"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
