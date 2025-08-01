@@ -1,4 +1,4 @@
-task.wait(30)
+task.wait(120)
 local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
 task.spawn(function()
     if Private_Server == "StandardServer" then
