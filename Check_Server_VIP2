@@ -1,0 +1,9 @@
+task.wait(120)
+local Private_Server = game:GetService('RobloxReplicatedStorage').GetServerType:InvokeServer()
+task.spawn(function()
+    if Private_Server == "StandardServer" then
+        game:GetService("Players").LocalPlayer:Kick("Private Server Not Detected");
+        task.wait(3)
+        game:Shutdown()
+    end
+end)
