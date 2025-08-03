@@ -1,6 +1,9 @@
 getgenv().ConfigsKaitun = {
 	["Block Pet Gift"] = false,
-	
+
+	Collect_Cooldown = 60, -- cooldown to collect fruit
+	JustFuckingCollectAll = false, -- Collect all (fruit not wait mutation)
+
 	["Low Cpu"] = true,
 	["Auto Rejoin"] = true,
 	
@@ -100,8 +103,11 @@ getgenv().ConfigsKaitun = {
 
 		}
 	},
-
+	
 	Events = {
+		["Cook Event"] = {
+			Minimum_Money = 1_000_000, -- minimum money to start play this event
+		},
 		["Zen Event"] = {
 			["Restocking"] = { -- Minimumthing to restock
 				Max_Restocks_Price = 10_000_000,
@@ -181,6 +187,7 @@ getgenv().ConfigsKaitun = {
 
 	Eggs = {
 		Place = {
+            "Gourmet Egg",
 			"Zen Egg",
 			"Primal Egg",
 			"Dinosaur Egg",
@@ -228,6 +235,8 @@ getgenv().ConfigsKaitun = {
 		},
 		Locked_Pet_Age = 50, -- pet that age > 60 will lock
 		Locked = {
+			"French Fry Ferret",
+			"Spaghetti Sloth",
 			"Corrupted Kitsune",
 			"Raiju",
 			"Koi",
