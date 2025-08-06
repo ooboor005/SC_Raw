@@ -15,17 +15,6 @@ getgenv().ConfigsKaitun = {
 		["Safe Tree"] = {
 			"Moon Blossom",
 			"Fossilight",
-
-			-- locked fruit for zen event
-			["Tomato"] = 5, ["Strawberry"] = 5, ["Blueberry"] = 5,
-			["Orange Tulip"] = 5, ["Corn"] = 10, ["Daffodil"] = 5,
-			["Bamboo"] = 10, ["Apple"] = 5, ["Coconut"] = 5,
-			["Pumpkin"] = 5, ["Watermelon"] = 5, ["Cactus"] = 5,
-			["Dragon Fruit"] = 5, ["Mango"] = 5, ["Grape"] = 5,
-			["Avocado"] = 2, ["Feijoa"] = 2, ["Cauliflower"] = 2,
-			["Beanstalk"] = 2, ["Green Apple"] = 2, ["Spiked Mango"] = 2,
-			["Firefly Fern"] = 2, ["Soft Sunshine"] = 2, ["Sugar Apple"] = 2,
-			["Mushroom"] = 10, ["Pepper"] = 5, ["Cacao"] = 5
 		}
 	},
 
@@ -37,7 +26,7 @@ getgenv().ConfigsKaitun = {
 			}
 		},
 		Place = {
-			Mode = "Select", -- Select , Lock
+			Mode = "Lock", -- Select , Lock
 			Select = {
 				"Carrot",
  				"Tomato",
@@ -186,8 +175,7 @@ getgenv().ConfigsKaitun = {
 	},
 
 	Eggs = {
-		Place = {
-            "Gourmet Egg",
+		Place = {"Gourmet Egg",
 			"Zen Egg",
 			"Primal Egg",
 			"Dinosaur Egg",
@@ -233,6 +221,7 @@ getgenv().ConfigsKaitun = {
 				["Corrupted Kodama"] = { 2, 100, 2 },
 			},
 		},
+		Favorite_LockedPet = true,
 		Locked_Pet_Age = 50, -- pet that age > 60 will lock
 		Locked = {
 			"French Fry Ferret",
