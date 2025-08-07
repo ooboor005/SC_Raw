@@ -1,2 +1,21 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/CDK"))()
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_BF_Maru"))()
+getgenv().HermanosDevSetting = {
+    Farming = {
+        Job = "ATM Hacking", -- Steak, Shelf Stocker, ATM Hacking
+        VehicleType = "Bike", -- Bike, Car
+        VehicleSpeed = 58,
+        HackTools = "Smart Select",
+        HackToolsQuantity = 5,
+
+        AutoFarm = true,
+        CashDeposit = 50,
+        AutoDeposit = true
+    },
+    Character = {
+        AutoRespawn = true,
+        AntiRagdoll = true,
+        AntiKill = true,
+    }
+}
+
+script_key="WTcsgQVtDpajZNJpytkONWyvDNRzYfEO";
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/50cc49ea3e0a5a40cd1fb5545dc938b6.lua"))()
