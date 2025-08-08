@@ -53,6 +53,7 @@ VIM:SendKeyEvent(false, 13, false, game)
 function Script()
 	-- Script HERE
 	print("-- Script HERE")
+	task.wait(30)
   	loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_Gag'))()
 end
 
