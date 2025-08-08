@@ -1,9 +1,11 @@
 -- ตรวจสอบว่าเกมโหลดเสร็จแล้วก่อนเริ่ม
 if not game:IsLoaded() then game.Loaded:Wait() end
 
+local Players = game:GetService("Players")
 -- รอ LocalPlayer ให้พร้อมก่อน
 while not Players.LocalPlayer do task.wait() end
 local LocalPlayer = Players.LocalPlayer
+
 
 getgenv().ConfigsKaitun = {
 	["Block Pet Gift"] = false,
