@@ -1,16 +1,3 @@
-
--- รอให้เกมโหลดเสร็จ
-if not game:IsLoaded() then game.Loaded:Wait() end
-
-local Players = game:GetService("Players")
-while not Players.LocalPlayer do task.wait() end
-local LocalPlayer = Players.LocalPlayer
-
--- รอ Character
-if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("Humanoid") then
-	LocalPlayer.CharacterAdded:Wait()
-end
-
 getgenv().HermanosDevSetting = {
     Farming = {
         Job = "ATM Hacking", -- Steak, Shelf Stocker, ATM Hacking
