@@ -1,10 +1,14 @@
--- ตรวจสอบว่าเกมโหลดเสร็จแล้วก่อนเริ่ม
+-- รอให้เกมโหลดเสร็จ
 if not game:IsLoaded() then game.Loaded:Wait() end
 
 local Players = game:GetService("Players")
--- รอ LocalPlayer ให้พร้อมก่อน
 while not Players.LocalPlayer do task.wait() end
 local LocalPlayer = Players.LocalPlayer
+
+-- รอ Character
+if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("Humanoid") then
+	LocalPlayer.CharacterAdded:Wait()
+end
 
 
 getgenv().ConfigsKaitun = {
@@ -35,7 +39,7 @@ getgenv().ConfigsKaitun = {
 			}
 		},
 		Place = {
-			Mode = "Lock", -- Select , Lock
+			Mode = "Select", -- Select , Lock
 			Select = {
 				"Carrot",
  				"Tomato",
@@ -104,20 +108,9 @@ getgenv().ConfigsKaitun = {
 	
 	Events = {
 		["Cook Event"] = {
-			Minimum_Money = 1_000_000, -- minimum money to start play this event
+			Minimum_Money = 30_000_000, -- minimum money to start play this event
 		},
-		["Zen Event"] = {
-			["Restocking"] = { -- Minimumthing to restock
-				Max_Restocks_Price = 10_000_000,
-				Minimum_Money = 1_000_000,
-				Minimum_Chi = 200
-			},
-			["Doing"] = {
-				Minimum_Money = 1_000_000, -- minimum money to start play this event
-				First_Upgrade_Tree = 7,
-				Maximum_Chi = 20,
-			}
-		},
+	
 		["Traveling Shop"] = {
 			"Bee Egg",
 			"Night Staff",
@@ -184,7 +177,8 @@ getgenv().ConfigsKaitun = {
 	},
 
 	Eggs = {
-		Place = {"Gourmet Egg",
+		Place = {
+			"Gourmet Egg",
 			"Zen Egg",
 			"Primal Egg",
 			"Dinosaur Egg",
