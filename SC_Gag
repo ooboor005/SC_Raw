@@ -11,7 +11,6 @@ if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("Humano
 end
 
 
-ask.wait(3)
 getgenv().ConfigsKaitun = {
 	Beta_Fix_Data_Sync = true,
 
