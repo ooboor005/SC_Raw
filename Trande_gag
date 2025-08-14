@@ -17,6 +17,29 @@ local Workspace = game:GetService("Workspace")
 local IsScriptLoaded = false
 local IsFruitTrader = false
 
+-- ======== Helpers: normalize & partial-match for pet filters ========
+local function _normalizeName(s: string?): string
+	if typeof(s) ~= "string" then return "" end
+	s = s:lower():gsub("%s+", " ")
+	return s:match("^%s*(.-)%s*$") or s
+end
+
+-- returns true if petName contains any of filters (as a full phrase)
+-- If filters is nil or empty -> allow all
+local function matchesAnyPetFilter(petName: string, filters: {string}?): boolean
+	if filters == nil or #filters == 0 then
+		return true
+	end
+	local hay = " " .. _normalizeName(petName) .. " "
+	for _, f in ipairs(filters) do
+		local needle = " " .. _normalizeName(f) .. " "
+		if needle ~= "  " and hay:find(needle, 1, true) then
+			return true
+		end
+	end
+	return false
+end
+-- ===================================================================
 
 local function loadWait()
 	while not LocalPlayer:GetAttribute("Finished_Loading") do
@@ -44,7 +67,7 @@ else
 	loadWait()
 end
 
--- 🔁 กระตุ้นระบบด้วยการส่งปุ่ม Enter
+-- 馃攣 喔佮福喔班笗喔膏箟喔權福喔班笟喔氞笖喙夃抚喔⑧竵喔侧福喔箞喔囙笡喔膏箞喔� Enter
 task.wait(1)
 VIM:SendKeyEvent(true, 13, false, game)
 task.wait()
@@ -77,8 +100,8 @@ function ScriptLoad()
 			pets: { string } | nil,
 			limit: number | nil,
 		},
-	} =
-		HttpService:JSONDecode(ConfigRequest.Body)
+	} = HttpService:JSONDecode(ConfigRequest.Body)
+
 	if typeof(Config["_errors"]) == "table" then
 		Script()
 	else
@@ -93,10 +116,12 @@ function Trading()
 	local Character = Players.LocalPlayer.Character
 	local Humanoid: Humanoid = Character.Humanoid
 	local IsTradeDone = false
+
 	Players.LocalPlayer.ChildAdded:Connect(function(char)
 		Character = char
 		Humanoid = char.Humanoid
 	end)
+
 	local NotificationFrame: Frame = Players.LocalPlayer.PlayerGui:FindFirstChild("Top_Notification").Frame
 	NotificationFrame.ChildAdded:Connect(function(frame)
 		if frame:FindFirstChild("TextLabel") then
@@ -105,6 +130,7 @@ function Trading()
 			end
 		end
 	end)
+
 	local ConfigRequest = request({
 		Url = string.format("%s/config/%s", BaseUrl, Players.LocalPlayer.Name),
 		Method = "GET",
@@ -118,8 +144,8 @@ function Trading()
 			limit: number | nil,
 			pets: { string } | nil,
 		},
-	} =
-		HttpService:JSONDecode(ConfigRequest.Body)
+	} = HttpService:JSONDecode(ConfigRequest.Body)
+
 	if typeof(Config["_errors"]) == "table" then
 		repeat
 			task.wait(10)
@@ -130,17 +156,21 @@ function Trading()
 			Config = HttpService:JSONDecode(ConfigRequest.Body)
 		until typeof(Config["_errors"]) ~= "table"
 	end
+
 	local Mode: "ACCPET" | "TRADER" = "TRADER"
 	if Config.accpeter == Players.LocalPlayer.Name then
 		Mode = "ACCPET"
 	end
+
 	local TargetPlayer: Player = Players:FindFirstChild(
 		Mode == "ACCPET" and Config.tarder
 			or typeof(Config.accpeter) == "nil" and Config.tarder
 			or string.len(Config.accpeter or "") == 0 and Config.tarder
 			or Config.accpeter
 	)
+
 	print("Find a player")
+
 	repeat
 		task.wait(5)
 		ConfigRequest = request({
@@ -155,18 +185,22 @@ function Trading()
 				or Config.accpeter
 		)
 	until TargetPlayer or typeof(Config["_errors"]) == "table"
+
 	if typeof(Config["_errors"]) == "table" then
 		return
 	end
+
 	local PlayersList = {}
 	local PlayerIndex = 1
 	local LimitTrade = typeof(Config.data.limit) == "number" and Config.data.limit or 0
 	local Limit = 1
+
 	for i, v in pairs(Players:GetPlayers()) do
 		if v ~= LocalPlayer then
 			table.insert(PlayersList, v)
 		end
 	end
+
 	local C2 = Players.PlayerAdded:Connect(function(plr)
 		table.insert(PlayersList, plr)
 	end)
@@ -175,18 +209,22 @@ function Trading()
 			table.remove(PlayersList, plr)
 		end
 	end)
+
 	if Mode == "TRADER" then
 		if Config.data.type == "ALL" or Config.data.type == "PET" then
 			Limit = 0
+
 			for i, v in pairs(Workspace:FindFirstChild("PetsPhysical"):GetChildren()) do
 				if v:GetAttribute("OWNER") == LocalPlayer.Name then
 					GameEvents.PetsService:FireServer("UnequipPet", v:GetAttribute("UUID"))
 				end
 				task.wait(1)
 			end
+
 			if Character:FindFirstChildOfClass("Tool") then
 				Humanoid:UnequipTools()
 			end
+
 			for i, v in pairs(Players.LocalPlayer.Backpack:GetChildren()) do
 				if
 					typeof(v) == "Instance"
@@ -194,6 +232,7 @@ function Trading()
 					and v:GetAttribute("ItemType") == "Pet"
 					and (LimitTrade == 0 or Limit <= LimitTrade)
 				then
+					-- 喔｀腑喙冟斧喙� TargetPlayer 喔∴傅喔曕副喔о箖喔權箑喔佮浮 (喔曕覆喔� config 喔ム箞喔侧釜喔膏笖)
 					repeat
 						task.wait()
 						TargetPlayer = Players:FindFirstChild(
@@ -202,58 +241,79 @@ function Trading()
 								or Config.accpeter
 						)
 					until TargetPlayer
-					local TargetName = TargetPlayer.Name
+
+					-- 喔栢箟喔侧箘喔∴箞喙勦笖喙夃弗喙囙腑喔� accpeter 喙冟斧喙夃抚喔權笗喔侧浮 PlayersList
 					if Config.accpeter == nil or string.len(Config.accpeter) == 0 then
 						if PlayersList[PlayerIndex] == nil then
 							PlayerIndex = 1
 						end
 						TargetPlayer = PlayersList[PlayerIndex]
 					end
-					local PetName = v.Name:match("^(.-)%s%[.+%]$")
-					local TargetChar = TargetPlayer.Character
-					if
-						TargetChar
-						and (Config.data.pets and (#Config.data.pets == 0 or (table.find(Config.data.pets, PetName))))
-					then
+					local TargetName = TargetPlayer and TargetPlayer.Name or nil
+
+					-- 喔斷付喔囙笂喔粪箞喔釜喔编笗喔о箤 (喔佮副喔權箑喔勦釜喙勦浮喙堗浮喔� [..] 喔曕箞喔笚喙夃覆喔�)
+					local PetName = v.Name:match("^(.-)%s%[.+%]$") or v.Name
+
+					-- 喔副喔涏箑喔斷笗 Char 喙�喔涏箟喔侧斧喔∴覆喔⑧笚喔膏竵喔勦福喔编箟喔�
+					local TargetChar = TargetPlayer and TargetPlayer.Character or nil
+
+					if TargetChar and matchesAnyPetFilter(PetName, Config.data and Config.data.pets) then
 						repeat
 							task.wait()
-							if not Players:FindFirstChild(TargetName) then
+
+							if not TargetName or not Players:FindFirstChild(TargetName) then
 								game:Shutdown()
 							end
-							LocalPlayer.Character.HumanoidRootPart.CFrame = TargetChar.HumanoidRootPart.CFrame
-								* CFrame.new(2, 0, 0)
+
+							-- 喔о复喙堗竾喙勦笡喙冟竵喔ム箟 喙� 喙�喔涏箟喔侧斧喔∴覆喔�
+							LocalPlayer.Character.HumanoidRootPart.CFrame =
+								TargetChar.HumanoidRootPart.CFrame * CFrame.new(2, 0, 0)
+
+							-- 喔栢箟喔侧笗喔脆笖 favorite 喙冟斧喙夃笡喔ム笖喔佮箞喔笝
 							if v:GetAttribute("d") == true then
 								GameEvents.Favorite_Item:FireServer(v)
 							end
+
+							-- equip 喔栢箟喔侧涪喔编竾喔涪喔灌箞喙冟笝 Backpack
 							if LocalPlayer.Backpack:FindFirstChild(v.Name) then
 								Humanoid:EquipTool(v)
 							end
+
+							-- 喔｀腑 prompt 喔傕付喙夃笝
 							local prompt
 							repeat
 								task.wait()
-								prompt = TargetChar.HumanoidRootPart:FindFirstChild("ProximityPrompt", true)
-							until prompt or not Players:FindFirstChild("TargetName")
+								-- 喔｀傅喔副喔涏箑喔斷笗 TargetChar 喙�喔溹阜喙堗腑喔｀傅喔笡喔抚喙屶笝
+								if TargetPlayer then
+									TargetChar = TargetPlayer.Character
+								end
+								prompt = TargetChar and TargetChar.HumanoidRootPart:FindFirstChild("ProximityPrompt", true)
+							until prompt or not Players:FindFirstChild(TargetName)
+
 							if not Players:FindFirstChild(TargetName) then
 								game:Shutdown()
 							end
+
 							task.wait(0.75)
 							GameEvents.PetGiftingService:FireServer("GivePet", TargetPlayer)
 							task.wait(0.75)
 							task.wait(4)
 						until IsTradeDone
+
 						IsTradeDone = false
-						repeat
-							task.wait()
-						until not NotificationFrame:FindFirstChild("Notification_UI")
+						repeat task.wait() until not NotificationFrame:FindFirstChild("Notification_UI")
+
 						if not Players:FindFirstChild(TargetName) then
 							game:Shutdown()
 						end
+
 						PlayerIndex += 1
 						Limit += 1
 					end
 				end
 			end
 		end
+
 		request({
 			Url = string.format("%s/status/%s", BaseUrl, Config.taskId),
 			Method = "POST",
@@ -264,10 +324,12 @@ function Trading()
 				["status"] = true,
 			}),
 		})
+
 		if Config.data.type ~= "FRUIT" then
 			ScriptLoad()
 		end
 	else
+		-- ACCPET mode
 		local IsDone = false
 		local ResponeData
 		task.spawn(function()
@@ -302,6 +364,7 @@ function Trading()
 			end
 		end)
 	end
+
 	C1:Disconnect()
 	C2:Disconnect()
 end
@@ -328,17 +391,16 @@ if game.PlaceId == 126884695634066 then
 					type: "FRUIT" | "PET" | "ALL",
 					pets: { string },
 				},
-			} =
-				HttpService:JSONDecode(ConfigRequest.Body)
+			} = HttpService:JSONDecode(ConfigRequest.Body)
+
 			VIM:SendKeyEvent(true, 13, false, game)
 			task.wait()
 			VIM:SendKeyEvent(false, 13, false, game)
-			if typeof(Config["_errors"]) == "table" then
 
+			if typeof(Config["_errors"]) == "table" then
 				if not IsFruitTrader then
 					ScriptLoad()
 				end
-
 				repeat
 					task.wait(10)
 					VIM:SendKeyEvent(true, 13, false, game)
@@ -351,9 +413,11 @@ if game.PlaceId == 126884695634066 then
 					Config = HttpService:JSONDecode(ConfigRequest.Body)
 				until typeof(Config["_errors"]) ~= "table"
 			end
+
 			if Config.data.type == "FRUIT" then
 				IsFruitTrader = true
 			end
+
 			print("TRADING")
 			Trading()
 		end
