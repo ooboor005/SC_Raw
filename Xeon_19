@@ -1,3 +1,1 @@
-_G.OPFarmGem = true
-script_key="iWpqmAUmQVpIlmOadjCkXTMwRZLsxnDf";
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
+loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Trande_gag'))()
