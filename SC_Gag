@@ -18,11 +18,10 @@ getgenv().ConfigsKaitun = {
   
 	["Block Pet Gift"] = true,
 
-	Collect_Cooldown = 60, -- cooldown to collect fruit
-	JustFuckingCollectAll = false, -- Collect all (fruit not wait mutation)
+	Collect_Cooldown = 120, -- cooldown to collect fruit
 	
 	["Low Cpu"] = true,
-	["Auto Rejoin"] = false,
+	["Auto Rejoin"] = true,
 	
 	["Rejoin When Update"] = false,
 	["Limit Tree"] = {
@@ -97,36 +96,17 @@ getgenv().ConfigsKaitun = {
 	},
 
 	Events = {
-		["Cook Event"] = {
-			Minimum_Money = 1_000_000, -- minimum money to start play this event
+		["Bean Event"] = {
+			Minimum_Money = 10_000_000, -- minimum money to start play this event
 		},
-		["Zen Event"] = {
-			["Restocking"] = { -- Minimumthing to restock
-				Max_Restocks_Price = 3_000_000_000_000,
-				Minimum_Money = 1_000_000,
-				Minimum_Chi = 100
-			},
-			["Doing"] = {
-				Minimum_Money = 1_000_000, -- minimum money to start play this event
-				First_Upgrade_Tree = 7,
-				Maximum_Chi = 100,
-
-				-- // thing to skip doing
-				Skip_Fox = false, -- Skip The Middle Fox Trade (Corrupted Kitsune)
-				Skip_Corrupted_OldMan = false, -- Skip The OldMan Trade (Kodama)
-				-- If u need to skip Tranquill OldMan Set "First Upgrade Tree" To 0 and Max Chi To 99999
-			}
-		},
-		["Traveling Shop"] = {
-			"Bee Egg",
-		},
-		Craft = {
-			"Anti Bee Egg",
-			"Small Toy",
-			"Small Treat",
-			"Ancient Seed Pack",
-		},
-		Shop = {
+		Shop = {-- un comment to buy
+			"Sprout Seed Pack",
+			"Sprout Egg",
+			-- "Mandrake",
+			"Silver Fertilizer",
+			-- "Canary Melon",
+			-- "Amberheart",
+			"Spriggan",
       		"Gourmet Egg",
 			"Gourmet Seed Pack",
 			"Zen Egg",
@@ -136,6 +116,15 @@ getgenv().ConfigsKaitun = {
 			"Pet Shard Tranquil",
 			"Koi",
 			"Raiju",
+		},
+		["Traveling Shop"] = {
+			"Bee Egg",
+		},
+		Craft = {
+			"Anti Bee Egg",
+			"Small Toy",
+			"Small Treat",
+			"Ancient Seed Pack",
 		},
 		Start_Do_Honey = 1_000_000 -- start trade fruit for honey at money
 	},
@@ -171,6 +160,14 @@ getgenv().ConfigsKaitun = {
 
 	Eggs = {
 		Place = {
+			"Sprout Egg",
+			"Gourmet Egg",
+			"Zen Egg",
+			"Primal Egg",
+			"Dinosaur Egg",
+			"Oasis Egg",
+			"Anti Bee Egg",
+			"Night Egg",
 			"Dinosaur Egg",
       		"Gourmet Egg",
 			"Zen Egg",
@@ -196,15 +193,21 @@ getgenv().ConfigsKaitun = {
 		["Start Delete Pet At"] = 50,
 		["Upgrade Slot"] = {
 			["Pet"] = {
-				["Starfish"] = { 8, 100, 1 },
+				["Starfish"] = { 5, 100, 1, true }, -- the "true" on the last is auto equip (use for like only need to use for upgrade pet)
 			},
-			["Limit Upgrade"] = 5,
+			["Limit Upgrade"] = 2, -- max is 5 (more than or lower than 1 will do nothing)
 			["Equip When Done"] = {
-				["Spaghetti Sloth"] = { 4, 100, 1 },
-				["Koi"] = { 4, 100, 2 },
+				["Tanchozuru"] = { 5, 100, 1 }, -- 5 on the first mean equip only 5 | pet , 100 mean equip only level pet lower than 100 | the one on the last is priority it will ues first if possible 
+				["Ostrich"] = { 3, 100, 2 },
+				["Blood Kiwi"] = { 8, 100 },
+				["Seal"] = { 8, 100 },
+				["Rooster"] = { 8, 100 },
+				["Starfish"] = { 5, 75 },
 			},
 		},
-		Locked_Pet_Age = 50, -- pet that age > 60 will lock
+		Unfavorite_AllPet = false,
+		Favorite_LockedPet = true,
+		Locked_Pet_Age = 60, -- pet that age > 60 will lock
 		Locked = {
 			"French Fry Ferret",
       		"Spaghetti Sloth",
@@ -247,7 +250,10 @@ getgenv().ConfigsKaitun = {
 			["Bunny"] = 5,
 			["Golden Lab"] = 5,
 		},
-		LockPet_Weight = 5, -- if Weight >= 10 they will locked,
+		LockPet_Weight = 7, -- if Weight >= 10 they will locked
+		Ignore_Pet_Weight = {
+			"NAME oF PET THAT U DONT NEED LOCK",
+		},
 		Instant_Sell = {
 			"Shiba Inu",
 		}
