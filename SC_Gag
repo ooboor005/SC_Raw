@@ -168,9 +168,6 @@ getgenv().ConfigsKaitun = {
 			"Oasis Egg",
 			"Anti Bee Egg",
 			"Night Egg",
-			"Dinosaur Egg",
-      		"Gourmet Egg",
-			"Zen Egg",
 			"Bug Egg",
 			"Paradise Egg",
 			"Common Summer Egg",
@@ -246,9 +243,7 @@ getgenv().ConfigsKaitun = {
 			["Toucan"] = 5,
 			["Capybara"] = 5,
 			["Bunny"] = 5,
-			["Golden Lab"] = 5,
 			["Bee"] = 3,
-			["Bunny"] = 5,
 			["Golden Lab"] = 5,
 		},
 		LockPet_Weight = 7, -- if Weight >= 10 they will locked
@@ -276,7 +271,7 @@ getgenv().ConfigsKaitun = {
 			"Squirrel",
 			"Snail",
 			"Brown Mouse",
-			"Mochi Mouse ",
+			"Mochi Mouse",
 			
 		}
 	},
