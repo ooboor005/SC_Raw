@@ -209,9 +209,9 @@ getgenv().ConfigsKaitun = {
 		Favorite_LockedPet = true,
 		Locked_Pet_Age = 60, -- pet that age > 60 will lock
 		Locked = {
+			"Spriggan",
+			"Golden Goose",
 			"French Fry Ferret",
-      		"Spaghetti Sloth",
-      		"Sushi Bear",
 			"Corrupted Kitsune",
 			"Corrupted Kodama",
 			"Kitsune",
@@ -257,6 +257,9 @@ getgenv().ConfigsKaitun = {
 		Instant_Sell = {
 			"Shiba Inu",
 			"Sushi Bear",
+			"Spaghetti Sloth",
+			"Sunny-Side Chicken",
+			"Mochi Mouse",
 		}
 	},
 
