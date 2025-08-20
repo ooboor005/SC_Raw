@@ -1,4 +1,3 @@
--- รอให้เกมโหลดเสร็จ (กันค้าง + กัน error)
 pcall(function()
 	if not game:IsLoaded() then
 		local ok = pcall(function()
@@ -8,7 +7,6 @@ pcall(function()
 	end
 end)
 
--- รอ LocalPlayer (มี timeout กันค้าง)
 local Players = game:GetService("Players")
 local LocalPlayer
 do
@@ -22,7 +20,6 @@ do
 	end
 end
 
--- รอ Character และ Humanoid (มี retry)
 if LocalPlayer then
 	if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("Humanoid") then
 		local ok = pcall(function()
