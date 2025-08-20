@@ -1,2 +1,11 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/CDK"))()
+-- รอให้เกมโหลดเสร็จ (กันค้าง + กัน error)
+pcall(function()
+	if not game:IsLoaded() then
+		local ok = pcall(function()
+			game.Loaded:Wait()
+		end)
+		if not ok then warn("[SAFE] game.Loaded:Wait() error") end
+	end
+end)
+
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_BF_Maru"))()
