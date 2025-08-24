@@ -60,13 +60,15 @@ getgenv().ConfigsKaitun = {
 			"Fossilight",
       		"Serenity",
       
-			-- locked fruit for zen event
-			["Tomato"] = 5, ["Strawberry"] = 5, ["Blueberry"] = 5,
-			["Orange Tulip"] = 5, ["Corn"] = 5, ["Daffodil"] = 5,
-			["Bamboo"] = 5, ["Apple"] = 5, ["Coconut"] = 5,
-			["Pumpkin"] = 5, ["Watermelon"] = 5, ["Cactus"] = 5,
-			["Dragon Fruit"] = 5, ["Mango"] = 5, ["Grape"] = 5,
-			["Mushroom"] = 5, ["Pepper"] = 5, ["Cacao"] = 3
+			-- for the event
+            ["Blueberry"] = 15,
+            ["Strawberry"] = 15,
+            ["Apple"] = 15,
+            ["Coconut"] = 15,
+            ["Dragon Fruit"] = 15,
+            ["Mango"] = 15,
+            ["Tomato"] = 20,
+            ["Cactus"] = 15,
 		}
 	},
 
@@ -98,6 +100,9 @@ getgenv().ConfigsKaitun = {
 				"Carrot"
 			},
 			Lock = {
+				"Maple Apple",
+				"Easter Egg",
+				"Bone Blossom",
 				"Sunflower",
 				"Dragon Pepper",
 				"Elephant Ears",
@@ -125,7 +130,7 @@ getgenv().ConfigsKaitun = {
 			"Silver Fertilizer",
 			-- "Canary Melon",
 			-- "Amberheart",
-			"Spriggan",
+			["Spriggan"] = 8,
       		"Gourmet Egg",
 			"Gourmet Seed Pack",
 			"Zen Egg",
@@ -135,6 +140,9 @@ getgenv().ConfigsKaitun = {
 			"Pet Shard Tranquil",
 			"Koi",
 			"Raiju",
+			-- Friend Shop
+			"Skyroot Chest",
+			"Pet Shard GiantBean",
 		},
 		["Traveling Shop"] = {
 			"Bee Egg",
@@ -192,6 +200,7 @@ getgenv().ConfigsKaitun = {
 			"Common Summer Egg",
 		},
 		Buy = {
+			"Oasis Egg",
 			"Anti Bee Egg",
 			"Bee Egg",
 			"Night Egg",
@@ -225,8 +234,7 @@ getgenv().ConfigsKaitun = {
 		Favorite_LockedPet = true,
 		Locked_Pet_Age = 60, -- pet that age > 60 will lock
 		Locked = {
-			"Golem",
-			"Spriggan",
+			"Griffin",
 			"Golden Goose",
 			"French Fry Ferret",
 			"Corrupted Kitsune",
