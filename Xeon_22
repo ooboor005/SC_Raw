@@ -1,13 +1,4 @@
 
-pcall(function()
-	if not game:IsLoaded() then
-		local ok = pcall(function()
-			game.Loaded:Wait()
-		end)
-		if not ok then warn("[SAFE] game.Loaded:Wait() error") end
-	end
-end)
-
 local Players = game:GetService("Players")
 local LocalPlayer
 do
