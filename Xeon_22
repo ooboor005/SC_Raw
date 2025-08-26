@@ -12,7 +12,7 @@ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08a
 ]]--
 
 -- ====== Config ======
-local IDLE_THRESHOLD_SECONDS = 120  -- 60 วิ
+local IDLE_THRESHOLD_SECONDS = 60  -- 60 วิ
 local CHECK_INTERVAL = 1                 -- ตรวจทุก 1 วินาที
 local MOVEMENT_THRESHOLD = 0.1           -- น้อยกว่า 0.1 studs ถือว่านิ่ง
 
