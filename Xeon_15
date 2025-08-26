@@ -1,12 +1,3 @@
-local LocalPlayer
-if LocalPlayer then
-	if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("Humanoid") then
-		local ok = pcall(function()
-			LocalPlayer.CharacterAdded:Wait()
-		end)
-		if not ok then warn("[SAFE] CharacterAdded:Wait() error") end
-	end
-end
 
 print('Rut SC')
 _G.OPFarmGem = true
