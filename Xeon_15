@@ -10,7 +10,7 @@ end
 
 print('Rut SC')
 _G.OPFarmGem = true
-script_key = "alfvZBNelbjIUTIQbfhsePdDOQOpxmaq"
+script_key = "alfvZBNelbjIUTIQbfhsePdDOQOpxmaq";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
 
 --[[ 
@@ -43,7 +43,7 @@ local lastRunTick = nil           -- เวลาที่เพิ่งรั�
 local function startFarmNow()
 	print('Rut SC 2')
     _G.OPFarmGem = true
-    script_key = "alfvZBNelbjIUTIQbfhsePdDOQOpxmaq"
+    script_key = "alfvZBNelbjIUTIQbfhsePdDOQOpxmaq";
     loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
 end
 
