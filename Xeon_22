@@ -1,17 +1,4 @@
-
-local Players = game:GetService("Players")
 local LocalPlayer
-do
-	local t0 = os.clock()
-	while not Players.LocalPlayer and os.clock() - t0 < 60 do
-		task.wait()
-	end
-	LocalPlayer = Players.LocalPlayer
-	if not LocalPlayer then
-		warn("[SAFE] LocalPlayer ไม่พร้อมหลัง 30 วิ แต่ไปต่อ")
-	end
-end
-
 if LocalPlayer then
 	if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("Humanoid") then
 		local ok = pcall(function()
@@ -20,7 +7,8 @@ if LocalPlayer then
 		if not ok then warn("[SAFE] CharacterAdded:Wait() error") end
 	end
 end
+print('Rut SC')
 
 _G.OPFarmGem = true
-script_key="iWpqmAUmQVpIlmOadjCkXTMwRZLsxnDf";
+script_key="alfvZBNelbjIUTIQbfhsePdDOQOpxmaq";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
