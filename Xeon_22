@@ -1,87 +1,72 @@
-
-print('Rut SC')
-_G.OPFarmGem = true
-script_key = "iWpqmAUmQVpIlmOadjCkXTMwRZLsxnDf";
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
-
---[[ 
-  Idle-trigger Runner (counts idle even while dead)
-  - นับเวลานิ่งรวมช่วงที่ตาย/ไม่มี HumanoidRootPart
-  - รันโค้ดภายนอกทุก ๆ 60 นาที หากยังนิ่งต่อเนื่อง
-  - ไม่รีเซ็ตตัวจับเวลาเมื่อรีสปอน (ถ้ายังไม่ขยับ)
-]]--
-
--- ====== Config ======
-local IDLE_THRESHOLD_SECONDS = 60  -- 60 วิ
-local CHECK_INTERVAL = 1                 -- ตรวจทุก 1 วินาที
-local MOVEMENT_THRESHOLD = 0.1           -- น้อยกว่า 0.1 studs ถือว่านิ่ง
-
--- ====== Services ======
-if not game:IsLoaded() then game.Loaded:Wait() end
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-
--- ====== LocalPlayer ======
-while not Players.LocalPlayer do task.wait() end
-local LocalPlayer = Players.LocalPlayer
-
--- ====== State ======
-local lastPosition = nil          -- ตำแหน่งล่าสุด (อัปเดตเฉพาะตอนมี HRP)
-local lastActiveTick = tick()     -- เวลาล่าสุดที่ "ตรวจพบการขยับ"
-local lastRunTick = nil           -- เวลาที่เพิ่งรันสคริปต์ล่าสุด
-
--- ====== Action: รันโค้ดภายนอก "ตามที่กำหนดไว้" ======
-local function startFarmNow()
-	print('Rut SC 2')
-    _G.OPFarmGem = true
-    script_key = "iWpqmAUmQVpIlmOadjCkXTMwRZLsxnDf";
-    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
-end
-
--- ====== Idle monitor (นับตอนตายด้วย) ======
-local function idleMonitorLoop()
-    while RunService:IsRunning() and LocalPlayer and LocalPlayer.Parent do
-        task.wait(CHECK_INTERVAL)
-
-        local char = LocalPlayer.Character
-        local hrp = char and char:FindFirstChild("HumanoidRootPart")
-
-        -- ถ้ามี HRP ให้วัดการเคลื่อนไหวตามปกติ
-        if hrp then
-            local currentPos = hrp.Position
-
-            if lastPosition then
-                local moved = (currentPos - lastPosition).Magnitude
-                if moved >= MOVEMENT_THRESHOLD then
-                    lastActiveTick = tick() -- มีการขยับจริง
-                end
-            else
-                -- เพิ่งเจอ HRP ครั้งแรกในรอบนี้: ตั้ง baseline แต่ "ไม่" รีเซ็ต lastActiveTick
-                -- (เพื่อให้นับ idle ต่อเนื่องข้ามช่วงที่ตาย)
-                lastPosition = currentPos
-            end
-
-            lastPosition = currentPos
-        else
-            -- ไม่มี HRP (ตาย/กำลังโหลดตัว) => ถือว่า "นิ่ง" ในช่วงนี้
-            -- ไม่แตะ lastActiveTick เลย เพื่อให้นับ idle ต่อเนื่อง
-            -- และไม่อัปเดต lastPosition (รอให้มี HRP ค่อยตั้งใหม่)
-        end
-
-        -- ตรวจว่าครบนิ่ง 60 นาทีหรือยัง + เวลาห่างจากการรันครั้งก่อนครบ 60 นาทีหรือยัง
-        local idleDuration = tick() - lastActiveTick
-        local canRunAgain = (lastRunTick == nil) or ((tick() - lastRunTick) >= IDLE_THRESHOLD_SECONDS)
-		print(idleDuration)
-        if idleDuration >= IDLE_THRESHOLD_SECONDS and canRunAgain then
-            print(string.format("[IdleRunner] Idle %.0f sec (>= %d). Running external script...", idleDuration, IDLE_THRESHOLD_SECONDS))
-            startFarmNow()
-            lastRunTick = tick()
-            -- ไม่รีเซ็ต lastActiveTick: ถ้ายังนิ่งต่อไป จะรันอีกรอบเมื่อครบ 60 นาทีถัดไป
-        end
-    end
-end
-
--- เริ่มลูปตัวเดียวพอ (ไม่ต้อง spawn ใหม่ทุกครั้งที่รีสปอน)
-task.spawn(idleMonitorLoop)
-
-print("[IdleRunner] Ready. Counts idle even while dead, and runs your script every 60 minutes of continuous idle.")
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+getgenv().Key = "014b435c390d21d1b37d757b"
+    getgenv().SettingFarm ={
+        ["Hide UI"] = false,
+        ["Reset Teleport"] = {
+            ["Enabled"] = false,
+            ["Delay Reset"] = 3,
+            ["Item Dont Reset"] = {
+                ["Fruit"] = {
+                    ["Enabled"] = true,
+                    ["All Fruit"] = true, 
+                    ["Select Fruit"] = {
+                        ["Enabled"] = false,
+                        ["Fruit"] = {},
+                    },
+                },
+            },
+        },
+        ["White Screen"] = false,
+        ["Lock Fps"] = {
+            ["Enabled"] = true,
+            ["FPS"] = 10,
+        },
+        ["Get Items"] = {
+            ["Saber"] = true,
+            ["Godhuman"] =  true,
+            ["Skull Guitar"] = false,
+            ["Mirror Fractal"] = true,
+            ["Cursed Dual Katana"] = true,
+            ["Upgrade Race V2-V3"] = false,
+            ["Auto Pull Lever"] = true,
+        },
+        ["Farm Fragments"] = {
+            ["Enabled"]  = false,
+            ["Fragment"] = 50000,
+        },
+        ["Auto Chat"] = {
+            ["Enabled"] = false,
+            ["Text"] = "joejoeshop.xyz",
+        },
+        ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
+        ["Select Hop"] = { -- 70% will have it
+            ["Hop Server If Have Player Near"] = false, 
+            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = false, 
+            ["Hop Find Dough King Get Mirror Fractal"] = false,
+            ["Hop Find Raids Castle [CDK]"] = false,
+            ["Hop Find Cake Queen [CDK]"] = false,
+            ["Hop Find Soul Reaper [CDK]"] = false,
+            ["Hop Find Darkbeard [SG]"] = false,
+            ["Hop Find Mirage [ Pull Lever ]"] = false,
+        },
+        ["Farm Mastery"] = {
+            ["Melee"] = true,
+            ["Sword"] = true,
+        },
+        ["Buy Haki"] = {
+            ["Enhancement"] = true,
+            ["Skyjump"] = true,
+            ["Flash Step"] = true,
+            ["Observation"] = true,
+        },
+        ["Sniper Fruit Shop"] = {
+            ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
+            ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas"},
+        },
+        ["Lock Fruit"] = {"Dough-Dough","Dragon-Dragon","Leopard-Leopard","Mammoth-Mammoth","Kitsune-Ribbon","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
+        ["Webhook"] = {
+            ["Enabled"] = false,
+            ["WebhookUrl"] = "",
+        }
+    }
+loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
