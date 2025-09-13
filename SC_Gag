@@ -137,15 +137,18 @@ getgenv().ConfigsKaitun = {
 	},
 
 	Events = {
+		["Fall Event"] = {
+			Minimum_Money = 10_000_000, -- minimum money to start play this event
+		},
 		["Fairy Event"] = {
 			Minimum_Money = 10_000_000, -- minimum money to start play this event
 			Rewards_Item = { -- top mean select first
+				"Enchanted Seed Pack",
 				"Pet Shard Glimmering",
 				"Enchanted Egg",
 				"Mutation Spray Glimmering",
 				"FairyPoints",
 				"Fairy Targeter",
-				"Enchanted Seed Pack",
 			},
 			Upgrade = {
 				Mode = "Order", -- Order (mean will up on order), Chepest, Highest
@@ -161,10 +164,14 @@ getgenv().ConfigsKaitun = {
 					["Fairy Event Duration"] = 10, -- max 10
 					["Fairy Spawn Amount"] = 9, -- max 9
 				}
-			}
+			},
+			
+			Minimum_Fairy_Point_Restock = 10000, -- if fairy point more then this will restock
+			Catch_Fairy_Before_Restock = 51, -- fr it 50 but to be sure i put 51
 		},
 		MaxMoney_Restocks = 10_000_000,
 		Shop = { -- un comment to buy
+			"Fall Egg",
 			"Enchanted Chest",
 			"Pet Shard Glimmering",
 			"Enchanted Egg",
@@ -230,6 +237,7 @@ getgenv().ConfigsKaitun = {
 		Place = {
 			"Anti Bee Egg",
 			"Bug Egg",
+			"Fall Egg",
 			"Enchanted Egg",
 			"Sprout Egg",
 			"Gourmet Egg",
@@ -283,6 +291,7 @@ getgenv().ConfigsKaitun = {
 		Favorite_LockedPet = true,
 		Locked_Pet_Age = 60, -- pet that age > 60 will lock
 		Locked = {
+			"Swan",
 			"Phoenix",
 			"Cockatrice",
 			"Griffin",
