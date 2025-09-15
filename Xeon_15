@@ -1,7 +1,7 @@
 
 print('Rut SC')
 _G.OPFarmGem = true
-script_key = "alfvZBNelbjIUTIQbfhsePdDOQOpxmaq";
+script_key = "DCVsPBqTzzThUkSrdrQuXRrGeNtlNLuj";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
 
 --[[ 
