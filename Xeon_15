@@ -1,8 +1,8 @@
 
 print('Rut SC')
 _G.OPFarmGem = true
-script_key="DCVsPBqTzzThUkSrdrQuXRrGeNtlNLuj";
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/8ebd2044c56155dafe0dd1704a88e3e1.lua"))()
+script_key="JsDVGPIArtKwIIqTRFdfBkndAWoXcKKI";
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
 
 --[[ 
   Idle-trigger Runner (counts idle even while dead)
@@ -34,8 +34,8 @@ local lastRunTick = nil           -- เวลาที่เพิ่งรั�
 local function startFarmNow()
 	print('Rut SC 2')
     _G.OPFarmGem = true
-    script_key="DCVsPBqTzzThUkSrdrQuXRrGeNtlNLuj";
-	loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/8ebd2044c56155dafe0dd1704a88e3e1.lua"))()
+    script_key="JsDVGPIArtKwIIqTRFdfBkndAWoXcKKI";
+	loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5f69c589c2e08aee7d37c351dd3068af.lua"))()
 end
 
 -- ====== Idle monitor (นับตอนตายด้วย) ======
