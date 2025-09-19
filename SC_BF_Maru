@@ -5,7 +5,7 @@ repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
 _G.Team = "Pirate" -- Marine / Pirate
 getgenv().Script_Mode = "Kaitun_Script"
 _G.MainSettings = {
-    ["EnabledHOP"] = true,
+    ["EnabledHOP"] = false,
     ['FPSBOOST'] = true,
     ["FPSLOCKAMOUNT"] = 10,
     ['WhiteScreen'] = false,
