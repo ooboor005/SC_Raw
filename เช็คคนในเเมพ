@@ -127,7 +127,7 @@ local function get_nearest()
 end
 
 --== ตรวจว่ามีคนอยู่ใกล้ต่อเนื่องครบ X วินาทีค่อย hop ==--
-local STAY_SECONDS = 1   -- ต้องใกล้ "ต่อเนื่อง" ครบ 10 วิ
+local STAY_SECONDS = 10   -- ต้องใกล้ "ต่อเนื่อง" ครบ 10 วิ
 
 local function check_nearby_player()
 	local target, dist = get_nearest()
