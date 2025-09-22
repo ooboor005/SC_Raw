@@ -1,49 +1,169 @@
-local server_hop = function()
-	local get_random = {}
-	for i,v in pairs(game:GetService("HttpService"):JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder=Asc&limit=100')).data) do
-		if type(v) == "table" and v.maxPlayers > v.playing and v.id ~= game.JobId then
-			get_random[#get_random + 1] = v.id
-		end
-		if #get_random > 0 then
-			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, get_random[math.random(1, #get_random)])
-		end
-	end
+--== Services & locals ==--
+local HttpService       = game:GetService("HttpService")
+local TeleportService   = game:GetService("TeleportService")
+local Players           = game:GetService("Players")
+local RunService        = game:GetService("RunService")
+local LocalPlayer       = Players.LocalPlayer
+
+--== Utils: รอ HRP ให้พร้อมแบบปลอดภัย ==--
+local function getHRP(character)
+	if not character then return nil end
+	local ok, hrp = pcall(function()
+		return character:FindFirstChild("HumanoidRootPart") or character:WaitForChild("HumanoidRootPart", 3)
+	end)
+	return ok and hrp or nil
 end
 
-local get_nearest = function()
-	local distance = 150
-	local target
-	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-		if v ~= game:GetService('Players').LocalPlayer and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
-			local magnitude = (game:GetService("Players").LocalPlayer.Character.PrimaryPart.CFrame.p - v.Character:FindFirstChild("HumanoidRootPart").Position).magnitude
-			if magnitude < distance then
-				target = v
-				distance = magnitude
+local function getLocalHRP()
+	local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	return getHRP(char)
+end
+
+--== ดึงรายชื่อ server ว่าง (รองรับหลายหน้า) ==--
+local function fetchServers(placeId, maxPages)
+	maxPages = maxPages or 5
+	local servers = {}
+	local seen = {}
+
+	local base = ("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Asc&limit=100"):format(placeId)
+	local cursor
+
+	for _ = 1, maxPages do
+		local url = cursor and (base .. "&cursor=" .. cursor) or base
+		local ok, res = pcall(function()
+			return HttpService:JSONDecode(game:HttpGet(url))
+		end)
+		if not ok or type(res) ~= "table" or type(res.data) ~= "table" then
+			break
+		end
+
+		for _, v in ipairs(res.data) do
+			if type(v) == "table" then
+				local id = v.id
+				local playing = tonumber(v.playing or 0) or 0
+				local maxPlayers = tonumber(v.maxPlayers or 0) or 0
+				if id and id ~= game.JobId and playing < maxPlayers and not seen[id] then
+					seen[id] = true
+					table.insert(servers, id)
+				end
 			end
 		end
+
+		cursor = res.nextPageCursor
+		if not cursor then break end
+		task.wait(0.1)
 	end
-	return target
+
+	return servers
 end
 
-local check_nearby_player = function()
-	local target = get_nearest()
-	if target then
-		local startTime = tick()
-		while tick() - startTime < 10 do
-			local nearest = get_nearest()
-			if nearest ~= target or not nearest then
-				return
-			end
-			wait(1)
-		end
-		server_hop()
+--== Teleport (มี retry + fallback) ==--
+local RNG = Random.new(os.clock()*1e6 % 1 * 1e9)
+
+local function server_hop()
+	-- รวบรวม target ล่วงหน้า
+	local list = fetchServers(game.PlaceId, 8)
+
+	-- ถ้าไม่มีเลย ใช้ Teleport แบบสุ่มเซิร์ฟเวอร์
+	if #list == 0 then
+		pcall(function()
+			TeleportService:Teleport(game.PlaceId, LocalPlayer)
+		end)
+		return
 	end
+
+	-- สุ่มลำดับเล็กน้อย
+	for i = #list, 2, 1 do
+		local j = RNG:NextInteger(1, i)
+		list[i], list[j] = list[j], list[i]
+	end
+
+	-- ลองเทเลพอร์ต (เปลี่ยนเป้าหมายทุกรอบ)
+	local attempts = math.min(6, #list)
+	for n = 1, attempts do
+		local target = list[n]
+		local ok, err = pcall(function()
+			TeleportService:TeleportToPlaceInstance(game.PlaceId, target, LocalPlayer)
+		end)
+		if ok then return end
+		task.wait(0.8 + n * 0.3)
+	end
+
+	-- สุดท้ายยังไม่ได้ → fallback
+	pcall(function()
+		TeleportService:Teleport(game.PlaceId, LocalPlayer)
+	end)
 end
 
-task.spawn(function()
-	while task.wait() do
-		xpcall(function()
-			check_nearby_player()
-		end,print)
+-- ถ้า init เทเลพอร์ตล้มเหลว ให้ลอง hop ใหม่อัตโนมัติ
+TeleportService.TeleportInitFailed:Connect(function(player, result, msg)
+	if player == LocalPlayer then
+		task.delay(1.5, server_hop)
 	end
 end)
+
+--== หาเป้าหมายที่ใกล้ที่สุดในรัศมี ==--
+local NEAR_RADIUS = 150   -- หน่วยสตูดิโอ
+
+local function get_nearest()
+	local myHRP = getLocalHRP()
+	if not myHRP then return nil, math.huge end
+
+	local nearest, bestDist = nil, math.huge
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= LocalPlayer then
+			local hrp = plr.Character and getHRP(plr.Character)
+			if hrp then
+				local d = (myHRP.Position - hrp.Position).Magnitude
+				if d < bestDist then
+					bestDist = d
+					nearest = plr
+				end
+			end
+		end
+	end
+
+	return nearest, bestDist
+end
+
+--== ตรวจว่ามีคนอยู่ใกล้ต่อเนื่องครบ X วินาทีค่อย hop ==--
+local STAY_SECONDS = 1   -- ต้องใกล้ "ต่อเนื่อง" ครบ 10 วิ
+
+local function check_nearby_player()
+	local target, dist = get_nearest()
+	if not target or dist > NEAR_RADIUS then
+		return
+	end
+
+	-- ต้องเป็น "คนเดิม" และ "ยังอยู่ในรัศมี" จนครบเวลา
+	local start = tick()
+	while tick() - start < STAY_SECONDS do
+		task.wait(1)
+		local current, d = get_nearest()
+		if current ~= target or not current or d > NEAR_RADIUS then
+			return -- หลุดเงื่อนไข → ยกเลิก
+		end
+	end
+
+	-- ครบเวลาแล้ว → hop
+	server_hop()
+end
+
+--== วนตรวจแบบปลอดภัย ==--
+task.spawn(function()
+	while task.wait(0.5) do
+		xpcall(check_nearby_player, function(err)
+			warn("[check_nearby_player] ", err)
+		end)
+	end
+end)
+
+-- (ตัวเลือก) เรียกครั้งแรกเมื่อพร้อม Character
+task.spawn(function()
+	local _ = getLocalHRP() -- ensure ready
+end)
+
+-- ถ้าเทสใน Studio → จะไม่ย้ายจริง ให้แจ้งเตือน
+if RunService:IsStudio() then
+	warn("[server_hop] You are in Studio; Teleport won't actually move you.")
+end
