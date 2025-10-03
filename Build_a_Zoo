@@ -3,7 +3,7 @@ while not Lib.WaitPlayerData do
     task.wait()
 end
 local EggsToBuy = {
-    "Bonedragon Egg",
+    "Bonedragon Egg","BoneDragonEgg","BoneDragon Egg","bonedragon egg",
 }
 local Mutation = {
     "Snow","Dino",
