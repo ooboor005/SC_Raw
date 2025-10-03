@@ -2,12 +2,14 @@ local Lib = getsenv(game:GetService("Players").LocalPlayer.PlayerGui.ScreenStora
 while not Lib.WaitPlayerData do
     task.wait()
 end
+
 local EggsToBuy = {
     "Bonedragon Egg","BoneDragonEgg","BoneDragon Egg","bonedragon egg",
 }
 local Mutation = {
     "Snow","Dino",
 }
+
 local BuyLandsDelay = 15
 local CollectMoneyDelay = 30
 local Pets = Lib.WaitPlayerData("Pets")
@@ -15,14 +17,16 @@ local Egg = Lib.WaitPlayerData("Egg")
 local PetFolder = workspace.Pets
 local PlayerBuiltBlocks = workspace.PlayerBuiltBlocks
 local Island = workspace.Art[game.Players.LocalPlayer:GetAttribute("AssignedIslandName")]
+
 task.spawn(function()
     while true do
         task.wait(CollectMoneyDelay)
         for i, v in pairs(Pets:GetChildren()) do
             local Root = PetFolder:FindFirstChild(v.Name)
             if Root and Root:FindFirstChild("RootPart") then
-                firetouchinterest(Root.RootPart.TrgIdle, game.Players.LocalPlayer.Character.HumanoidRootPart, 1)
                 firetouchinterest(Root.RootPart.TrgIdle, game.Players.LocalPlayer.Character.HumanoidRootPart, 0)
+				task.wait(.1)
+                firetouchinterest(Root.RootPart.TrgIdle, game.Players.LocalPlayer.Character.HumanoidRootPart, 1)
             end
         end
     end
