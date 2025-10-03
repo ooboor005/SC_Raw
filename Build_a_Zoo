@@ -1,0 +1,97 @@
+local Lib = getsenv(game:GetService("Players").LocalPlayer.PlayerGui.ScreenStorage.ScreenStorage).shared
+while not Lib.WaitPlayerData do
+    task.wait()
+end
+local EggsToBuy = {
+    "Bonedragon Egg",
+}
+local Mutation = {
+    "Snow","Dino",
+}
+local BuyLandsDelay = 15
+local CollectMoneyDelay = 30
+local Pets = Lib.WaitPlayerData("Pets")
+local Egg = Lib.WaitPlayerData("Egg")
+local PetFolder = workspace.Pets
+local PlayerBuiltBlocks = workspace.PlayerBuiltBlocks
+local Island = workspace.Art[game.Players.LocalPlayer:GetAttribute("AssignedIslandName")]
+task.spawn(function()
+    while true do
+        task.wait(CollectMoneyDelay)
+        for i, v in pairs(Pets:GetChildren()) do
+            local Root = PetFolder:FindFirstChild(v.Name)
+            if Root and Root:FindFirstChild("RootPart") then
+                firetouchinterest(Root.RootPart.TrgIdle, game.Players.LocalPlayer.Character.HumanoidRootPart, 1)
+                firetouchinterest(Root.RootPart.TrgIdle, game.Players.LocalPlayer.Character.HumanoidRootPart, 0)
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    local BuyLandsThread = true
+    while BuyLandsThread do
+        task.wait(BuyLandsDelay)
+        local ExistsCanBuy = false
+        for i, v in pairs(workspace.Art.Island_6.ENV.Locks:GetChildren()) do
+            if v:IsA("Model") and v.Farm:GetAttribute("Unlock") == false then
+                ExistsCanBuy = true
+            end
+            if
+                v:IsA("Model")
+                and v.Farm:GetAttribute("Unlock") == false
+                and v.Farm:GetAttribute("LockCost")
+                    < game:GetService("Players").LocalPlayer.leaderstats["Money $"].Value
+            then
+                game:GetService("ReplicatedStorage")
+                    :WaitForChild("Remote")
+                    :WaitForChild("CharacterRE")
+                    :FireServer("Unlock", v.Farm)
+            end
+        end
+        if not ExistsCanBuy then
+            BuyLandsThread = false
+        end
+    end
+end)
+
+for i, v in pairs(Egg:GetChildren()) do
+    local Root = PlayerBuiltBlocks:FindFirstChild(v.Name)
+    if Root and Root:FindFirstChild("RootPart") then
+        local Root = Root.RootPart
+        if Root["GUI/HatchGUI"].Enabled == false then
+            Root.RF:InvokeServer("Hatch")
+        end
+    end
+end
+
+function Convenyor(Model: Model)
+    Model:FindFirstChild("Belt").ChildAdded:Connect(function(Child)
+        print(Child, Child:GetAttribute("Type"))
+        if table.find(EggsToBuy, Child:GetAttribute("Type")) then
+            local Price, _ = Child.RootPart["GUI/EggGUI"].Price.Text:sub(2):gsub(",", "")
+            Price = tonumber(Price)
+            if
+                Price < game:GetService("Players").LocalPlayer.leaderstats["Money $"].Value
+                and (table.find(Mutation, Child.RootPart["GUI/EggGUI"].Mutate.Text) or #Mutation == 0)
+            then
+                game:GetService("ReplicatedStorage")
+                    :WaitForChild("Remote")
+                    :WaitForChild("CharacterRE")
+                    :FireServer("BuyEgg", Child.Name)
+            end
+        end
+    end)
+end
+
+Island.ENV.Conveyor.ChildAdded:Connect(function(Child)
+    if Child:IsA("Model") then
+        Convenyor(Child)
+    end
+end)
+
+for i, v in pairs(Island.ENV.Conveyor:GetChildren()) do
+    if string.find(v.Name, "Conveyor") then
+        Convenyor(v)
+    end
+end
