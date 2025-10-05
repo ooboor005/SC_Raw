@@ -146,7 +146,7 @@ task.spawn(function()
     
                 -- Scripts Banana Here
                 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-                getgenv().Key = "b5265ea143cf979b49924e34"
+                getgenv().Key = "9666499eb64a9d24c9721057"
                     getgenv().SettingFarm ={
                         ["Hide UI"] = false,
                         ["Reset Teleport"] = {
