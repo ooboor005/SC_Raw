@@ -101,7 +101,7 @@ task.spawn(function()
             local lever = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CheckTempleDoor")
             local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
 
-            if level >= 1 then
+            if level >= 2799 then
                 _G.DoneList['MAX_LEVEL'] = true
             end
             if godhuman then
@@ -146,7 +146,7 @@ task.spawn(function()
     
                 -- Scripts Banana Here
                 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-                getgenv().Key = "014b435c390d21d1b37d757b"
+                getgenv().Key = "547bdf0ba0d58d7887a0efe2"
                     getgenv().SettingFarm ={
                         ["Hide UI"] = false,
                         ["Reset Teleport"] = {
