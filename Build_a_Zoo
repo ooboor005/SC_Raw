@@ -4,7 +4,7 @@ while not Lib.WaitPlayerData do
 end
 
 local EggsToBuy = {
-    "Unicon Pro Egg","UniconProEgg","Uniconproegg","unicon pro egg","uniconproegg",
+    "Pegasus Egg","PegasusEgg","pegasusegg","pegasus egg","Pegasus egg",
 }
 local Mutation = {
     "Snow","Dino",
