@@ -1432,8 +1432,12 @@ while _G.Enabled do
 			plantOwnedSeeds_PriceAware()
 			task.wait(1)
 			Count_Plot = Count_Plots()
+			seeds = getOwnedSeedsWithRarity()
 		end
 		seeds = getOwnedSeedsWithRarity()
+		if #seeds == 0 then
+			break
+		end
     end
 
 
