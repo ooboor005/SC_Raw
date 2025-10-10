@@ -2,6 +2,11 @@
 -- Plants vs Brainrots – Auto (ALL-IN-ONE)
 -- =========================
 
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+
 -- ===== PERSISTENCE (Cross-Session Save) =====
 local FS = {
 	isfile = isfile or function(_) return false end,
