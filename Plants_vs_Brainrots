@@ -575,10 +575,10 @@ local function pluckWeakestPlantsByCount_WithPrice(n)
             local ok = removePlantById(id)
             if ok then
                 sold += 1
-                sendEmbed("🪓 ถอนพืชสำเร็จ",
-                    ("%s | Rank %s | DMG %d | Shop $%s")
-                        :format(item.inst.Name, tostring(item.Rarity), item.dmg, tostring(item.ShopPrice or 0)),
-                    0x57F287)
+                -- sendEmbed("🪓 ถอนพืชสำเร็จ",
+                --     ("%s | Rank %s | DMG %d | Shop $%s")
+                --         :format(item.inst.Name, tostring(item.Rarity), item.dmg, tostring(item.ShopPrice or 0)),
+                --     0x57F287)
 				ClearHands()
             else
                 sendEmbed("ถอนพืชไม่สำเร็จ",
@@ -760,9 +760,9 @@ local function plant(tile, seedName, spotOverride)
     end)
 
     if ok then
-        sendEmbed("ปลูกสำเร็จ",
-            ("ปลูก **%s** บน `%s`\nตำแหน่ง `(%.1f, %.1f, %.1f)`"):format(item, tile:GetFullName(), spot.X, spot.Y, spot.Z),
-            0x57F287, {{name="SeedID", value="`"..tostring(id).."`", inline=true}})
+        -- sendEmbed("ปลูกสำเร็จ",
+        --     ("ปลูก **%s** บน `%s`\nตำแหน่ง `(%.1f, %.1f, %.1f)`"):format(item, tile:GetFullName(), spot.X, spot.Y, spot.Z),
+        --     0x57F287, {{name="SeedID", value="`"..tostring(id).."`", inline=true}})
         return true
     else
         sendEmbed("ปลูกล้มเหลว", "PlaceItem error:\n```"..tostring(err).."```", 0xED4245)
@@ -775,14 +775,14 @@ local function plantOwnedSeeds_PriceAware()
     local freeSlots, used, cap = getFreePlantSlots()
 
     if getPlantCapacity()  == Count_Plots() then
-        sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง (%d/%d)"))
+        --sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง (%d/%d)"))
         return
     end
 
     -- 1) เมล็ดที่ถืออยู่
     local seeds = getOwnedSeedsWithRarity()
     if #seeds == 0 then
-        sendEmbed("ปลูกตามช่องว่าง", "ไม่มีเมล็ดใน Backpack/Character", 0xAAAAAA)
+        --sendEmbed("ปลูกตามช่องว่าง", "ไม่มีเมล็ดใน Backpack/Character", 0xAAAAAA)
         return
     end
 
@@ -825,7 +825,7 @@ local function plantOwnedSeeds_PriceAware()
         if planted >= freeSlots then break end
 		
 		if getPlantCapacity()  == Count_Plots() then
-			sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง"))
+			--sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง"))
 			return
 		end
 
@@ -844,7 +844,7 @@ local function plantOwnedSeeds_PriceAware()
             if toPlant > 0 then
                 local tiles = getGrassTiles(currentPlot)
                 if #tiles == 0 then
-                    sendEmbed("ปลูกตามช่องว่าง", "ไม่พบ Grass ที่ CanPlace", 0xED4245)
+                    --sendEmbed("ปลูกตามช่องว่าง", "ไม่พบ Grass ที่ CanPlace", 0xED4245)
                     return
                 end
 
@@ -885,18 +885,18 @@ local function plantOwnedSeeds_PriceAware()
 		task.wait(3)
     end
 
-    sendEmbed(
-        "ปลูกตามช่องว่าง (ดีที่สุดก่อน)",
-        ("ปลูกสำเร็จ %d/%d ช่องว่างที่มีอยู่"):format(planted, freeSlots),
-        (planted > 0) and 0x57F287 or 0xAAAAAA
-    )
+    -- sendEmbed(
+    --     "ปลูกตามช่องว่าง (ดีที่สุดก่อน)",
+    --     ("ปลูกสำเร็จ %d/%d ช่องว่างที่มีอยู่"):format(planted, freeSlots),
+    --     (planted > 0) and 0x57F287 or 0xAAAAAA
+    -- )
 end
 
 local function BuySeed(seedName)
     if not seedName or seedName=="" then return false end
     local ok, err = pcall(function() RS.Remotes.BuyItem:FireServer(seedName) end)
     if ok then
-        sendEmbed(" ซื้อเมล็ด", ("ซื้อ **%s** สำเร็จ"):format(seedName), 0x5865F2)
+        --sendEmbed(" ซื้อเมล็ด", ("ซื้อ **%s** สำเร็จ"):format(seedName), 0x5865F2)
     else
         sendEmbed(" ซื้อเมล็ดล้มเหลว", ("**%s**\n```%s```"):format(seedName, tostring(err)), 0xED4245)
     end
@@ -1097,7 +1097,7 @@ local function tryBuyNextPlatform_NoWalk()
     local money = (plr.leaderstats and plr.leaderstats.Money and plr.leaderstats.Money.Value) or 0
     
 	if money < price then
-        sendEmbed("ซื้อแพลตฟอร์ม", ("ยังซื้อ **#%d** ไม่ได้ (ต้องการ $%s)"):format(idx, tostring(price)), 0xFAA61A)
+        --sendEmbed("ซื้อแพลตฟอร์ม", ("ยังซื้อ **#%d** ไม่ได้ (ต้องการ $%s)"):format(idx, tostring(price)), 0xFAA61A)
         return false
     end
 	
@@ -1106,7 +1106,7 @@ local function tryBuyNextPlatform_NoWalk()
     local ok, err = pcall(function() RS.Remotes.BuyPlatform:FireServer(tostring(idx)) end)
     
 	if ok then
-        sendEmbed("ซื้อแพลตฟอร์มสำเร็จ", ("ซื้อช่อง **#%d** ราคา **$%s**"):format(idx, tostring(price)), 0x57F287)
+        --sendEmbed("ซื้อแพลตฟอร์มสำเร็จ", ("ซื้อช่อง **#%d** ราคา **$%s**"):format(idx, tostring(price)), 0x57F287)
     else
         sendEmbed("ซื้อแพลตฟอร์มล้มเหลว", "```"..tostring(err).."```", 0xED4245)
     end
@@ -1144,12 +1144,12 @@ local function tryBuyNextRow_NoWalk()
     if not idx then return false end
     local money = (plr.leaderstats and plr.leaderstats.Money and plr.leaderstats.Money.Value) or 0
     if money < price then
-        sendEmbed("ซื้อแถวปลูกพืช", ("เงินไม่พอซื้อ **Row #%d** (ต้องการ $%s)"):format(idx, tostring(price)), 0xFAA61A)
+        --sendEmbed("ซื้อแถวปลูกพืช", ("เงินไม่พอซื้อ **Row #%d** (ต้องการ $%s)"):format(idx, tostring(price)), 0xFAA61A)
         return false
     end
     local ok, err = pcall(function() RS.Remotes.BuyRow:FireServer(idx) end)
     if ok then
-        sendEmbed("ซื้อแถวปลูกพืชสำเร็จ", ("ซื้อ **Row #%d** ราคา **$%s** (+5 slot)"):format(idx, tostring(price)), 0x57F287)
+        --sendEmbed("ซื้อแถวปลูกพืชสำเร็จ", ("ซื้อ **Row #%d** ราคา **$%s** (+5 slot)"):format(idx, tostring(price)), 0x57F287)
     else
         sendEmbed("ซื้อแถวล้มเหลว", "```"..tostring(err).."```", 0xED4245)
     end
@@ -1458,7 +1458,7 @@ while _G.Enabled do
 		local cap = getPlantCapacity()
 		-- 6) แจ้งเมื่อความจุปลูกเพิ่มขึ้น
 		if cap > lastCap then
-			sendEmbed("📈 เพิ่มความจุปลูก", ("จาก **%d** → **%d** ต้น"):format(lastCap, cap), 0x00FFFF)
+			--sendEmbed("📈 เพิ่มความจุปลูก", ("จาก **%d** → **%d** ต้น"):format(lastCap, cap), 0x00FFFF)
 			lastCap = cap
 		end
 	end
