@@ -134,7 +134,20 @@ end
 
 while not Findplot() do task.wait(0.25) end
 
+local function Count_Plots()
+	local folder = workspace:FindFirstChild("Plots")
+    and workspace.Plots:FindFirstChild(tostring(currentPlot))
+    and workspace.Plots[tostring(currentPlot)]:FindFirstChild("Hitboxes")
 
+	if folder then
+		local count = #folder:GetChildren()
+		--print("Plots =", count)
+		return count
+	else
+		warn("Hitboxes not found")
+	end
+end
+local Count_Plot = Count_Plots()
 -- ===== TILE & PLANT HELPERS =====
 local function getGrassTiles(plot)
     local tiles, rows = {}, plot and plot:FindFirstChild("Rows")
@@ -249,68 +262,6 @@ local function isTooManyPlants()
     end
     return false
 end
-
-local function plant(tile, seedName, spotOverride)
-    if not tile then return false end
-
-    local id = findLatestSeedId(seedName)
-    if not id then
-        sendEmbed(" ปลูกล้มเหลว", "หา **ID** ของ seed ไม่เจอ: `".. tostring(seedName) .."`", 0xED4245)
-        return false
-    end
-    if not EquipTool(seedName) then
-        sendEmbed(" ปลูกล้มเหลว", "ไม่มี/ถือ **Tool** ไม่ได้: `".. tostring(seedName) .."`", 0xED4245)
-        return false
-    end
-
-    -- นับจำนวนต้น “ก่อนวาง”
-    local before = getMyPlantCount()
-
-    -- จุดวาง: ใช้ override ถ้ามี, ไม่งั้นสุ่มให้เหมือนเดิม
-    local plantedNow = getExistingPlants(currentPlot)
-    local spot = spotOverride or pickRandomFreePoint(tile, plantedNow, 12, 0.15, 0.6)
-    if not spot then
-        sendEmbed(" ปลูกล้มเหลว", "ไม่พบตำแหน่งว่างบน tile", 0xED4245)
-        return false
-    end
-
-    -- แก้การตัดชื่อ: เอา " Seed" ออก ไม่ใช่เอาแค่คำแรก
-    local item = (tostring(seedName or "")):gsub("%s*Seed$","")
-
-    local ok, err = pcall(function()
-        RS.Remotes.PlaceItem:FireServer({
-            ID = id, CFrame = CFrame.new(spot), Item = item, Floor = tile
-        })
-    end)
-    if not ok then
-        sendEmbed(" ปลูกล้มเหลว", "PlaceItem error:\n```"..tostring(err).."```", 0xED4245)
-        return false
-    end
-
-    -- รอผลจริงจากเซิร์ฟเวอร์: จำนวนต้นต้องเพิ่มขึ้น
-    local deadline = tick() + 3.0  -- รอได้ ~3 วินาที
-    local success = false
-    repeat
-        if isTooManyPlants() then break end
-        local now = getMyPlantCount()
-        if now > before then
-            success = true
-            break
-        end
-        task.wait(0.1)
-    until tick() > deadline
-
-    if success then
-        sendEmbed(" ปลูกสำเร็จ",
-            ("ปลูก **%s** บน `%s`\nตำแหน่ง `(%.1f, %.1f, %.1f)`"):format(item, tile:GetFullName(), spot.X, spot.Y, spot.Z),
-            0x57F287, {{name="SeedID", value="`"..tostring(id).."`", inline=true}})
-        return true
-    else
-        sendEmbed(" ปลูกไม่สำเร็จ", "คำสั่งส่งแล้วแต่เซิร์ฟเวอร์ไม่ยอมวาง (ตำแหน่งไม่ผ่าน/เต็ม/ชน)", 0xED4245)
-        return false
-    end
-end
-
 
 
 
@@ -587,6 +538,25 @@ local function removePlantById(id)
     return success
 end
 
+-- === NEW: เคลียร์มือให้ว่าง ===
+local function ClearHands()
+    local char = plr.Character or plr.CharacterAdded:Wait()
+    local hum  = char:FindFirstChildOfClass("Humanoid")
+    if hum then hum:UnequipTools() end
+    -- เผื่อยังหลงเหลือ Tool ติด Character ให้ย้ายกลับ Backpack
+    local bag = plr:FindFirstChild("Backpack")
+    if bag then
+        for _, t in ipairs(char:GetChildren()) do
+            if t:IsA("Tool") then t.Parent = bag end
+        end
+    end
+    -- รอจนแน่ใจว่าไม่มี Tool อยู่ในมือ
+    for _=1,20 do
+        if not char:FindFirstChildWhichIsA("Tool") then break end
+        task.wait(0.05)
+    end
+end
+
 -- ==== แทนที่ตัวเดิมด้วยเวอร์ชันตรวจสอบผลจริง ====
 local function pluckWeakestPlantsByCount_WithPrice(n)
     if n <= 0 then return 0 end
@@ -604,6 +574,7 @@ local function pluckWeakestPlantsByCount_WithPrice(n)
                     ("%s | Rank %s | DMG %d | Shop $%s")
                         :format(item.inst.Name, tostring(item.Rarity), item.dmg, tostring(item.ShopPrice or 0)),
                     0x57F287)
+				ClearHands()
             else
                 sendEmbed("ถอนพืชไม่สำเร็จ",
                     ("พยายามถอน %s (ID: %s) แต่ตรวจไม่พบการเปลี่ยนแปลง"):format(item.inst.Name, tostring(id)),
@@ -690,11 +661,116 @@ end
 -- จัดอันดับ: NameRank (ถ้ามี getTreeRankByName) > Rarity Rank > ShopPrice > Uses
 -- ไม่แทนที่ต้นเดิม (ไม่เรียก makeRoomIfBetter_RankAndPrice)
 
+
+-- === NEW: ใส่ Tool แบบถือชิ้นเดียวเท่านั้น ===
+local function EquipToolExclusive(toolItemName, tries, waitStep)
+    tries, waitStep = tries or 20, waitStep or 0.05
+    local char = plr.Character or plr.CharacterAdded:Wait()
+    local bag  = plr:FindFirstChild("Backpack")
+    local hum  = char:FindFirstChildOfClass("Humanoid")
+
+    -- ถ้า “ถือถูกชิ้นอยู่แล้ว” ก็จบ
+    for _, t in ipairs(char:GetChildren()) do
+        if t:IsA("Tool") and t:GetAttribute("ItemName") == toolItemName then
+            return t
+        end
+    end
+
+    -- ถ้าถืออย่างอื่นอยู่ ให้เคลียร์มือก่อน
+    if char:FindFirstChildWhichIsA("Tool") then
+        ClearHands()
+    end
+
+    -- หา Tool ที่ต้องการจาก Character/Backpack
+    local function findTool()
+        for _, t in ipairs(char:GetChildren()) do
+            if t:IsA("Tool") and t:GetAttribute("ItemName") == toolItemName then return t end
+        end
+        if bag then
+            for _, t in ipairs(bag:GetChildren()) do
+                if t:IsA("Tool") and t:GetAttribute("ItemName") == toolItemName then return t end
+            end
+        end
+        return nil
+    end
+
+    local tool = findTool()
+    if not tool then return nil end
+
+    -- ย้ายมาใส่มือ
+    tool.Parent = char
+
+    -- รอจนถือจริง และไม่มีชิ้นอื่นมาปน
+    for _=1,tries do
+        local hasRight = char:FindFirstChild(tool.Name) ~= nil
+        local wrongHeld = false
+        for _, t in ipairs(char:GetChildren()) do
+            if t:IsA("Tool") and t ~= tool and (t:GetAttribute("ItemName") or t.Name) ~= toolItemName then
+                wrongHeld = true; break
+            end
+        end
+        if hasRight and not wrongHeld then
+            return tool
+        end
+        if wrongHeld and hum then
+            hum:UnequipTools()
+            tool.Parent = char
+        end
+        task.wait(waitStep)
+    end
+    return nil
+end
+
+
+
+local function plant(tile, seedName, spotOverride)
+    if not tile then return false end
+
+    local id = findLatestSeedId(seedName)
+    if not id then
+        sendEmbed("ปลูกล้มเหลว", "หา ID ของ seed ไม่เจอ: `".. tostring(seedName) .."`", 0xED4245)
+        return false
+    end
+
+    -- ใช้การถือแบบ exclusive
+    local tool = EquipToolExclusive(seedName)
+    if not tool then
+        sendEmbed("ปลูกล้มเหลว", "ถือ Tool ไม่ได้: `".. tostring(seedName) .."`", 0xED4245)
+        return false
+    end
+
+    -- จุดวาง
+    local plantedNow = getExistingPlants(currentPlot)
+    local spot = spotOverride or pickRandomFreePoint(tile, plantedNow, 12, 0.15, 0.6)
+    if not spot then
+        sendEmbed("ปลูกล้มเหลว", "ไม่พบตำแหน่งว่างบน tile", 0xED4245)
+        return false
+    end
+
+    local item = seedName:match("^(%S+)")
+    local ok, err = pcall(function()
+        RS.Remotes.PlaceItem:FireServer({
+            ID = id, CFrame = CFrame.new(spot), Item = item, Floor = tile
+        })
+    end)
+
+    if ok then
+        sendEmbed("ปลูกสำเร็จ",
+            ("ปลูก **%s** บน `%s`\nตำแหน่ง `(%.1f, %.1f, %.1f)`"):format(item, tile:GetFullName(), spot.X, spot.Y, spot.Z),
+            0x57F287, {{name="SeedID", value="`"..tostring(id).."`", inline=true}})
+        return true
+    else
+        sendEmbed("ปลูกล้มเหลว", "PlaceItem error:\n```"..tostring(err).."```", 0xED4245)
+        return false
+    end
+end
+
 local function plantOwnedSeeds_PriceAware()
     -- 0) ช่องว่างจริงก่อน
     local freeSlots, used, cap = getFreePlantSlots()
-    if freeSlots <= 0 then
-        sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง (%d/%d)"):format(used, cap), 0xAAAAAA)
+
+    if getPlantCapacity()  == Count_Plots() then
+        sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง (%d/%d)"))
         return
     end
 
@@ -743,6 +819,11 @@ local function plantOwnedSeeds_PriceAware()
 
         if planted >= freeSlots then break end
 		
+		if getPlantCapacity()  == Count_Plots() then
+			sendEmbed("ปลูกตามช่องว่าง", ("ไม่มีช่องว่าง"))
+			return
+		end
+
         -- ถือ Tool ไม่ได้ → ข้าม seed นี้
         if not EquipTool(s.Name) then
             -- (คงพฤติกรรมเดิม: ไม่ทำให้ทั้งฟังก์ชันล้ม)
@@ -771,29 +852,24 @@ local function plantOwnedSeeds_PriceAware()
 					local rowPick = math.random(1, enabledRows)
 					local tile, spot = getRandomGrassPoint(tostring(currentPlot), tostring(rowPick), 0.15)
 
+				
 					local okPlanted = false
 					if tile and spot and tile:GetAttribute("CanPlace") then
-						okPlanted = plant(tile, s.Name, spot)
+						okPlanted = plant(tile, s.Name, spot)   -- คืน true/false
 					end
 					if not okPlanted then
 						-- fallback
-						local tiles2 = getGrassTiles(currentPlot)
-						if #tiles2 == 0 then
-							sendEmbed("ปลูกตามช่องว่าง", "ไม่พบ Grass ที่ CanPlace", 0xED4245)
-							return
-						end
-						local t = pickEmptyThenAny(tiles2)
+						local t = pickEmptyThenAny(getGrassTiles(currentPlot))
 						if t and t:GetAttribute("CanPlace") then
-							okPlanted = plant(t, s.Name) -- ไม่มี spotOverride
+							okPlanted = plant(t, s.Name)        -- ไม่มี spotOverride
 						end
 					end
 
 					if okPlanted then
-						planted = planted + 1
+						planted += 1
 						task.wait(PLANT_DELAY + 0.1)
 					else
-						-- วางไม่ได้ → เลิกปลูก seed นี้ (กันลูปค้าง)
-						break
+						break -- กันลูปค้างถ้าวางไม่ได้จริง
 					end
 				end
 
@@ -838,6 +914,10 @@ end
 function ShouldSkipSeedByCap(seedName, capOverride) -- การซื้อเมล็ด ตามลำดับ
     local plant = _basePlantNameFromSeed(seedName)
     local cap = tonumber(capOverride or getPlantCapacity()) or 0
+	
+	if  Count_Plot >= 5 and plant == "Cactus" then
+		return true
+	end
 
     if cap > 5 and (plant == "Cactus" or plant == "Strawberry" or plant == "Pumpkin") then
         return true
@@ -1162,7 +1242,7 @@ local function ensureEquipBestBrainrots()
         RS.Remotes.EquipBestBrainrots:FireServer()
     end)
     if succeeded then
-        sendEmbed("Equip Brainrot", "เรียกใช้ **EquipBestBrainrots** (มี Brainrot อยู่แล้ว)", 0x57F287)
+        --sendEmbed("Equip Brainrot", "เรียกใช้ **EquipBestBrainrots** (มี Brainrot อยู่แล้ว)", 0x57F287)
     else
         sendEmbed("Equip Brainrot ล้มเหลว", "```"..tostring(err).."```", 0xED4245)
     end
@@ -1280,7 +1360,7 @@ local function parseTimeToSeconds(txt)
     -- รูปแบบ MM:SS
     m, s = clock:match("^(%d+):(%d+)$")
     if m and s then
-        return tonumber(m)*60 + tonumber(s)
+        return (tonumber(m)*60 + tonumber(s)) / 3
     end
 
     -- ถ้าไม่ใช่รูปแบบมีโคลอน ลองอ่านเป็นคำภาษาไทย/สากล
@@ -1288,11 +1368,14 @@ local function parseTimeToSeconds(txt)
     local mm = tonumber(txt:match("(%d+)%s*นาที"))   or tonumber(txt:match("(%d+)%s*m")) or 0
     local ss = tonumber(txt:match("(%d+)%s*วินาที")) or tonumber(txt:match("(%d+)%s*s")) or 0
     if hh + mm + ss > 0 then
-        return hh*3600 + mm*60 + ss
+        return (hh*3600 + mm*60 + ss) 
     end
 
     return nil -- แปลงไม่ได้
 end
+
+
+
 
 local lastCollect = tick()
 local lastCap = getPlantCapacity()
@@ -1307,7 +1390,7 @@ end
 sendText("เริ่ม Auto PvB")
 
 while _G.Enabled do
-
+	
 	--  ลอง Equip Brainrot เป็นช่วง ๆ เมื่อมีของ
     if tick() - lastEquipCheck > 5 then
         ensureEquipBestBrainrots()
@@ -1336,18 +1419,16 @@ while _G.Enabled do
 			end
 		end
 	end
-
-	local seeds = getOwnedSeedsWithRarity()
-	print(#seeds)
-	if #seeds ~= 0 then
-		pluckWeakestPlantsByCount_WithPrice(1) -- ถอนพืช
-		task.wait(3)
+	
+	while not (lastCap == Count_Plot) do
 		plantOwnedSeeds_PriceAware()
+		task.wait(1)
+		Count_Plot = Count_Plots()
 	end
 
     -- 4) ซื้อแพลตฟอร์ม Brainrot ถัดไป (ข้าม Rebirth)
     tryBuyNextPlatform_NoWalk()
-
+	
 	if lastCap ~= 35 then
 		-- 5) ซื้อ Row ปลูกพืชถัดไป (เพิ่มความจุ +5)
     	tryBuyNextRow_NoWalk()
@@ -1362,8 +1443,8 @@ while _G.Enabled do
     
 	if lastCap > 10 then
 		local seconds = Plots[tostring(currentPlot)].NPCs.George.Timer.Timer.Text
-		print('Wait : ' .. (seconds/3))
-		task.wait(parseTimeToSeconds(seconds/3))
+		print('Wait : ' .. seconds)
+		task.wait(parseTimeToSeconds(seconds))
 	end
 	
 	task.wait(5)
