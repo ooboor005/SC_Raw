@@ -1426,6 +1426,7 @@ while _G.Enabled do
 				if okWait and waitUntilAffordable(pick.Price, 300) then
 					BuySeed(pick.Name)
 					seeds = getOwnedSeedsWithRarity()
+
 				end
 			end
 		end
@@ -1438,11 +1439,12 @@ while _G.Enabled do
 			task.wait(1)
 			Count_Plot = Count_Plots()
 			seeds = getOwnedSeedsWithRarity()
+			if #seeds == 0 then
+				break
+			end
 		end
 		seeds = getOwnedSeedsWithRarity()
-		if #seeds == 0 then
-			break
-		end
+		
     end
 
 
