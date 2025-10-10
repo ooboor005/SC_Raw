@@ -1427,7 +1427,7 @@ while _G.Enabled do
 	end
 	
 
-    if #seeds != 0 then
+    if #seeds ~= 0 then
         while not (lastCap == Count_Plot) do
 			plantOwnedSeeds_PriceAware()
 			task.wait(1)
