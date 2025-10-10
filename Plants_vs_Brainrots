@@ -1383,7 +1383,7 @@ local lastCollect = tick()
 local lastCap = getPlantCapacity()
 local lastEquipCheck = 0
 
-===== MAIN LOOP =====
+--===== MAIN LOOP =====
 if needsTutorial() and lastCap <= 5 then
     task.wait(1)
     pcall(runTutorialOnce)
@@ -1393,73 +1393,73 @@ sendText("เริ่ม Auto PvB")
 
 
 
--- while _G.Enabled do
+while _G.Enabled do
 	
--- 	--  ลอง Equip Brainrot เป็นช่วง ๆ เมื่อมีของ
---     if tick() - lastEquipCheck > 5 then
---         ensureEquipBestBrainrots()
---         lastEquipCheck = tick()
---     end
+	--  ลอง Equip Brainrot เป็นช่วง ๆ เมื่อมีของ
+    if tick() - lastEquipCheck > 5 then
+        ensureEquipBestBrainrots()
+        lastEquipCheck = tick()
+    end
 
---     -- 1) ซื้อเมล็ด: กวาดหายากก่อน (Mythic/Godly/Secret)
---     local shop  = getAvailableSeeds()
---     local money = (plr.leaderstats and plr.leaderstats.Money and plr.leaderstats.Money.Value) or 0
---     updateMaxMoneySeen(money)
+    -- 1) ซื้อเมล็ด: กวาดหายากก่อน (Mythic/Godly/Secret)
+    local shop  = getAvailableSeeds()
+    local money = (plr.leaderstats and plr.leaderstats.Money and plr.leaderstats.Money.Value) or 0
+    updateMaxMoneySeen(money)
 
--- 	local boughtPriority = buyPriorityRaritySeeds(lastCap)
--- 	if not boughtPriority then
+	local boughtPriority = buyPriorityRaritySeeds(lastCap)
+	if not boughtPriority then
 
--- 		local shopFiltered = FilterShopByCap(shop, lastCap)
+		local shopFiltered = FilterShopByCap(shop, lastCap)
 
--- 		local pick = pickSeedByPolicy(money, shopFiltered)
--- 		if pick then
--- 			if money >= pick.Price then
--- 				BuySeed(pick.Name)
--- 			else
--- 				local okWait = select(1, shouldWaitFor(pick.Price, 300))
--- 				if okWait and waitUntilAffordable(pick.Price, 300) then
--- 					BuySeed(pick.Name)
--- 				end
--- 			end
--- 		end
--- 	end
+		local pick = pickSeedByPolicy(money, shopFiltered)
+		if pick then
+			if money >= pick.Price then
+				BuySeed(pick.Name)
+			else
+				local okWait = select(1, shouldWaitFor(pick.Price, 300))
+				if okWait and waitUntilAffordable(pick.Price, 300) then
+					BuySeed(pick.Name)
+				end
+			end
+		end
+	end
 	
--- 	while not (lastCap == Count_Plot) do
--- 		plantOwnedSeeds_PriceAware()
--- 		task.wait(1)
--- 		Count_Plot = Count_Plots()
--- 	end
+	while not (lastCap == Count_Plot) do
+		plantOwnedSeeds_PriceAware()
+		task.wait(1)
+		Count_Plot = Count_Plots()
+	end
 
---     -- 4) ซื้อแพลตฟอร์ม Brainrot ถัดไป (ข้าม Rebirth)
---     tryBuyNextPlatform_NoWalk()
+    -- 4) ซื้อแพลตฟอร์ม Brainrot ถัดไป (ข้าม Rebirth)
+    tryBuyNextPlatform_NoWalk()
 	
--- 	if lastCap ~= 35 then
--- 		-- 5) ซื้อ Row ปลูกพืชถัดไป (เพิ่มความจุ +5)
---     	tryBuyNextRow_NoWalk()
+	if lastCap ~= 35 then
+		-- 5) ซื้อ Row ปลูกพืชถัดไป (เพิ่มความจุ +5)
+    	tryBuyNextRow_NoWalk()
 
--- 		local cap = getPlantCapacity()
--- 		-- 6) แจ้งเมื่อความจุปลูกเพิ่มขึ้น
--- 		if cap > lastCap then
--- 			sendEmbed("📈 เพิ่มความจุปลูก", ("จาก **%d** → **%d** ต้น"):format(lastCap, cap), 0x00FFFF)
--- 			lastCap = cap
--- 		end
--- 	end
+		local cap = getPlantCapacity()
+		-- 6) แจ้งเมื่อความจุปลูกเพิ่มขึ้น
+		if cap > lastCap then
+			sendEmbed("📈 เพิ่มความจุปลูก", ("จาก **%d** → **%d** ต้น"):format(lastCap, cap), 0x00FFFF)
+			lastCap = cap
+		end
+	end
     
--- 	if lastCap > 10 then
--- 		local seconds = Plots[tostring(currentPlot)].NPCs.George.Timer.Timer.Text
--- 		--print('Wait : ' .. seconds)
--- 		task.wait(parseTimeToSeconds(seconds))
--- 	end
+	if lastCap > 10 then
+		local seconds = Plots[tostring(currentPlot)].NPCs.George.Timer.Timer.Text
+		--print('Wait : ' .. seconds)
+		task.wait(parseTimeToSeconds(seconds))
+	end
 	
--- 	task.wait(5)
--- 	local character = plr.Character or plr.CharacterAdded:Wait()
--- 	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	task.wait(5)
+	local character = plr.Character or plr.CharacterAdded:Wait()
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
 
--- 	if humanoid then
--- 		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
--- 	end
+	if humanoid then
+		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+	end
 
--- end
+end
 
 sendText("หยุด Auto PvB")
 shutdownSave()
