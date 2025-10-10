@@ -1392,7 +1392,7 @@ end
 sendText("เริ่ม Auto PvB")
 
 
-
+local seeds = getOwnedSeedsWithRarity()
 while _G.Enabled do
 	
 	--  ลอง Equip Brainrot เป็นช่วง ๆ เมื่อมีของ
@@ -1415,20 +1415,27 @@ while _G.Enabled do
 		if pick then
 			if money >= pick.Price then
 				BuySeed(pick.Name)
+				seeds = getOwnedSeedsWithRarity()
 			else
 				local okWait = select(1, shouldWaitFor(pick.Price, 300))
 				if okWait and waitUntilAffordable(pick.Price, 300) then
 					BuySeed(pick.Name)
+					seeds = getOwnedSeedsWithRarity()
 				end
 			end
 		end
 	end
 	
-	while not (lastCap == Count_Plot) do
-		plantOwnedSeeds_PriceAware()
-		task.wait(1)
-		Count_Plot = Count_Plots()
-	end
+
+    if #seeds != 0 then
+        while not (lastCap == Count_Plot) do
+			plantOwnedSeeds_PriceAware()
+			task.wait(1)
+			Count_Plot = Count_Plots()
+		end
+		seeds = getOwnedSeedsWithRarity()
+    end
+
 
     -- 4) ซื้อแพลตฟอร์ม Brainrot ถัดไป (ข้าม Rebirth)
     tryBuyNextPlatform_NoWalk()
