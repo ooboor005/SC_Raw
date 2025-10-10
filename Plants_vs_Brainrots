@@ -1443,7 +1443,7 @@ while _G.Enabled do
     
 	if lastCap > 10 then
 		local seconds = Plots[tostring(currentPlot)].NPCs.George.Timer.Timer.Text
-		print('Wait : ' .. seconds)
+		--print('Wait : ' .. seconds)
 		task.wait(parseTimeToSeconds(seconds))
 	end
 	
