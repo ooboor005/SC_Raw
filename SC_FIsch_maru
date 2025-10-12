@@ -19,7 +19,6 @@ _G.Settings = {
 		Necessary_Rods = {
 			"Reinforced Rod",
 			"Depthseeker Rod",
-			"Aurora Rod",
 			"Carrot Rod",
 			-- "Kraken Rod",
 			"Zeus Rod",
@@ -86,7 +85,7 @@ _G.Settings = {
 		["Enabled"] = true,            -- Enable or disable the enchantment system
 		["Rod"] = {                    -- Specific enchantments for each rod
 			["Ethereal Prism Rod"] = {
-				CashFarm = {"Aurora Rod","Quantum", "Anomalous", "Chaotic", "Abyssal"},
+				CashFarm = {"Quantum", "Anomalous", "Chaotic", "Abyssal"},
 			}
 		},
 	},
