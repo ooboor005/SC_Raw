@@ -136,7 +136,7 @@ _G.Settings = {
 		['Subfix'] = " - ",
 		['Rod Displayed'] = 10,
 	},
-	["FpsBoost"] = false,
+	["FpsBoost"] = true,
 	["Black_Screen"] = true
 }
 
