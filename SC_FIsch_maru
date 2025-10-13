@@ -90,7 +90,7 @@ _G.Settings = {
 		},
 	},
 	["Totems"] = {
-		["Enabled"] = true,         -- Enable or disable the totem system
+		["Enabled"] = false,         -- Enable or disable the totem system
 		["ActivationLevel"] = 300,  -- Level required to activate totems
 	
 		["DayTotem"] = "Sundial Totem",    -- Totem used during the day
