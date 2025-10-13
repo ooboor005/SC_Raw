@@ -96,7 +96,7 @@ _G.Settings = {
 		["DayTotem"] = "Sundial Totem",    -- Totem used during the day
 		["NightTotem"] = "Aurora Totem",   -- Totem used during the night
 	
-		["AutoPurchase"] = true,    -- Enable automatic totem purchasing
+		["AutoPurchase"] = false,    -- Enable automatic totem purchasing
 		["PurchaseLimit"] = {       -- Maximum allowed purchases per type
 			["DayTotem"] = 1,
 			["NightTotem"] = 1,
