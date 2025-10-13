@@ -1,8 +1,9 @@
+if not game:IsLoaded() then repeat game.Loaded:Wait() until game:IsLoaded() end
+
 local Level_Farm = CFrame.new(1374.36963, -602.399231, 2337.11328, 0.836481154, -9.18514473e-08, -0.547995687, 3.76509632e-08, 1, -1.10141599e-07, 0.547995687, 7.14988104e-08, 0.836481154)
 _G.Settings = {
 	["DefaultPosition"] = Level_Farm,
-	["EquipRod"] = "Auto", -- Trident Rod, Destiny Rod,... Rod
-	["MinFishingTime"] = 1.8, -- this will make you fishing faster in ... second (min is 1 fish 1.8 sec because game limited)
+	["MinFishingTime"] = 0.5, -- this will make you fishing faster in ... second (min is 1 fish 1.8 sec because game limited)
 	["SellFish"] = {
 		["SellDelay"] = 10, -- Seconds
 		["Enable"] = true,
@@ -14,6 +15,14 @@ _G.Settings = {
 			["Exotic"] = true -- recommend to enable it
 		}
 	},
+	["DailyShop"] = {
+        Buy = true,
+        Items = {
+            "Exalted Relic",
+            "Enchant Relic",
+            "Aurora Totem"
+        }
+    },
 	['Rod'] = {
 		-- Necessary Rods: Rods that are required or essential for the gameplay
 		Necessary_Rods = {
@@ -90,16 +99,16 @@ _G.Settings = {
 		},
 	},
 	["Totems"] = {
-		["Enabled"] = false,         -- Enable or disable the totem system
+		["Enabled"] = true,         -- Enable or disable the totem system
 		["ActivationLevel"] = 300,  -- Level required to activate totems
 	
 		["DayTotem"] = "Sundial Totem",    -- Totem used during the day
 		["NightTotem"] = "Aurora Totem",   -- Totem used during the night
 	
-		["AutoPurchase"] = false,    -- Enable automatic totem purchasing
+		["AutoPurchase"] = true,    -- Enable automatic totem purchasing
 		["PurchaseLimit"] = {       -- Maximum allowed purchases per type
-			["DayTotem"] = 1,
-			["NightTotem"] = 1,
+			["Day"] = 1,
+			["Night"] = 1,
 		},
 	},	
 	['EnabledFishingZones'] = false,
