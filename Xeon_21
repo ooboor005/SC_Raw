@@ -4,37 +4,3 @@ repeat task.wait() until game.Players.LocalPlayer
 repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
 
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_FIsch_maru"))()
-
-
-
--- StarterPlayerScripts/AutoExitIfCoinIdle.client.lua
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local coin = player:WaitForChild("leaderstats"):WaitForChild("C$")
-
-local TIMEOUT_SEC = 1 * 60  -- 7 นาที
-local CHECK_EVERY = 30       -- เช็คทุกกี่วินาที
-
-local lastValue = coin.Value
-local lastChangedAt = time()
-
--- รีเซ็ตตัวจับเวลาเมื่อค่า coin เปลี่ยน (จะเป็นเพิ่มหรือลดก็ได้)
-coin:GetPropertyChangedSignal("Value"):Connect(function()
-	if coin.Value ~= lastValue then
-		lastValue = coin.Value
-		lastChangedAt = time()
-		-- print(("C$ เปลี่ยนเป็น %s (รีเซ็ตตัวจับเวลา)"):format(tostring(lastValue)))
-	end
-end)
-
--- เช็คเป็นระยะ ถ้าค่าไม่เปลี่ยนเกิน TIMEOUT_SEC ให้เตะตัวเองออกจากเกม
-task.spawn(function()
-	while player.Parent do
-		task.wait(CHECK_EVERY)
-		local idle = time() - lastChangedAt
-		if idle >= TIMEOUT_SEC then
-			game:Shutdown()
-			break
-		end
-	end
-end)
