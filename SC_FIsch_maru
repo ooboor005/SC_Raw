@@ -36,8 +36,6 @@ _G.Settings = {
 
 			"No-Life Rod", 
 			"Seraphic Rod",
-
-			"Ethereal Prism Rod",
 		},
 	
 		-- Custom Rods: Special rods that can be customized after obtained all necessary rods.
