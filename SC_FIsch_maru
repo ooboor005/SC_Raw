@@ -32,6 +32,7 @@ _G.Settings = {
 			"Reinforced Rod",
 			"Midas Rod",
 			"Luminescent Oath",
+			"Great Rod of Oscar",
 		},
 	
 		["BuyCustomRodOnLevel"] = 200,
