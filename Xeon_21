@@ -1,6 +1,6 @@
 _G.Config = {
   ["Rod Options"] = {
-    ["AutoBuyWhenReady"] = true,
+    ["AutoBuyWhenReady"] = false,
     ["Rod Level Cap Price"] = 1000,
     ["Purchasable Rods"] = {
       "Abyssal Specter Rod",
