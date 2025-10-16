@@ -1,8 +1,29 @@
-repeat task.wait() until game:IsLoaded()
-repeat task.wait() until game.Players
-repeat task.wait() until game.Players.LocalPlayer
-repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+script_key="uJekJkGbMyAucHiYnBMqsUDYXjXTMpWj";
+getgenv().Configs = {
+    -- แจ้งเตือน ( Notify )
+    WebhookUrl = "", -- ลิ้ง Webhook Discord
+    LimitDiamonds = 0, -- จำกัดเพชรถ้าถึงแล้วให้แจ้งเตือนใช้คู่กับ WebhookOneTime
+    WebhookOneTime = false, -- ส่งแจ้งเตือนแค่ครั้งเดียวตอนฟาร์มเสร็จ
+    EnableLogRam = false, -- เปิด/ปิด Log ของ Account Manager
 
-_G.WebhookLink = nil
-_G.NoHideNameWebhook = false
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/26272949f21bd5a5d463bbbea4ec7ae4.lua"))()
+    -- การฟาร์ม ( Farm )
+    LimitDay = 0, -- จำกัดวันถ้าถึงแล้วให้เริ่มเกมใหม่ / ถ้าเป็น 0 คือฟาร์มเรื่อยๆ
+    MaxStrongholdLevel = 5, -- ระดับสูงสุดของสตรองโฮลด์ถ้าถึงแล้วให้เริ่มเกมใหม่
+
+    -- คลาส ( Class )
+    BuyClass = {"None"}, -- ชื้อคลาส
+    DoFirstTimeReroll = false, -- รีร้านคลาสครั้งแรกฟรี ถ้าไม่มีคลาสที่ต้องการขาย
+    AutoEquipClass = "None", -- เลือกใส่ Class
+    UpgradeClass = false, -- อัพเวลคลาสอัตโนมัติ (ไม่ได้ทำเควส แค่อัพเวลตอนมันพร้อมเท่านั้น)
+
+    -- Misc
+    UI = true, -- เปิด/ปิด UI
+    LowGraphics = true, -- โหมดกราฟฟิคต่ำ
+    FpsCap = 6, -- จำกัด FPS (ถ้าไม่ใช้ให้ตั้งเป็น 0)
+}
+getgenv().GoogleSheetLog = {
+    -- Google Sheet
+    Enable = false, -- เปิดใช้ฟีเจอร์
+    WebAppURL = "" -- ใส่ URL ของ Google Apps Script ที่เชื่อมต่อกับ Google Sheets ของคุณ
+}
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/be5a6b1091866143648277e01680d4d7.lua"))()
