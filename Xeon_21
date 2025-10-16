@@ -1,1 +1,1 @@
-loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_FIsch'))()
+loadstring(game:HttpGet('https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_FIsch_maru'))()
