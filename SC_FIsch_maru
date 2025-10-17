@@ -31,7 +31,6 @@ _G.Settings = {
 		["Necessary_Rods"] = {
 			"Reinforced Rod",
 			"Midas Rod",
-			"Luminescent Oath",
 			"Great Rod of Oscar",
 		},
 	
@@ -73,11 +72,11 @@ _G.Settings = {
 	["Enchant"] = {
 		["Enabled"] = true,            -- Enable or disable the enchantment system
 		["Rod"] = {                    -- Specific enchantments for each rod
-			-- ["Luminescent Oath"] = {
+			-- ["Great Rod of Oscar"] = {
 			-- 	LevelFarm = {"Clever"},
 			-- 	CashFarm = {"Quantum", "Anomalous", "Chaotic", "Abyssal"},
 			-- },
-			["Luminescent Oath"] = {
+			["Great Rod of Oscar"] = {
 				["Enchant Relic"] = {
 					LevelFarm = {"Clever"},
 					CashFarm = {"Sea King"},
