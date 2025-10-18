@@ -30,8 +30,8 @@ _G.Settings = {
 		-- คันเบ็ดที่จำเป็น: คันเบ็ดที่จำเป็นหรือจำเป็นสำหรับการเล่นเกม
 		["Necessary_Rods"] = {
 			"Reinforced Rod",
-			"Aurora Rod",
 			"Midas Rod",
+			"Aurora Rod",
 			"Great Rod of Oscar",
 		},
 	
