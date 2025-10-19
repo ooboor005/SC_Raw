@@ -1,18 +1,12 @@
-
-local money_zone = CFrame.new(-13887.3965, -11048.6885, 350.285706, 0.948456287, 1.08180259e-07, 0.316907942, -1.06977055e-07, 1, -2.11960565e-08, -0.316907942, -1.37983438e-08, 0.948456287)
-local Level_Farm = CFrame.new(1374.36963, -602.399231, 2337.11328, 0.836481154, -9.18514473e-08, -0.547995687, 3.76509632e-08, 1, -1.10141599e-07, 0.547995687, 7.14988104e-08, 0.836481154)
-_G.Settings = {
-	["DefaultPosition"] = Level_Farm,
-	["Speed"] = 2,
-	["FarmMode"] = "Level", -- Money
+_G.Config = _G.Config or {
+	["FPSCap"] = 10,
+	["WhiteScreen"] = true,
 	["BuyLuck"] = true,
-	["MinFishingTime"] = 0, -- จะทำให้คุณตกปลาได้เร็วขึ้นในเวลา ... วินาที (นาทีคือ 1 ปลา 1.8 วินาที เนื่องจากเกมจำกัด)
-	["SellFish"] = {
-		["SellDelay"] = 10, -- Seconds
+	["AutoSell"] = {
+		["Delay"] = 10, -- Seconds
 		["Enable"] = true,
-		["Method"] = {
+		["Rarity"] = {
 			["Event"] = true,
-			["Enchant"] = false,
 			["Mythical"] = true,
 			["Legendary"] = true,
 			["Exotic"] = true -- recommend to enable it
@@ -27,16 +21,13 @@ _G.Settings = {
         }
     },
 	['Rod'] = {
-		-- คันเบ็ดที่จำเป็น: คันเบ็ดที่จำเป็นหรือจำเป็นสำหรับการเล่นเกม
-		["Necessary_Rods"] = {
-			"Reinforced Rod",
-			"Aurora Rod",
+		["Main"] = {
+			"Stone Rod", -- Stone Rod
+			"Wildflower Rod",
+			"Aurora Rod", 
 			"Great Rod of Oscar",
 		},
-	
-		["BuyCustomRodOnLevel"] = 200,
-		-- แท่งที่กำหนดเอง: แท่งพิเศษที่สามารถปรับแต่งได้หลังจากได้รับแท่งที่จำเป็นทั้งหมดแล้ว
-		["Custom_Rods"] = {
+		["Secondary"] = {
 			"Fischer's Rod", "Ethereal Prism Rod", "Cerulean Fang Rod",
 			"Aurora Rod", "Tempest Rod", "Abyssal Specter Rod",
 			"Destiny Rod", "Challenger's Rod", "Rod Of The Zenith",
@@ -60,30 +51,26 @@ _G.Settings = {
 
 			"Wildflower Rod", "Firefly Rod", "Frog Rod",
 			"Azure Of Lagoon", "Free Spirit Rod", "Verdant Shear Rod",
-			"Great Dreamer Rod",
-			"No-Life Rod", "Seraphic Rod",
-		},
-	
-		-- คันเบ็ดปริศนา: คันเบ็ดที่จะวางจำหน่ายในอนาคต (ไม่มีจำหน่ายในขณะนี้)
-		["Puzzle_Rods"] = {
-			--["Heaven's Rod"] = 400, -- ( name, required level )
+			"Great Dreamer Rod", "Wicked Fang Rod"
 		},
 	},	
 	["Enchant"] = {
-		["Enabled"] = true,            -- Enable or disable the enchantment system
-		["Rod"] = {                    -- Specific enchantments for each rod
-			-- ["Great Rod of Oscar"] = {
-			-- 	LevelFarm = {"Clever"},
-			-- 	CashFarm = {"Quantum", "Anomalous", "Chaotic", "Abyssal"},
-			-- },
+		["Enabled"] = true,
+		["Rod"] = {
 			["Great Rod of Oscar"] = {
 				["Enchant Relic"] = {
 					LevelFarm = {"Clever"},
-					CashFarm = {"Sea King"},
+					CashFarm = {"Clever"},
 				},
-				["Exalted Relic"] = {
-					LevelFarm = {"Sea Overlord"},
-					CashFarm = {"Sea Overlord"},
+				["Cosmic Relic"] = {
+					LevelFarm = {"Wise"},
+					CashFarm = {"Sea Prince"},
+				},
+			},
+			["Great Rod of Oscar"] = {
+				["Enchant Relic"] = {
+					LevelFarm = {"Clever", "Insight", "Sea King"},
+					CashFarm = {"Clever", "Insight", "Sea King"},
 				},
 				["Cosmic Relic"] = {
 					LevelFarm = {"Wise"},
@@ -93,29 +80,27 @@ _G.Settings = {
 		},
 	},
 	["Totems"] = {
-		["Enabled"] = true,         -- Enable or disable the totem system
-		["ActivationLevel"] = 200,  -- Level required to activate totems
+		["Enabled"] = true,
+		["ActivationLevel"] = 300,
 	
-		["DayTotem"] = "Sundial Totem",    -- Totem used during the day
-		["NightTotem"] = "Aurora Totem",   -- Totem used during the night
+		["DayTotem"] = "Sundial Totem",
+		["NightTotem"] = "Aurora Totem",
 	
-		["AutoPurchase"] = true,    -- Enable automatic totem purchasing
-		["PurchaseLimit"] = {       -- Maximum allowed purchases per type
+		["AutoPurchase"] = true,
+		["PurchaseLimit"] = {
 			["Day"] = 1,
 			["Night"] = 1,
 		},
 	},	
-	["RAM_Config"] = {
-		['Port'] = 7963,
-		['Password'] = "",
-		['Update Interval'] = 5,
-		['Subfix'] = " - ",
-		['Rod Displayed'] = 10,
+	["RAM"] = {
+		    Port = 7963,
+			Password = "",
+			["Update Interval"] = 5,
+			["Reconnect Delay"] = 2,
+			["Max Retries"] = 10,
+			Subfix = " • "
 	},
-	["FpsBoost"] = false,
-	["Black_Screen"] = true
 }
-
 
 -- LocalScript
 local Players = game:GetService("Players")
