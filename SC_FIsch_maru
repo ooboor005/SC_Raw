@@ -1,5 +1,5 @@
-_G.Config = {
-	["FPSCap"] = 10,
+_G.Config =  {
+	["FPSCap"] = 30,
 	["WhiteScreen"] = true,
 	["BuyLuck"] = true,
 	["AutoSell"] = {
@@ -103,6 +103,9 @@ _G.Config = {
 			Subfix = " • "
 	},
 }
+
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B8%A5%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%81"))()
+
 script_key="vfoKBWBNZVURVezqNIctucjearuNhguv";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/16ddf2948fdb2a2791df613f2b969e7c.lua"))()
 
