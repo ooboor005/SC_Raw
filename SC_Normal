@@ -97,10 +97,10 @@ _G.Config = {
     },
   },
 
-  ["Lock"] = { ["Level Cap"] = 1000, ["Money Cap"] = 1000000 },
+  ["Lock"] = { ["Level Cap"] = 1500, ["Money Cap"] = 1000000 },
 
   ["Aurora Settings"] = {
-    ["Always Totem"] = true,
+    ["Always Totem"] = false,
     ["Start Level"] = 300,
     ["End Level"] = 1000,
   },
@@ -108,6 +108,8 @@ _G.Config = {
   ["Apply FPSCap"] = 10,
   ["Equip Rod Best Rod [Select]"] = "Great Rod of Oscar",
 }
+
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B8%A5%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%81"))()
 
 _G.Kaitun = true
 
