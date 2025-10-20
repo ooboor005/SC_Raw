@@ -1,113 +1,26 @@
 _G.Config = {
-  ["Rod Options"] = {
-    ["AutoBuyWhenReady"] = false,
-    ["Rod Level Cap Price"] = 1000,
-    ["Purchasable Rods"] = {
-      "Abyssal Specter Rod",
-      "Arctic Rod",
-      "Aurora Rod",
-      "Avalanche Rod",
-      "Azure Of Lagoon",
-      "Blazebringer Rod",
-      "Carbon Rod",
-      "Carrot Rod",
-      "Cerulean Fang Rod",
-      "Challenger's Rod",
-      "Champions Rod",
-      "Crystallized Rod",
-      "Depthseeker Rod",
-      "Destiny Rod",
-      "Ethereal Prism Rod",
-      "Fast Rod",
-      "Firefly Rod",
-      "Firework Rod",
-      "Fortune Rod",
-      "Free Spirit Rod",
-      "Frog Rod",
-      "Frostbane Rod",
-      "Fungal Rod",
-      "Great Dreamer Rod",
-      "Great Rod of Oscar",
-      "Kings Rod",
-      "Kraken Rod",
-      "Leviathan's Fang Rod",
-      "Long Rod",
-      "Lucky Rod",
-      "Magma Rod",
-      "Magnet Rod",
-      "Merchant Rod",
-      "Midas Rod",
-      "Mythical Rod",
-      "Nocturnal Rod",
-      "Paper Fan Rod",
-      "Phoenix Rod",
-      "Plastic Rod",
-      "Poseidon Rod",
-      "Rainbow Cluster Rod",
-      "Rapid Rod",
-      "Reinforced Rod",
-      "Rod Of The Zenith",
-      "Scarlet Spincaster Rod",
-      "Scurvy Rod",
-      "Seraphic Rod",
-      "Steady Rod",
-      "Stone Rod",
-      "Summit Rod",
-      "Sunken Rod",
-      "Tempest Rod",
-      "The Boom Ball",
-      "Training Rod",
-      "Treasure Rod",
-      "Trident Rod",
-      "Verdant Shear Rod",
-      "Volcanic Rod",
-      "Wicked Fang Rod",
-      "Wildflower Rod",
-      "Zeus Rod",
-    },
-  },
-
-  ["Farm Options"] = {
-    ["Level Cap"] = 10,
-    ["Code"] = {
-      "1BVisits",
-      "4THOFJULY",
-      "ATLANTEANSTORM",
-      "CARBON",
-      "CAVERN",
-      "ChangesComing",
-      "FISCHFEST",
-      "GOLDENTIDE",
-      "GOODBYEFISCHMAS",
-      "Legomy",
-      "METEOR",
-      "NewYear",
-      "NorthernExpedition",
-      "OGNOLIFE",
-      "RFG",
-      "ROSES",
-      "SECONDARYENCHANT",
-      "SNOWBURROW",
-      "SORRY",
-      "SORRYGUYS",
-      "SorryReward",
-      "SUPPORTERDESTINY",
-      "TemporarySubmarine",
-      "THEKRAKEN",
-    },
-  },
-
-  ["Lock"] = { ["Level Cap"] = 1500, ["Money Cap"] = 1000000 },
-
-  ["Aurora Settings"] = {
-    ["Always Totem"] = false,
-    ["Start Level"] = 300,
-    ["End Level"] = 1000,
-  },
-
-  ["Apply FPSCap"] = 10,
-  ["Equip Rod Best Rod [Select]"] = "Great Rod of Oscar",
-}
+        ["Rod Options"] = {
+            ["AutoBuyWhenReady"] = false, -- ซื้อตลอดถ้าเงินครบมันจะช้าเอาไว้สำหรับคนฟาร์มชิวๆ
+            ["Rod Level Cap Price"] = 1500, -- Level ไหนจะให้ซื้อเบ็ด
+            ["Purchasable Rods"] = {"Cerulean Fang Rod","Tempest Rod","Rod Of The Depths","Firework Rod", "Rod Of The Zenith", "Wicked Fang Rod","Ethereal Prism Rod", "Zeus Rod", "Treasure Rod","Frog Rod", "The Boom Ball", "Avalanche Rod","Summit Rod", "Lucky Rod", "Destiny Rod", "Cerulean Fang Rod", "Azure Of Lagoon","Arctic Rod", "Tempest Rod", "Leviathan's Fang Rod", "Paper Fan Rod", "Abyssal Specter Rod","Aurora Rod", "Verdant Shear Rod","Rapid Rod", "Fungal Rod", "Fortune Rod","Mythical Rod", "Magnet Rod", "Rainbow Cluster Rod","Scurvy Rod", "Nocturnal Rod","Blazebringer Rod", "Free Spirit Rod", "Plastic Rod","Midas Rod", "Reinforced Rod", "Depthseeker Rod","Sunken Rod", "Great Dreamer Rod", "Seraphic Rod","Kings Rod", "Crystallized Rod", "Great Rod of Oscar","Champions Rod", "Challenger's Rod", "Carbon Rod","Kraken Rod", "Training Rod", "Volcanic Rod","Fast Rod", "Scarlet Spincaster Rod","Trident Rod", "Magma Rod", "Frostbane Rod","Merchant Rod", "Wildflower Rod", "Poseidon Rod","Carrot Rod", "Phoenix Rod", "Steady Rod","Stone Rod", "Firefly Rod", "Long Rod"},
+        },
+        ["Farm Options"] = {
+            ["Level Cap"] = 10,--Level ที่จะให้ใช้โค้ด
+            ["Code"] = {"CAVERN","SNOWBURROW","TemporarySubmarine","SUPPORTERDESTINY","METEOR","FISCHFEST","OGNOLIFE","SECONDARYENCHANT","SORRY","ROSES","4THOFJULY","ChangesComing","Legomy","SorryReward","THEKRAKEN","RFG","CARBON","SORRYGUYS","ATLANTEANSTORM","GOLDENTIDE","GOODBYEFISCHMAS","NewYear","1BVisits","NorthernExpedition"},
+        },
+        ["Lock"] = {
+            ["Level Cap"] = 1500,--จะให้ฟาณืมถึง Level อะไร
+            ["Money Cap"] = 30000000,--ให้ฟาร์มถึงเงินเท่าไหร่
+        },
+        ["Aurora Settings"] = {
+            ["Always Totem"] = false,---ใช้ตลอดต่อให้ level ตันเริ่มใช้ตาม ["Start Level"]
+            ["Start Level"] = 300, -- เริ่มต้นใช้และซื้อตลอด level ไหน
+            ["End Level"] = 1500, -- หยุดจนกว่าจะถึง level นี้
+        },
+        ["Apply FPSCap"] = 60, -- ล้อค FPS
+        ["Equip Rod Best Rod [Select]"] = "Great Rod of Oscar" -- ตอน Level ครบของ ["Level Cap"] จะใช้เบ็ดนี้ให้เพื่อฟาร์มโง่เลือกเอา
+    }
+_G.Kaitun = true
 
 loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/%E0%B8%A5%E0%B8%9A%E0%B8%84%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%81"))()
 
