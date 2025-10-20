@@ -1,4 +1,4 @@
-_G.Config = _G.Config or {
+_G.Config = {
 	["FPSCap"] = 10,
 	["WhiteScreen"] = true,
 	["BuyLuck"] = true,
@@ -24,7 +24,9 @@ _G.Config = _G.Config or {
 		["Main"] = {
 			"Stone Rod", -- Stone Rod
 			"Wildflower Rod",
-			"Aurora Rod", 
+			-- "Midas Rod",
+			"Carrot Rod", -- Carrot Rod
+			"Luminescent Oath",
 			"Great Rod of Oscar",
 		},
 		["Secondary"] = {
@@ -67,7 +69,7 @@ _G.Config = _G.Config or {
 					CashFarm = {"Sea Prince"},
 				},
 			},
-			["Great Rod of Oscar"] = {
+			["Luminescent Oath"] = {
 				["Enchant Relic"] = {
 					LevelFarm = {"Clever", "Insight", "Sea King"},
 					CashFarm = {"Clever", "Insight", "Sea King"},
@@ -101,7 +103,6 @@ _G.Config = _G.Config or {
 			Subfix = " • "
 	},
 }
-
 script_key="vfoKBWBNZVURVezqNIctucjearuNhguv";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/16ddf2948fdb2a2791df613f2b969e7c.lua"))()
 
