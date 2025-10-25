@@ -23,7 +23,7 @@ getgenv().Configs = {
     -- Misc
     UI = true,
     LowGraphics = true,
-    FpsCap = 7,
+    FpsCap = 10,
 }
 
 --============== Kaitun Class ==============--
