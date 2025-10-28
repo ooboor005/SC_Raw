@@ -1,5 +1,5 @@
-_G.Config = {
-	["FPSCap"] = 30,
+_G.Config =  {
+	["FPSCap"] = 10,
 	["WhiteScreen"] = true,
 	["BuyLuck"] = true,
 	["AutoSell"] = {
@@ -24,36 +24,35 @@ _G.Config = {
 		["Main"] = {
 			"Stone Rod", -- Stone Rod
 			"Wildflower Rod",
-			-- "Midas Rod",
-			"Carrot Rod", -- Carrot Rod
+			"Aurora Rod", -- Aurora Rod
 			"Luminescent Oath",
 			"Great Rod of Oscar",
 		},
 		["Secondary"] = {
-			"Fischer's Rod", "Ethereal Prism Rod", "Cerulean Fang Rod",
+			"Ethereal Prism Rod", "Cerulean Fang Rod",
 			"Aurora Rod", "Tempest Rod", "Abyssal Specter Rod",
 			"Destiny Rod", "Challenger's Rod", "Rod Of The Zenith",
-			"Challenger's Rod", "Nocturnal Rod", "Kings Rod",
+			"Nocturnal Rod", "Kings Rod",
 			"Trident Rod", "Poseidon Rod", "Champions Rod",
 			"Volcanic Rod", "Summit Rod", "Training Rod",
 			"Fast Rod", "Steady Rod", "Nocturnal Rod",
-			"Precision Rod", "Depthseeker Rod", "Carrot Rod",
-			"Wisdom Rod", "Vocanic Rod", "Voyager Rod",
-			"Riptide Rod", "Seasons Rod", "Rainbow Cluster Rod",
-			"The Lost Rod", "The Boom Ball", "Scarlet Spincaster Rod",
+			"Precision Rod", "Depthseeker Rod",
+			"Vocanic Rod", "Voyager Rod", -- "Wisdom Rod",
+			"Riptide Rod",  "Rainbow Cluster Rod", -- "Seasons Rod",
+			"The Boom Ball", "Scarlet Spincaster Rod", -- "The Lost Rod",
 			"Zeus Rod", "Kraken Rod", "Leviathan's Fang Rod",
-			"Great Rod of Oscar", "Celestial Rod", "Rod Of The Eternal King",
-			"Rod Of The Forgotten Fang", "Spiritbinder", "Evil Pitchfork",
-			"Elder Mossripper", "Plastic Rod", "Carbon Rod",
+			"Celestial Rod",  "Rod Of The Depths", -- "Rod Of The Eternal King",
+			"Rod Of The Forgotten Fang", -- "Spiritbinder", 
+			"Plastic Rod", "Carbon Rod", -- "Elder Mossripper",
 			"Long Rod", "Lucky Rod", "Fortune Rod",
 			"Rapid Rod", "Magnet Rod", "Mythical Rod",
-			"Midas Rod", "Scurvy Rod", "Stone Rod",
+			"Midas Rod", "Scurvy Rod",
 			"Phoenix Rod", "Arctic Rod", "Crystalized Rod",
-			"Ice Warpers Rod", "Avalanche Rod", "Stone Rod",
-
-			"Wildflower Rod", "Firefly Rod", "Frog Rod",
+			"Ice Warpers Rod", "Avalanche Rod",
+			"Heaven's Rod", "Magma Rod",
+			"Firefly Rod", "Frog Rod", "Frostbane Rod",
 			"Azure Of Lagoon", "Free Spirit Rod", "Verdant Shear Rod",
-			"Great Dreamer Rod", "Wicked Fang Rod"
+			"Great Dreamer Rod", "Wicked Fang Rod", "Fungal Rod"
 		},
 	},	
 	["Enchant"] = {
@@ -69,10 +68,13 @@ _G.Config = {
 					CashFarm = {"Sea Prince"},
 				},
 			},
-			["Luminescent Oath"] = {
+			["Great Rod of Oscar"] = {
 				["Enchant Relic"] = {
 					LevelFarm = {"Clever", "Insight", "Sea King"},
-					CashFarm = {"Clever", "Insight", "Sea King"},
+					CashFarm = {"Sea King"},
+				},
+				["Exalted Relic"] = {
+					CashFarm = {"Sea Overlord"}
 				},
 				["Cosmic Relic"] = {
 					LevelFarm = {"Wise"},
@@ -97,13 +99,13 @@ _G.Config = {
 	["RAM"] = {
 		    Port = 7963,
 			Password = "",
-			["Update Interval"] = 5,
+			["Update Interval"] = 3,
 			["Reconnect Delay"] = 2,
 			["Max Retries"] = 10,
+			["DisplayLimit"] = 5,
 			Subfix = " • "
 	},
 }
-
 script_key="vfoKBWBNZVURVezqNIctucjearuNhguv";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/16ddf2948fdb2a2791df613f2b969e7c.lua"))()
 
