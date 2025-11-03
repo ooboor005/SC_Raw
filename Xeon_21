@@ -1,51 +1,41 @@
 script_key="uJekJkGbMyAucHiYnBMqsUDYXjXTMpWj";
-getgenv().ScriptMode = "Diamond"
--- Diamond / Class
+getgenv().ScriptMode = "Diamond" -- ตัวเปลี่ยนโหมดสคริป Diamond / Class
 
--- Kaitun Diamond
+-- Kaitun Mode Diamond
 getgenv().Configs = {
     -- แจ้งเตือน ( Notify )
     WebhookUrl = "",
-    LimitDiamonds = 0, -- จำกัดเพชรถ้าถึงแล้วให้แจ้งเตือน
-    WebhookOneTime = false, -- ส่งแจ้งเตือนแค่ครั้งเดียวตอนฟาร์มเสร็จ
+    LimitDiamonds = 0, -- จำกัดเพชร
     EnableLogRam = false,
 
     -- การฟาร์ม ( Farm )
-    LimitDay = 0, -- จำกัดวัน
-    MaxStrongholdLevel = 5, -- ระดับสูงสุดของสตรองโฮลด์
-    ClaimBadges = true, -- รับเหรียญทั้งหมด
+    LimitDay = 0, -- จำกัดวันถ้าถึงแล้วให้เริ่มเกมใหม่
+    MaxStrongholdLevel = 5, -- ระดับสูงสุดของสตรองโฮลด์ถ้าถึงแล้วให้เริ่มเกมใหม่
+    CountStronghold = 0, -- นับสตรองโฮลด์ครบแล้วให้เริ่มเกมใหม่
+    ClaimBadges = true, -- รับเหรียญทั้งหมดอัตโนมัติ
+    FarmCandy = true, -- ฟาร์มลูกอมอัตโนมัติ
 
-    -- คลาส ( Class )
+    -- คลาส & ร้านค้า ( Class & Shop )
     BuyClass = {"None"}, -- ชื้อคลาส
-    DoFirstTimeReroll = false, -- รีร้านคลาสครั้งแรกฟรี
-    AutoEquipClass = "None", -- ใส่ Class
-    UpgradeClass = false, -- อัพเวลคลาสอัตโนมัติ (ไม่ได้ทำเควส)
+    DoFirstTimeReroll = false, -- รีร้านคลาสครั้งแรกฟรี ถ้าไม่มีคลาสที่ต้องการขาย
+    AutoEquipClass = "Gambler", -- เลือกใส่ Class
+    UpgradeClass = false, -- อัพเวลคลาสอัตโนมัติ (ไม่ได้ทำเควส แค่อัพเวลตอนมันพร้อมเท่านั้น)
+    HalloweenShop = {"Anything1", "Anything2"}, -- รายการชื้อของร้านฮาโลวีน
 
     -- Misc
     UI = true, -- เปิด/ปิด UI
     LowGraphics = true, -- โหมดกราฟฟิคต่ำ
-    FpsCap = 10, -- จำกัด FPS (ถ้าไม่ใช้ให้ตั้งเป็น 0)
+    FpsCap = 10, -- จำกัด FPS
 }
 
--- Kaitun Class
-getgenv().ConfigsClass = {
-    MaxLevel = 3, -- ฟาร์มถึงเวลอะไรให้หยุด 1 - 3
-    TargetClass = "Pyromaniac",
-    -- Cyborg, Alien, Assassin,
-    -- Pyromaniac, Poison Master,
-    -- Big Game Hunter
+-- Kaitun Mode Class
+getgenv().AutoClass = {
+    ClassID = 0, -- Change the number to the desired class ID (ใส่ ID CLASS)
+    EnableLogRam = false, -- Enable/Disable Log
 
-    TargetMob = {
-        "Wolf", "Alpha Wolf", "Bear","Polar Bear",
-        "Arctic Fox"
-        },
-    TweenSpeed = 300,
-    InGameTimer = 150,
-    MobDistance = 100,
-    MobSeparation = 50,
-
-    -- Notify (แจ้งเตือน)
-    LogRAM = false,
+    -- 2 Players Required Class (Medic, Support, Undead) (ไม่จำเป็น)
+    Player1 = "Player1Name", -- Change to the first player's name
+    Player2 = "Player2Name", -- Change to the second player's name
 }
 
 -- Google Sheet Log
@@ -53,5 +43,4 @@ getgenv().GoogleSheetLog = {
     Enable = false, -- เปิดใช้ฟีเจอร์
     WebAppURL = "" -- ใส่ URL ของ Google Apps Script
 }
-
 loadstring(game:HttpGet("https://gist.githubusercontent.com/Clehxb/a0512b13f2bcc539e037712e13572d14/raw/Night_Loader"))()
