@@ -1,4 +1,4 @@
-script_key="uJekJkGbMyAucHiYnBMqsUDYXjXTMpWj";
+script_key="uJekJkGbMyAucHiYnBMqsUDYXjXTMpWj"
 getgenv().ScriptMode = "Diamond" -- ตัวเปลี่ยนโหมดสคริป Diamond / Class
 
 -- Kaitun Mode Diamond
