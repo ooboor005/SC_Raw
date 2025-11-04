@@ -2,251 +2,117 @@ repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game.Players
 repeat task.wait() until game.Players.LocalPlayer
 repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
-repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild('Main (minimal)') or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild('Main')
-
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/CDK"))()
-
-print("Debug: Step1")
-
-task.wait(3)
-
-pcall(function()
-    if game.Players.LocalPlayer.Team == nil then
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Pirates")
-    end
-end)
-
-print("Debug: Step2")
-
-_G.RefundStat = false
-_G.CheckList = {
-    ['MAX_LEVEL'] = true,
-    ['GOT_GODHUMAN'] = true,
-    ['GOT_LEVER'] = false,
-    ['GOT_CDK'] = true,
-    ['GOT_CDK_350'] = false,
-    ['GOT_MIR+VH'] = false,
+_G.Team = "Pirate" -- Marine / Pirate
+getgenv().Script_Mode = "Kaitun_Script"
+_G.MainSettings = {
+    ["EnabledHOP"] = false,
+    ['FPSBOOST'] = true,
+    ["FPSLOCKAMOUNT"] = 10,
+    ['WhiteScreen'] = false,
+    ['CloseUI'] = true,
+    ["NotifycationExPRemove"] = true,
+    ['AFKCheck'] = 150,
+    ["LockFragments"] = 20000,
+    ["LockFruitsRaid"] = { -- ล็อคผลที่ไม่เอาไปลงดัน
+            [1] = "Dough-Dough",
+            [2] = "Dragon-Dragon",
+            [3] = "Leopard-Leopard",
+            [4] = "Mammoth-Mammoth",
+            [5] = "Kitsune-Ribbon",
+            [6] = "Buddha-Buddha",
+            [7] = "Portal-Portal",
+            [8] = "T-Rex-T-Rex",
+            [9] = "Shadow-Shadow",
+            [10] = "Venom-Venom",
+            [11] = "Control-Control",
+            [12] = "Spirit-Spirit"
+        }
 }
 
-local _Request_ = http_request or request or HttpPost or (syn and syn.request)
-
--- Don't touch
-
-_G.DoneList = {
-    ['MAX_LEVEL'] = false,
-    ['GOT_GODHUMAN'] = false,
-    ['GOT_LEVER'] = false,
-    ['GOT_CDK'] = false,
-    ['GOT_CDK_350'] = false,
-    ['GOT_MIR+VH'] = false,
+_G.SharkAnchor_Settings = {
+    ["Enabled_Farm"] = false,
+    ['FarmAfterMoney'] = 2500000
 }
 
-_G.CheckedAll = false
-_G.SuccessAll = false
-_G.BananaIsloaded = false
-_G.MaruHubIsloaded = false
-_G.Valkyrie = false
-_G.Mirror = false
+_G.Quests_Settings = { -- ตั้งค่าเควสหลักๆ
+    ['Rainbow_Haki'] = true,
+    ["MusketeerHat"] = true,
+    ["PullLever"] = true,
+    ['DoughQuests_Mirror'] = {
+        ['Enabled'] = true,
+        ['UseFruits'] = true
+    }        
+}
+_G.Races_Settings = { -- ตั้งค่าเผ่า
+    ['Race'] = {
+        ['EnabledEvo'] = false,
+        ["v2"] = false,
+        ["v3"] = false,
+        ["Races_Lock"] = {
+            ["Races"] = { -- Select Races U want
+                ["Mink"] = false,
+                ["Human"] = false,
+                ["Fishman"] = false
+            },
+            ["RerollsWhenFragments"] = 200000 -- Random Races When Your Fragments is >= Settings
+        }
+    }
+}
+_G.Fruits_Settings = { -- ตั้งค่าผล
+    ['Main_Fruits'] = {}, -- ผลหลัก ถ้ายังไม่ใช่ค่าที่ตั้งมันจะกินจนกว่าจะใช่หรือซื้อ
+    ['Select_Fruits'] = {"Flame-Flame", "Ice-Ice", "Magma-Magma", "Light-Light", "Dark-Dark","Dough-Dough"} -- กินหรือซื้อตอนไม่มีผล
+}
+_G.Settings_Melee = {
+    ['Superhuman'] = true,
+    ['DeathStep'] = true,
+    ['SharkmanKarate'] = true,
+    ['ElectricClaw'] = true,
+    ['DragonTalon'] = true,
+    ['Godhuman'] = true
+}
+_G.SwordSettings = {
+    ['Saber'] = true,
+    ["Pole"] = false,
+    ['MidnightBlade'] = false,
+    ['Shisui'] = true,
+    ['Saddi'] = true,
+    ['Wando'] = false,
+    ['Yama'] = true,
+    ['Rengoku'] = false,
+    ['Canvander'] = false,
+    ['BuddySword'] = false,
+    ['TwinHooks'] = false,
+    ['HallowScryte'] = false,
+    ['TrueTripleKatana'] = false,
+    ['CursedDualKatana'] = true
+}
+_G.GunSettings = {
+    ['Kabucha'] = false,
+    ['SerpentBow'] = false,
+    ['SoulGuitar'] = false
+}
+_G.FarmMastery_Settings = {
+    ['Melee'] = true,
+    ['Sword'] = true,
+    ['DevilFruits'] = true,
+    ['Select_Swords'] = {
+        ["AutoSettings"] = true,
+        ["ManualSettings"] = {
+            "Saber",
+            "Buddy Sword",
+            "Cursed Dual Katana",
+            "Tushita",
+            "Yama",
+            "HallowScryte"
+        }
+    }
+}
+_G.Hop_Settings = {
+    ["Find Tushita"] = false
+}
+-- Script Here !!!
 
--- Don't touch
-
--- ฟังก์ชันตรวจสอบความคืบหน้า
-local CheckProgressAgainstGoals = function()
-    local totalGoals = 0
-    local completedGoals = 0
-
-    for key, isWanted in pairs(_G.CheckList) do
-        if isWanted then
-            totalGoals = totalGoals + 1
-            local done = _G.DoneList[key]
-
-            if done then
-                completedGoals = completedGoals + 1
-                _G.MaruHubIsloaded = true
-                -- print("✅ " .. key .. " (Done)")
-            else
-                _G.BananaIsloaded = true
-                -- print("❌ " .. key .. " (Doing)")
-            end
-        end
-    end
-
-    -- print("😍 Progress: " .. completedGoals .. "/" .. totalGoals)
-    if completedGoals == totalGoals then
-        -- print("🎉 Success!")
-        _G.SuccessAll = true
-    else
-        -- print("⏳ Doing...")
-    end
-end
-
--- ฟังก์ชันตรวจสอบ Melee
-local MeleeCheck = function(...)
-    local ResponeData
-    if #{...} > 1 then
-        ResponeData = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(...)
-    else
-        ResponeData = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(..., true)
-    end
-    if ResponeData == 1 or ResponeData == 2 then
-        return true
-    end
-    return false
-end
-
--- ลูปตรวจสอบเป้าหมาย
-task.spawn(function()
-    while true do task.wait(1)
-        if not _G.SuccessAll then
-            local level = game:GetService("Players").LocalPlayer.Data.Level.Value
-            local godhuman = MeleeCheck("BuyGodhuman")
-            local lever = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CheckTempleDoor")
-            local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
-
-            if level >= 2799 then
-                _G.DoneList['MAX_LEVEL'] = true
-            end
-            if godhuman then
-                _G.DoneList['GOT_GODHUMAN'] = true
-            end
-            if lever then
-                _G.DoneList['GOT_LEVER'] = true
-            end
-            for i, v in pairs(inventory) do
-                if v.Type == "Sword" then
-                    if string.find(v.Name, 'Cursed Dual Katana') then
-                        _G.DoneList['GOT_CDK'] = true
-                        if v.Mastery >= 350 then
-                            _G.DoneList['GOT_CDK_350'] = true
-                        end
-                    end
-                end
-                if v.Type == "Wear" then
-                    if string.find(v.Name, "Valkyrie Helm") then
-                        _G.Valkyrie = true
-                    end
-                end
-                if v.Type == "Material" then
-                    if string.find(v.Name, "Mirror Fractal") then
-                        _G.Mirror = true
-                    end
-                end
-            end
-            if _G.Valkyrie and _G.Mirror then
-                _G.DoneList['GOT_MIR+VH'] = true
-            end
-            CheckProgressAgainstGoals()
-            _G.CheckedAll = true
-        end
-    end
-end)
-
-task.spawn(function()
-    while true do task.wait(5)
-        if _G.CheckedAll then
-            if _G.BananaIsloaded then
-    
-                -- Scripts Banana Here
-                repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-                getgenv().Key = "6ad43e234c7cb3c368fc18ba"
-                    getgenv().SettingFarm ={
-                        ["Hide UI"] = false,
-                        ["Reset Teleport"] = {
-                            ["Enabled"] = false,
-                            ["Delay Reset"] = 3,
-                            ["Item Dont Reset"] = {
-                                ["Fruit"] = {
-                                    ["Enabled"] = true,
-                                    ["All Fruit"] = true, 
-                                    ["Select Fruit"] = {
-                                        ["Enabled"] = false,
-                                        ["Fruit"] = {},
-                                    },
-                                },
-                            },
-                        },
-                        ["White Screen"] = false,
-                        ["Lock Fps"] = {
-                            ["Enabled"] = true,
-                            ["FPS"] = 10,
-                        },
-                        ["Get Items"] = {
-                            ["Saber"] = true,
-                            ["Godhuman"] =  true,
-                            ["Skull Guitar"] = false,
-                            ["Mirror Fractal"] = true,
-                            ["Cursed Dual Katana"] = true,
-                            ["Upgrade Race V2-V3"] = false,
-                            ["Auto Pull Lever"] = true,
-                        },
-                        ["Farm Fragments"] = {
-                            ["Enabled"]  = false,
-                            ["Fragment"] = 50000,
-                        },
-                        ["Auto Chat"] = {
-                            ["Enabled"] = false,
-                            ["Text"] = "joejoeshop.xyz",
-                        },
-                        ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
-                        ["Select Hop"] = { -- 70% will have it
-                            ["Hop Server If Have Player Near"] = false, 
-                            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = false, 
-                            ["Hop Find Dough King Get Mirror Fractal"] = false,
-                            ["Hop Find Raids Castle [CDK]"] = false,
-                            ["Hop Find Cake Queen [CDK]"] = false,
-                            ["Hop Find Soul Reaper [CDK]"] = false,
-                            ["Hop Find Darkbeard [SG]"] = false,
-                            ["Hop Find Mirage [ Pull Lever ]"] = false,
-                        },
-                        ["Farm Mastery"] = {
-                            ["Melee"] = true,
-                            ["Sword"] = true,
-                        },
-                        ["Buy Haki"] = {
-                            ["Enhancement"] = true,
-                            ["Skyjump"] = true,
-                            ["Flash Step"] = true,
-                            ["Observation"] = true,
-                        },
-                        ["Sniper Fruit Shop"] = {
-                            ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
-                            ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas"},
-                        },
-                        ["Lock Fruit"] = {"Dough-Dough","Dragon-Dragon","Leopard-Leopard","Mammoth-Mammoth","Kitsune-Ribbon","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
-                        ["Webhook"] = {
-                            ["Enabled"] = false,
-                            ["WebhookUrl"] = "",
-                        }
-                    }
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
-                break
-            end
-            if _G.MaruHubIsloaded then
-                if game:GetService("Players").LocalPlayer.Data.StatRefunds.Value > 0 and _G.RefundStat then
-                    print("Refund")
-                    if game:GetService("Players").LocalPlayer.Data.Stats["Demon Fruit"].Level.Value <= 1 then
-                        local args = {
-                            "redeemRefundPoints",
-                            "Refund Points"
-                        }
-                        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer(unpack(args))                        
-                    end
-                end
-
-                -- Scripts Maru hub Here
-                loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_BF_Maru"))()
-                break
-            end
-        end
-    end
-end)
-
-task.spawn(function()
-    while true do task.wait(5)
-        if _G.SuccessAll and _G.BananaIsloaded then
-            print('Rejoining...')
-            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
-            break
-        end
-    end
-end)
+getgenv().Key = "MARU-DJ1FF-7EDW-JTMA-XPF2G-33QHC"
+getgenv().id = "354662781859004417"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/e1c3fb1e210e932600653f256d136b6e.lua"))()
