@@ -16,16 +16,16 @@ getgenv().Configs = {
     FarmCandy = true, -- ฟาร์มลูกอมอัตโนมัติ
 
     -- คลาส & ร้านค้า ( Class & Shop )
-    BuyClass = {"None"}, -- ชื้อคลาส
-    DoFirstTimeReroll = false, -- รีร้านคลาสครั้งแรกฟรี ถ้าไม่มีคลาสที่ต้องการขาย
-    AutoEquipClass = "Gambler", -- เลือกใส่ Class
-    UpgradeClass = false, -- อัพเวลคลาสอัตโนมัติ (ไม่ได้ทำเควส แค่อัพเวลตอนมันพร้อมเท่านั้น)
+    BuyClass = {"Cyborg"}, -- ชื้อคลาส
+    DoFirstTimeReroll = true, -- รีร้านคลาสครั้งแรกฟรี ถ้าไม่มีคลาสที่ต้องการขาย
+    AutoEquipClass = "Cyborg", -- เลือกใส่ Class
+    UpgradeClass = true, -- อัพเวลคลาสอัตโนมัติ (ไม่ได้ทำเควส แค่อัพเวลตอนมันพร้อมเท่านั้น)
     HalloweenShop = {"Anything1", "Anything2"}, -- รายการชื้อของร้านฮาโลวีน
 
     -- Misc
     UI = true, -- เปิด/ปิด UI
     LowGraphics = true, -- โหมดกราฟฟิคต่ำ
-    FpsCap = 5, -- จำกัด FPS
+    FpsCap = 10, -- จำกัด FPS
 }
 
 -- Kaitun Mode Class
