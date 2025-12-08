@@ -1,0 +1,50 @@
+-- ค้นหา GUI ที่มีข้อความ "Sell" ใน PlayerGui
+local targetText = "Sell"         -- เปลี่ยนคำที่อยากหาได้
+local exactMatch = false          -- true = ต้องตรงเป๊ะ, false = แค่มีคำนี้อยู่ก็ได้ (contains)
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+-- สร้าง path แบบ WaitForChild chain (เริ่มจาก PlayerGui)
+local function buildPathFromPlayerGui(inst)
+    local chain = {}
+    local cur = inst
+    while cur and cur ~= PlayerGui and cur ~= game do
+        table.insert(chain, 1, cur.Name)
+        cur = cur.Parent
+    end
+    local path = 'game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")'
+    for _, name in ipairs(chain) do
+        path = path .. (':WaitForChild(%q)'):format(name)
+    end
+    return path
+end
+
+-- เช็คว่ามี property Text และตรงเงื่อนไข
+local function hasTextMatch(inst)
+    if (inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox")) and inst.Text then
+        if exactMatch then
+            return inst.Text == targetText
+        else
+            return string.find(string.lower(inst.Text), string.lower(targetText), 1, true) ~= nil
+        end
+    end
+    return false
+end
+
+-- สแกนครั้งเดียว
+for _, inst in ipairs(PlayerGui:GetDescendants()) do
+    if hasTextMatch(inst) then
+        print(("[FOUND] %s (%s)  Text=%q"):format(inst:GetFullName(), inst.ClassName, inst.Text))
+        print("WaitForChild path -> " .. buildPathFromPlayerGui(inst))
+    end
+end
+
+-- ถ้าอยากดักของที่โผล่มาทีหลัง (GUI ถูกสร้าง runtime)
+PlayerGui.DescendantAdded:Connect(function(inst)
+    if hasTextMatch(inst) then
+        print(("[FOUND-RUNTIME] %s (%s)  Text=%q"):format(inst:GetFullName(), inst.ClassName, inst.Text))
+        print("WaitForChild path -> " .. buildPathFromPlayerGui(inst))
+    end
+end)
