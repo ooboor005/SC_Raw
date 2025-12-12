@@ -1,5 +1,6 @@
 getgenv().Script_Mode = "Kaitun_Script"
 _G.OneClickSettings = {
+    ["MainIsFarmLevel"] = true,
     ["LockFruits"] = {
         "Dough-Dough",
         "Dragon-Dragon",
@@ -25,11 +26,14 @@ _G.OneClickSettings = {
         "Light-Light"
     },
     ["FragmentsCap"] = 10000,
-    ["Farm Shark Anchor"] = false
+    ["Upgrade Race"] = true,
+    ["Pull Lever"] = true,
+    ["Farm Shark Anchor"] = true,
+    ["Cursed Dual Katana"] = true
 }
 
 
-getgenv().Key = "MARU-DJ1FF-7EDW-JTMA-XPF2G-33QHC"
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
 getgenv().id = "354662781859004417"
 getgenv().Script_Mode = "Kaitun_Script"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/e1c3fb1e210e932600653f256d136b6e.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
