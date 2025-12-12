@@ -1,19 +1,19 @@
-_G.HorstManager = true -- สำหรับคนใช้รีจอยม้า ไม่ใช้ ต้องปิด! false
+_G.HorstManager = false -- สำหรับคนใช้รีจอยม้า ไม่ใช้ ต้องปิด! false
 
 _G.Configs = {
     ["Kaitun"] = {
         ["Arcane Pickaxe"] = true,
-        ["Magma Pickaxe"] = true,
+        ["Magma Pickaxe"] = false,
         ["Demonic Pickaxe"] = true,
     },
     ["Change_Account_Setting"] = {
-        ["Enable"] = true, -- เปิดใข้งานออโต้เปลี่ยนรหัส
-        ["Gold"] = 100000, -- เงินมากกว่าเท่าไหร่ ถ้าอยากให้ไม่ต้องดูเงินก้ปรับเงินเป็น nil
+        ["Enable"] = false, -- เปิดใข้งานออโต้เปลี่ยนรหัส
+        ["Gold"] = nil, -- เงินมากกว่าเท่าไหร่ ถ้าอยากให้ไม่ต้องดูเงินก้ปรับเงินเป็น nil
 
         -- ได้พิกแอคอะไร
         ["Pickaxes"] = {
             ["Arcane Pickaxe"] = true,
-            ["Magma Pickaxe"] = true,
+            ["Magma Pickaxe"] = false,
             ["Demonic Pickaxe"] = true,
         }
     }
