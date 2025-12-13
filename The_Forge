@@ -1,5 +1,5 @@
 _G.HorstManager = false -- สำหรับคนใช้รีจอยม้า ไม่ใช้ ต้องปิด! false
-
+_G.GUI = false -- false เปิด UI false ปิดUI
 _G.Configs = {
     ["Kaitun"] = {
         ["Arcane Pickaxe"] = true,
@@ -18,6 +18,5 @@ _G.Configs = {
         }
     }
 }
-
 script_key="JRhoLizsOGqkCjLgEuahhvHVKeguqFPk";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/430edd3ada2ded2c307f815500d0e557.lua"))()
