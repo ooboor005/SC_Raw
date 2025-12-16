@@ -1,1 +1,9 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/The_Forge"))()
+repeat task.wait() until game:IsLoaded()
+getgenv().Configuration = {
+    Pickaxe = {
+        ['Arcane Pickaxe'] = true,
+        ['Demonic Pickaxe'] = true
+    }
+}
+
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/ff5c70b908476cca4042b7bbd033d356.lua"))()
