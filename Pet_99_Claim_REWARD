@@ -1,0 +1,53 @@
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local RS = game:GetService("ReplicatedStorage")
+
+-- ===============================
+-- AUTO CLAIM RANK REWARD
+-- ===============================
+task.spawn(function()
+    local Unlocks = Players.LocalPlayer
+        .PlayerGui.Rank.Frame.Rewards.Items.Unlocks
+
+    local Claim = RS.Network.Ranks_ClaimReward
+
+    print("เริ่ม Auto Claim Rank")
+
+    while task.wait(1) do
+        local count = #Unlocks:GetChildren()
+        for i = 1, count do
+            pcall(function()
+                Claim:FireServer(i)
+            end)
+            task.wait(0.1)
+        end
+        -- print("Rank: พัก 60 นาที")
+        task.wait(60*5)
+    end
+end)
+
+-- ===============================
+-- AUTO REDEEM FREE GIFT
+-- ===============================
+task.spawn(function()
+    local Redeem = RS.Network:WaitForChild("Redeem Free Gift")
+
+    local MAX_GIFT = 12
+    local COOLDOWN = 60 * 60
+
+    print("เริ่ม Auto Redeem Free Gift")
+
+    while true do
+        for id = 1, MAX_GIFT do
+            print("พยายามเคลม Gift:", id)
+            pcall(function()
+                Redeem:InvokeServer(id)
+            end)
+            task.wait(2)
+        end
+
+        -- print("Gift: รอรอบถัดไป 60 นาที")
+        task.wait(COOLDOWN*10)
+    end
+end)
