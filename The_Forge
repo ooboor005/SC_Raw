@@ -1,10 +1,12 @@
 _G.HorstManager = false -- สำหรับคนใช้รีจอยม้า ไม่ใช้ ต้องปิด! false
-_G.GUI = false -- false เปิด UI false ปิดUI
+_G.GUI = false -- true เปิด UI false ปิดUI
 _G.Configs = {
     ["Kaitun"] = {
         ["Arcane Pickaxe"] = true,
         ["Magma Pickaxe"] = false,
         ["Demonic Pickaxe"] = true,
+        ["Frost Pickaxe"] = false,
+        ["Prismatic Pickaxe"] = false,
     },
     ["Change_Account_Setting"] = {
         ["Enable"] = false, -- เปิดใข้งานออโต้เปลี่ยนรหัส
@@ -15,8 +17,12 @@ _G.Configs = {
             ["Arcane Pickaxe"] = true,
             ["Magma Pickaxe"] = false,
             ["Demonic Pickaxe"] = true,
+       ["Frost Pickaxe"] = false,
+        ["Prismatic Pickaxe"] = false,
         }
     }
 }
+
+
 script_key="JRhoLizsOGqkCjLgEuahhvHVKeguqFPk";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/430edd3ada2ded2c307f815500d0e557.lua"))()
