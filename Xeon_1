@@ -232,7 +232,7 @@ task.spawn(function()
                 end
 
                 -- Scripts Maru hub Here
-                loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_BF_Maru"))()
+                loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_BF_Maru_V2"))()
                 break
             end
         end
