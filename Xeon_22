@@ -1,39 +1,72 @@
-getgenv().Mode = "OneClick"
-getgenv().Setting = {
-    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
-    ["FucusOnLevel"] = true,
-    ["Fruits"] = {  -- setting for fruits u want
-        ["Primary"] = { -- if current fruit is not in this list, eat/buy
-            "",
-            -- u can configs add mores/remove and must end with , (comma symbol)
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+getgenv().Key = "c39546ec58d5d0bc2f8c58a7"
+    getgenv().SettingFarm ={
+        ["Hide UI"] = false,
+        ["Reset Teleport"] = {
+            ["Enabled"] = false,
+            ["Delay Reset"] = 3,
+            ["Item Dont Reset"] = {
+                ["Fruit"] = {
+                    ["Enabled"] = true,
+                    ["All Fruit"] = true, 
+                    ["Select Fruit"] = {
+                        ["Enabled"] = false,
+                        ["Fruit"] = {},
+                    },
+                },
+            },
         },
-        ["Normal"] = { -- it just a normal fruit list
-            "Flame-Flame",
-            "Magmag-Magma",
-            "Dark-Dark",
-            "Light-Light"
-            -- u can configs add mores/remove and must end with , (comma symbol)
+        ["White Screen"] = false,
+        ["Lock Fps"] = {
+            ["Enabled"] = true,
+            ["FPS"] = 10,
+        },
+        ["Get Items"] = {
+            ["Saber"] = true,
+            ["Godhuman"] =  true,
+            ["Skull Guitar"] = false,
+            ["Mirror Fractal"] = true,
+            ["Cursed Dual Katana"] = true,
+            ["Upgrade Race V2-V3"] = false,
+            ["Auto Pull Lever"] = true,
+        },
+        ["Farm Fragments"] = {
+            ["Enabled"]  = false,
+            ["Fragment"] = 50000,
+        },
+        ["Auto Chat"] = {
+            ["Enabled"] = false,
+            ["Text"] = "joejoeshop.xyz",
+        },
+        ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
+        ["Select Hop"] = { -- 70% will have it
+            ["Hop Server If Have Player Near"] = false, 
+            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = false, 
+            ["Hop Find Dough King Get Mirror Fractal"] = false,
+            ["Hop Find Raids Castle [CDK]"] = false,
+            ["Hop Find Cake Queen [CDK]"] = false,
+            ["Hop Find Soul Reaper [CDK]"] = false,
+            ["Hop Find Darkbeard [SG]"] = false,
+            ["Hop Find Mirage [ Pull Lever ]"] = false,
+        },
+        ["Farm Mastery"] = {
+            ["Melee"] = true,
+            ["Sword"] = true,
+        },
+        ["Buy Haki"] = {
+            ["Enhancement"] = true,
+            ["Skyjump"] = true,
+            ["Flash Step"] = true,
+            ["Observation"] = true,
+        },
+        ["Sniper Fruit Shop"] = {
+            ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
+            ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas"},
+        },
+        ["Lock Fruit"] = {"Dough-Dough","Dragon-Dragon","Leopard-Leopard","Mammoth-Mammoth","Kitsune-Ribbon","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
+        ["Webhook"] = {
+            ["Enabled"] = false,
+            ["WebhookUrl"] = "",
         }
-        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
-    },
-    ["Lock Fruits"] = { -- don't use or eat fruits in this list
-        "Dough-Dough",
-        "Dragon-Dragon",
-        "Yeti-Yeti",
-        "Tiger-Tiger",
-        "Mammoth-Mammoth",
-        "Kitsune-Ribbon",
-        "Buddha-Buddha",
-        "Portal-Portal",
-        "T-Rex-T-Rex",
-        "Shadow-Shadow",
-        "Venom-Venom",
-        "Control-Control",
-        "Spirit-Spirit"
-    },
-    ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
-};
-
--- script here
-getgenv().user_key = '7d9e3b3e99f7392e69539b1fb55d5442'
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/OneClick/BF.lua"))()
+    }
+loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
