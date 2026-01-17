@@ -1,33 +1,235 @@
 repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild('Main (minimal)') or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild('Main')
 
-getgenv().Key = "MARU-VWVI-ET16W-DYJ7-97NJB-K6BV"
-getgenv().id = "354662781859004417"
+print("Debug: Step1")
 
-local Players = game:GetService("Players")
-local lp = Players.LocalPlayer
+task.wait(3)
 
--- เตรียมโฟลเดอร์
-local base = "Maru Hub Premium Scripts/Blox Fruits/settings"
-if not isfolder("Maru Hub Premium Scripts") then makefolder("Maru Hub Premium Scripts") end
-if not isfolder("Maru Hub Premium Scripts/Blox Fruits") then makefolder("Maru Hub Premium Scripts/Blox Fruits") end
-if not isfolder(base) then makefolder(base) end
+pcall(function()
+    if game.Players.LocalPlayer.Team == nil then
+        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetTeam", "Pirates")
+    end
+end)
 
--- JSON ต้นฉบับ (คงรูป 100%)
-local json = [[{"objects":[{"idx":"AutoFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoFishing","type":"Toggle","value":false},{"idx":"AutoKenV2Quest","type":"Toggle","value":false},{"idx":"AutoRaceV2","type":"Toggle","value":false},{"idx":"Hold_X","type":"Slider","value":"0"},{"idx":"HopFarmSoulReaper","type":"Toggle","value":false},{"idx":"StopHopFarmElite","type":"Toggle","value":false},{"idx":"AutoTouchPlate","type":"Toggle","value":false},{"idx":"AimbotGun","type":"Toggle","value":false},{"idx":"RejoinFarmKen","type":"Toggle","value":false},{"idx":"AutoBuyHakiColor","type":"Toggle","value":false},{"idx":"Hold_Z","type":"Slider","value":"0"},{"idx":"AutoSharkmanKarate","type":"Toggle","value":false},{"idx":"SpawnSoulReaper","type":"Toggle","value":false},{"idx":"AutoRainbowHaki","type":"Toggle","value":false},{"idx":"RemoveFog","type":"Toggle","value":false},{"idx":"AutoFarmKen","type":"Toggle","value":false},{"idx":"AutoCollectBone","type":"Toggle","value":false},{"idx":"AutoAcceptBossQuest","type":"Toggle","value":false},{"idx":"SelectNpc","type":"Dropdown"},{"idx":"AutoBartiloQuest","type":"Toggle","value":false},{"idx":"AimbotSkill","type":"Toggle","value":false},{"idx":"Distance_Y","type":"Slider","value":"15"},{"idx":"SelectStats","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoZouQuest","type":"Toggle","value":false},{"idx":"AutoBuyLegendarySwrod","type":"Toggle","value":false},{"idx":"AutoFarmBerry","type":"Toggle","value":false},{"idx":"AutoTrainDracoQuest","type":"Toggle","value":false},{"idx":"HopFarmElite","type":"Toggle","value":false},{"idx":"SelectBoss","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoRipIndra","type":"Toggle","value":false},{"idx":"AutoFishSlapMinigame","type":"Toggle","value":false},{"idx":"SelectFruit","type":"Dropdown","mutli":true,"value":[]},{"idx":"HopFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoGhoulRace","type":"Toggle","value":false},{"idx":"SelectWeapon","type":"Dropdown"},{"idx":"AutoElectricClaw","type":"Toggle","value":false},{"idx":"AutoFarmBone","type":"Toggle","value":false},{"idx":"AutoFindFruit","type":"Toggle","value":false},{"idx":"AutoFarmLevel","type":"Toggle","value":false},{"idx":"AutoHalloweenDoorEvent","type":"Toggle","value":false},{"idx":"AutoFarmMasteryFruit","type":"Toggle","value":false},{"idx":"FindChestFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoResetCharacter","type":"Toggle","value":false},{"idx":"AutoKillAura","type":"Toggle","value":false},{"idx":"Hold_C","type":"Slider","value":"0"},{"idx":"AutoFindMirageIsland","type":"Toggle","value":false},{"idx":"SelectRelicWeapon","type":"Dropdown","mutli":true,"value":[]},{"idx":"FarmEliteIndra","type":"Toggle","value":false},{"idx":"AutoPullLever","type":"Toggle","value":false},{"idx":"HopFarmEliteIndra","type":"Toggle","value":false},{"idx":"AutoFarmEctoplasm","type":"Toggle","value":false},{"idx":"AutoActiveRaceWithHost","type":"Toggle","value":false},{"idx":"SelectAimbotIgnore","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoFinishDracoTrial","type":"Toggle","value":false},{"idx":"AutoCraftSharkAnchor","type":"Toggle","value":false},{"idx":"AutoTushita","type":"Toggle","value":false},{"idx":"AutoOpenLeviathanGate","type":"Toggle","value":false},{"idx":"SelectMaterials","type":"Dropdown"},{"idx":"TPPlayer","type":"Toggle","value":false},{"idx":"Hold_V","type":"Slider","value":"0"},{"idx":"TeleportNpc","type":"Toggle","value":false},{"idx":"AutoKillLeviathan","type":"Toggle","value":false},{"idx":"AutoRaceV3","type":"Toggle","value":true},{"idx":"JobId","type":"Input","text":""},{"idx":"AutoRengoku","type":"Toggle","value":false},{"idx":"AutoCollectAzureEmber","type":"Toggle","value":false},{"idx":"AutoUpgradeGunInventory","type":"Toggle","value":false},{"idx":"SelectAimbotMethod","type":"Dropdown"},{"idx":"RemoveNotifyText","type":"Toggle","value":true},{"idx":"SelectSeaSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"MobAura","type":"Toggle","value":false},{"idx":"BuyChipLawBoss","type":"Toggle","value":false},{"idx":"SpeedBoat","type":"Slider","value":"250"},{"idx":"AutoTurnOnPvP","type":"Toggle","value":false},{"idx":"AutoMidnightBlade","type":"Toggle","value":false},{"idx":"AutoUseKen","type":"Toggle","value":true},{"idx":"AutoKillPlayerV4","type":"Toggle","value":false},{"idx":"InfSoru","type":"Toggle","value":false},{"idx":"AutoCastleRaid","type":"Toggle","value":false},{"idx":"AutoTradeSpy","type":"Toggle","value":false},{"idx":"DodgeNoCD","type":"Toggle","value":false},{"idx":"HopFarmBerry","type":"Toggle","value":false},{"idx":"InfGeppo","type":"Toggle","value":false},{"idx":"AutoRandomFruit","type":"Toggle","value":false},{"idx":"ESP_Gear","type":"Toggle","value":false},{"idx":"DamageAura","type":"Toggle","value":false},{"idx":"Fly","type":"Toggle","value":false},{"idx":"SafeMode","type":"Toggle","value":false},{"idx":"FarmQuestBone","type":"Toggle","value":false},{"idx":"SelectPlayerAimbot","type":"Dropdown"},{"idx":"AutoDeathStep","type":"Toggle","value":false},{"idx":"AutoRandomFruitSummer","type":"Toggle","value":false},{"idx":"AutoCraftVolcanicMagnet","type":"Toggle","value":false},{"idx":"ESP_Players","type":"Toggle","value":false},{"idx":"AutoSnipeFruit","type":"Toggle","value":false},{"idx":"AutoSuperhuman","type":"Toggle","value":false},{"idx":"AutoDragonHunter","type":"Toggle","value":false},{"idx":"AutoYama","type":"Toggle","value":false},{"idx":"TradeSweetChalice","type":"Toggle","value":false},{"idx":"HopFindFruit","type":"Toggle","value":false},{"idx":"AutoUnstoreFruit","type":"Toggle","value":false},{"idx":"FruitPrice","type":"Input","text":""},{"idx":"SelectHost","type":"Dropdown"},{"idx":"AutoFarmLawBoss","type":"Toggle","value":false},{"idx":"FullBright","type":"Toggle","value":false},{"idx":"WalkOnWater","type":"Toggle","value":false},{"idx":"AllowAttackPlayers","type":"Toggle","value":false},{"idx":"TeleportMirage","type":"Toggle","value":false},{"idx":"KillAura","type":"Toggle","value":false},{"idx":"AutoUpgradeSwordInventory","type":"Toggle","value":false},{"idx":"AutoSGT","type":"Toggle","value":false},{"idx":"AutoFarmMasteryGun","type":"Toggle","value":false},{"idx":"AutoGodhuman","type":"Toggle","value":false},{"idx":"AutoFarmTyrant","type":"Toggle","value":false},{"idx":"Distance_X","type":"Slider","value":"0"},{"idx":"AutoBuyChip","type":"Toggle","value":false},{"idx":"SelectSeaWeapon","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoTurnOnRaceV3","type":"Toggle","value":false},{"idx":"SelectIsland","type":"Dropdown"},{"idx":"AutoRandomFruitHalloween","type":"Toggle","value":false},{"idx":"AutoStartRaid","type":"Toggle","value":false},{"idx":"AutoKillMonster","type":"Toggle","value":false},{"idx":"SelectChip","type":"Dropdown"},{"idx":"SelectBait","type":"Dropdown"},{"idx":"AutoCollectEgg","type":"Toggle","value":false},{"idx":"AutoFarmFactory","type":"Toggle","value":false},{"idx":"AutoFarmInventoryMastery","type":"Toggle","value":false},{"idx":"AutoFindPrehistoricEventIsland","type":"Toggle","value":false},{"idx":"AutoFarmSoulReaper","type":"Toggle","value":false},{"idx":"TweenUntilFindMonster","type":"Toggle","value":false},{"idx":"AutoCDK","type":"Toggle","value":false},{"idx":"AutoEliteHunter","type":"Toggle","value":false},{"idx":"AutoDragonTalon","type":"Toggle","value":false},{"idx":"AutoFarmBoss","type":"Toggle","value":false},{"idx":"FarmQuestCake","type":"Toggle","value":false},{"idx":"AutoFarmMaterials","type":"Toggle","value":false},{"idx":"AutoFindLeviathanGate","type":"Toggle","value":false},{"idx":"ResetCharacterBoatBroke","type":"Toggle","value":false},{"idx":"AutoBuyGearDraco","type":"Toggle","value":false},{"idx":"AutoDressrosaQuest","type":"Toggle","value":false},{"idx":"BringMob","type":"Toggle","value":true},{"idx":"AutoCyborgRace","type":"Toggle","value":false},{"idx":"TeleportKitsuneIsland","type":"Toggle","value":false},{"idx":"AutoStats","type":"Toggle","value":false},{"idx":"SelectRelicSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoFarmSeaEvent","type":"Toggle","value":false},{"idx":"SelectSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"RemoveRock","type":"Toggle","value":false},{"idx":"HoldingSkill","type":"Toggle","value":false},{"idx":"TeleportIsland","type":"Toggle","value":false},{"idx":"AutoTurnOnRaceV4","type":"Toggle","value":false},{"idx":"ESP_DevilFruit","type":"Toggle","value":false},{"idx":"SelectMasteryMethod","type":"Dropdown"},{"idx":"SelectZone","type":"Dropdown"},{"idx":"AutoSaber","type":"Toggle","value":false},{"idx":"UseM1SeaEvent","type":"Toggle","value":false},{"idx":"EscapeRoughSea","type":"Toggle","value":false},{"idx":"AutoFarmCakePrince","type":"Toggle","value":false},{"idx":"AutoFinishTrain","type":"Toggle","value":false},{"idx":"HopFarmChest","type":"Toggle","value":false},{"idx":"AutoCollectFireFlower","type":"Toggle","value":false},{"idx":"AutoRelicEvent","type":"Toggle","value":false},{"idx":"AutoChooseGear","type":"Toggle","value":false},{"idx":"AutoStoreFruit","type":"Toggle","value":false},{"idx":"AutoFarmChest","type":"Toggle","value":false},{"idx":"AutoBuyBait","type":"Toggle","value":false},{"idx":"SelectSeaMob","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoUseBuso","type":"Toggle","value":true},{"idx":"AutoTeleportToDoor","type":"Toggle","value":false},{"idx":"AutoFinishTrial","type":"Toggle","value":false},{"idx":"AutoRandomBone","type":"Toggle","value":false},{"idx":"SpawnCakePrince","type":"Toggle","value":false},{"idx":"AutoGhoulRaceHOP","type":"Toggle","value":false},{"idx":"AutoCitizenQuest","type":"Toggle","value":false},{"idx":"Distance_Z","type":"Slider","value":"0"},{"idx":"AutoAwakeFruit","type":"Toggle","value":false},{"idx":"Kill_At","type":"Slider","value":"25"}]}]]
--- บันทึกไฟล์ (ใช้ UserId เป็นชื่อไฟล์)
-local path = ("%s/%s.json"):format(base, lp.UserId)
-writefile(path, json)
+print("Debug: Step2")
 
--- ถ้าต้องการใช้งานในสคริปต์ต่อ: แปลงกลับเป็นตาราง Lua ได้
---local MaruhubConfig = game:GetService("HttpService"):JSONDecode(json)
+_G.RefundStat = false
+_G.CheckList = {
+    ['MAX_LEVEL'] = true,
+    ['GOT_GODHUMAN'] = false,
+    ['GOT_LEVER'] = false,
+    ['GOT_CDK'] = false,
+    ['GOT_CDK_350'] = false,
+    ['GOT_MIR+VH'] = false,
+}
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+local _Request_ = http_request or request or HttpPost or (syn and syn.request)
 
-local placeid = game.PlaceId
- 
-while true do task.wait()
-    repeat task.wait()
-        task.wait(5)
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
-    until placeid == 4442272183 
+-- Don't touch
+
+_G.DoneList = {
+    ['MAX_LEVEL'] = false,
+    ['GOT_GODHUMAN'] = false,
+    ['GOT_LEVER'] = false,
+    ['GOT_CDK'] = false,
+    ['GOT_CDK_350'] = false,
+    ['GOT_MIR+VH'] = false,
+}
+
+_G.CheckedAll = false
+_G.SuccessAll = false
+_G.BananaIsloaded = false
+_G.MaruHubIsloaded = false
+_G.Valkyrie = false
+_G.Mirror = false
+
+-- Don't touch
+
+-- ฟังก์ชันตรวจสอบความคืบหน้า
+local CheckProgressAgainstGoals = function()
+    local totalGoals = 0
+    local completedGoals = 0
+
+    for key, isWanted in pairs(_G.CheckList) do
+        if isWanted then
+            totalGoals = totalGoals + 1
+            local done = _G.DoneList[key]
+
+            if done then
+                completedGoals = completedGoals + 1
+                _G.MaruHubIsloaded = true
+                -- print("✅ " .. key .. " (Done)")
+            else
+                _G.BananaIsloaded = true
+                -- print("❌ " .. key .. " (Doing)")
+            end
+        end
+    end
+
+    -- print("😍 Progress: " .. completedGoals .. "/" .. totalGoals)
+    if completedGoals == totalGoals then
+        -- print("🎉 Success!")
+        _G.SuccessAll = true
+    else
+        -- print("⏳ Doing...")
+    end
 end
+
+-- ฟังก์ชันตรวจสอบ Melee
+local MeleeCheck = function(...)
+    local ResponeData
+    if #{...} > 1 then
+        ResponeData = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(...)
+    else
+        ResponeData = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(..., true)
+    end
+    if ResponeData == 1 or ResponeData == 2 then
+        return true
+    end
+    return false
+end
+
+-- ลูปตรวจสอบเป้าหมาย
+task.spawn(function()
+    while true do task.wait(1)
+        if not _G.SuccessAll then
+            local level = game:GetService("Players").LocalPlayer.Data.Level.Value
+            local godhuman = MeleeCheck("BuyGodhuman")
+            local lever = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("CheckTempleDoor")
+            local inventory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
+
+            if level >= 2799 then
+                _G.DoneList['MAX_LEVEL'] = true
+            end
+            if godhuman then
+                _G.DoneList['GOT_GODHUMAN'] = true
+            end
+            if lever then
+                _G.DoneList['GOT_LEVER'] = true
+            end
+            for i, v in pairs(inventory) do
+                if v.Type == "Sword" then
+                    if string.find(v.Name, 'Cursed Dual Katana') then
+                        _G.DoneList['GOT_CDK'] = true
+                        if v.Mastery >= 350 then
+                            _G.DoneList['GOT_CDK_350'] = true
+                        end
+                    end
+                end
+                if v.Type == "Wear" then
+                    if string.find(v.Name, "Valkyrie Helm") then
+                        _G.Valkyrie = true
+                    end
+                end
+                if v.Type == "Material" then
+                    if string.find(v.Name, "Mirror Fractal") then
+                        _G.Mirror = true
+                    end
+                end
+            end
+            if _G.Valkyrie and _G.Mirror then
+                _G.DoneList['GOT_MIR+VH'] = true
+            end
+            CheckProgressAgainstGoals()
+            _G.CheckedAll = true
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do task.wait(5)
+        if _G.CheckedAll then
+            if _G.BananaIsloaded then
+    
+                -- Scripts Scripts Maru V2
+                    repeat task.wait() until game:IsLoaded()
+
+                    getgenv().Key = "MARU-VWVI-ET16W-DYJ7-97NJB-K6BV"
+                    getgenv().id = "354662781859004417"
+
+                    local Players = game:GetService("Players")
+                    local lp = Players.LocalPlayer
+
+                    -- เตรียมโฟลเดอร์
+                    local base = "Maru Hub Premium Scripts/Blox Fruits/settings"
+                    if not isfolder("Maru Hub Premium Scripts") then makefolder("Maru Hub Premium Scripts") end
+                    if not isfolder("Maru Hub Premium Scripts/Blox Fruits") then makefolder("Maru Hub Premium Scripts/Blox Fruits") end
+                    if not isfolder(base) then makefolder(base) end
+
+                    -- JSON ต้นฉบับ (คงรูป 100%)
+                    local json = [[{"objects":[{"idx":"AutoFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoFishing","type":"Toggle","value":false},{"idx":"AutoKenV2Quest","type":"Toggle","value":false},{"idx":"AutoRaceV2","type":"Toggle","value":true},{"idx":"Hold_X","type":"Slider","value":"0"},{"idx":"HopFarmSoulReaper","type":"Toggle","value":false},{"idx":"StopHopFarmElite","type":"Toggle","value":false},{"idx":"AutoTouchPlate","type":"Toggle","value":false},{"idx":"AimbotGun","type":"Toggle","value":false},{"idx":"RejoinFarmKen","type":"Toggle","value":false},{"idx":"AutoBuyHakiColor","type":"Toggle","value":false},{"idx":"Hold_Z","type":"Slider","value":"0"},{"idx":"AutoSharkmanKarate","type":"Toggle","value":false},{"idx":"SpawnSoulReaper","type":"Toggle","value":false},{"idx":"AutoRainbowHaki","type":"Toggle","value":false},{"idx":"RemoveFog","type":"Toggle","value":false},{"idx":"AutoFarmKen","type":"Toggle","value":false},{"idx":"AutoCollectBone","type":"Toggle","value":false},{"idx":"AutoAcceptBossQuest","type":"Toggle","value":false},{"idx":"SelectNpc","type":"Dropdown"},{"idx":"AutoBartiloQuest","type":"Toggle","value":false},{"idx":"AimbotSkill","type":"Toggle","value":false},{"idx":"Distance_Y","type":"Slider","value":"15"},{"idx":"SelectStats","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoZouQuest","type":"Toggle","value":false},{"idx":"AutoBuyLegendarySwrod","type":"Toggle","value":false},{"idx":"AutoFarmBerry","type":"Toggle","value":false},{"idx":"AutoTrainDracoQuest","type":"Toggle","value":false},{"idx":"HopFarmElite","type":"Toggle","value":false},{"idx":"SelectBoss","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoRipIndra","type":"Toggle","value":false},{"idx":"AutoFishSlapMinigame","type":"Toggle","value":false},{"idx":"SelectFruit","type":"Dropdown","mutli":true,"value":[]},{"idx":"HopFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoGhoulRace","type":"Toggle","value":false},{"idx":"SelectWeapon","type":"Dropdown"},{"idx":"AutoElectricClaw","type":"Toggle","value":false},{"idx":"AutoFarmBone","type":"Toggle","value":false},{"idx":"AutoFindFruit","type":"Toggle","value":false},{"idx":"AutoFarmLevel","type":"Toggle","value":false},{"idx":"AutoHalloweenDoorEvent","type":"Toggle","value":false},{"idx":"AutoFarmMasteryFruit","type":"Toggle","value":false},{"idx":"FindChestFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoResetCharacter","type":"Toggle","value":false},{"idx":"AutoKillAura","type":"Toggle","value":false},{"idx":"Hold_C","type":"Slider","value":"0"},{"idx":"AutoFindMirageIsland","type":"Toggle","value":false},{"idx":"SelectRelicWeapon","type":"Dropdown","mutli":true,"value":[]},{"idx":"FarmEliteIndra","type":"Toggle","value":false},{"idx":"AutoPullLever","type":"Toggle","value":false},{"idx":"HopFarmEliteIndra","type":"Toggle","value":false},{"idx":"AutoFarmEctoplasm","type":"Toggle","value":false},{"idx":"AutoActiveRaceWithHost","type":"Toggle","value":false},{"idx":"SelectAimbotIgnore","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoFinishDracoTrial","type":"Toggle","value":false},{"idx":"AutoCraftSharkAnchor","type":"Toggle","value":false},{"idx":"AutoTushita","type":"Toggle","value":false},{"idx":"AutoOpenLeviathanGate","type":"Toggle","value":false},{"idx":"SelectMaterials","type":"Dropdown"},{"idx":"TPPlayer","type":"Toggle","value":false},{"idx":"Hold_V","type":"Slider","value":"0"},{"idx":"TeleportNpc","type":"Toggle","value":false},{"idx":"AutoKillLeviathan","type":"Toggle","value":false},{"idx":"AutoRaceV3","type":"Toggle","value":false},{"idx":"JobId","type":"Input","text":""},{"idx":"AutoRengoku","type":"Toggle","value":false},{"idx":"AutoCollectAzureEmber","type":"Toggle","value":false},{"idx":"AutoUpgradeGunInventory","type":"Toggle","value":false},{"idx":"SelectAimbotMethod","type":"Dropdown"},{"idx":"RemoveNotifyText","type":"Toggle","value":true},{"idx":"SelectSeaSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"MobAura","type":"Toggle","value":false},{"idx":"BuyChipLawBoss","type":"Toggle","value":false},{"idx":"SpeedBoat","type":"Slider","value":"250"},{"idx":"AutoTurnOnPvP","type":"Toggle","value":false},{"idx":"AutoMidnightBlade","type":"Toggle","value":false},{"idx":"AutoUseKen","type":"Toggle","value":true},{"idx":"AutoKillPlayerV4","type":"Toggle","value":false},{"idx":"InfSoru","type":"Toggle","value":false},{"idx":"AutoCastleRaid","type":"Toggle","value":false},{"idx":"AutoTradeSpy","type":"Toggle","value":false},{"idx":"DodgeNoCD","type":"Toggle","value":false},{"idx":"HopFarmBerry","type":"Toggle","value":false},{"idx":"InfGeppo","type":"Toggle","value":false},{"idx":"AutoRandomFruit","type":"Toggle","value":false},{"idx":"ESP_Gear","type":"Toggle","value":false},{"idx":"DamageAura","type":"Toggle","value":false},{"idx":"Fly","type":"Toggle","value":false},{"idx":"SafeMode","type":"Toggle","value":false},{"idx":"FarmQuestBone","type":"Toggle","value":false},{"idx":"SelectPlayerAimbot","type":"Dropdown"},{"idx":"AutoDeathStep","type":"Toggle","value":false},{"idx":"AutoRandomFruitSummer","type":"Toggle","value":false},{"idx":"AutoCraftVolcanicMagnet","type":"Toggle","value":false},{"idx":"ESP_Players","type":"Toggle","value":false},{"idx":"AutoSnipeFruit","type":"Toggle","value":false},{"idx":"AutoSuperhuman","type":"Toggle","value":false},{"idx":"AutoDragonHunter","type":"Toggle","value":false},{"idx":"AutoYama","type":"Toggle","value":false},{"idx":"TradeSweetChalice","type":"Toggle","value":false},{"idx":"HopFindFruit","type":"Toggle","value":false},{"idx":"AutoUnstoreFruit","type":"Toggle","value":false},{"idx":"FruitPrice","type":"Input","text":""},{"idx":"SelectHost","type":"Dropdown"},{"idx":"AutoFarmLawBoss","type":"Toggle","value":false},{"idx":"FullBright","type":"Toggle","value":false},{"idx":"WalkOnWater","type":"Toggle","value":false},{"idx":"AllowAttackPlayers","type":"Toggle","value":false},{"idx":"TeleportMirage","type":"Toggle","value":false},{"idx":"KillAura","type":"Toggle","value":false},{"idx":"AutoUpgradeSwordInventory","type":"Toggle","value":false},{"idx":"AutoSGT","type":"Toggle","value":false},{"idx":"AutoFarmMasteryGun","type":"Toggle","value":false},{"idx":"AutoGodhuman","type":"Toggle","value":false},{"idx":"AutoFarmTyrant","type":"Toggle","value":false},{"idx":"Distance_X","type":"Slider","value":"0"},{"idx":"AutoBuyChip","type":"Toggle","value":false},{"idx":"SelectSeaWeapon","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoTurnOnRaceV3","type":"Toggle","value":false},{"idx":"SelectIsland","type":"Dropdown"},{"idx":"AutoRandomFruitHalloween","type":"Toggle","value":false},{"idx":"AutoStartRaid","type":"Toggle","value":false},{"idx":"AutoKillMonster","type":"Toggle","value":false},{"idx":"SelectChip","type":"Dropdown"},{"idx":"SelectBait","type":"Dropdown"},{"idx":"AutoCollectEgg","type":"Toggle","value":false},{"idx":"AutoFarmFactory","type":"Toggle","value":false},{"idx":"AutoFarmInventoryMastery","type":"Toggle","value":false},{"idx":"AutoFindPrehistoricEventIsland","type":"Toggle","value":false},{"idx":"AutoFarmSoulReaper","type":"Toggle","value":false},{"idx":"TweenUntilFindMonster","type":"Toggle","value":false},{"idx":"AutoCDK","type":"Toggle","value":false},{"idx":"AutoEliteHunter","type":"Toggle","value":false},{"idx":"AutoDragonTalon","type":"Toggle","value":false},{"idx":"AutoFarmBoss","type":"Toggle","value":false},{"idx":"FarmQuestCake","type":"Toggle","value":false},{"idx":"AutoFarmMaterials","type":"Toggle","value":false},{"idx":"AutoFindLeviathanGate","type":"Toggle","value":false},{"idx":"ResetCharacterBoatBroke","type":"Toggle","value":false},{"idx":"AutoBuyGearDraco","type":"Toggle","value":false},{"idx":"AutoDressrosaQuest","type":"Toggle","value":false},{"idx":"BringMob","type":"Toggle","value":true},{"idx":"AutoCyborgRace","type":"Toggle","value":false},{"idx":"TeleportKitsuneIsland","type":"Toggle","value":false},{"idx":"AutoStats","type":"Toggle","value":false},{"idx":"SelectRelicSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoFarmSeaEvent","type":"Toggle","value":false},{"idx":"SelectSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"RemoveRock","type":"Toggle","value":false},{"idx":"HoldingSkill","type":"Toggle","value":false},{"idx":"TeleportIsland","type":"Toggle","value":false},{"idx":"AutoTurnOnRaceV4","type":"Toggle","value":false},{"idx":"ESP_DevilFruit","type":"Toggle","value":false},{"idx":"SelectMasteryMethod","type":"Dropdown"},{"idx":"SelectZone","type":"Dropdown"},{"idx":"AutoSaber","type":"Toggle","value":false},{"idx":"UseM1SeaEvent","type":"Toggle","value":false},{"idx":"EscapeRoughSea","type":"Toggle","value":false},{"idx":"AutoFarmCakePrince","type":"Toggle","value":false},{"idx":"AutoFinishTrain","type":"Toggle","value":false},{"idx":"HopFarmChest","type":"Toggle","value":false},{"idx":"AutoCollectFireFlower","type":"Toggle","value":false},{"idx":"AutoRelicEvent","type":"Toggle","value":false},{"idx":"AutoChooseGear","type":"Toggle","value":false},{"idx":"AutoStoreFruit","type":"Toggle","value":false},{"idx":"AutoFarmChest","type":"Toggle","value":false},{"idx":"AutoBuyBait","type":"Toggle","value":false},{"idx":"SelectSeaMob","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoUseBuso","type":"Toggle","value":true},{"idx":"AutoTeleportToDoor","type":"Toggle","value":false},{"idx":"AutoFinishTrial","type":"Toggle","value":false},{"idx":"AutoRandomBone","type":"Toggle","value":false},{"idx":"SpawnCakePrince","type":"Toggle","value":false},{"idx":"AutoGhoulRaceHOP","type":"Toggle","value":false},{"idx":"AutoCitizenQuest","type":"Toggle","value":false},{"idx":"Distance_Z","type":"Slider","value":"0"},{"idx":"AutoAwakeFruit","type":"Toggle","value":false},{"idx":"Kill_At","type":"Slider","value":"25"}]}]]
+                    -- บันทึกไฟล์ (ใช้ UserId เป็นชื่อไฟล์)
+                    local path = ("%s/%s.json"):format(base, lp.UserId)
+                    writefile(path, json)
+
+                    -- ถ้าต้องการใช้งานในสคริปต์ต่อ: แปลงกลับเป็นตาราง Lua ได้
+                    --local MaruhubConfig = game:GetService("HttpService"):JSONDecode(json)
+
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+
+                    local placeid = game.PlaceId
+                    
+                    while true do task.wait()
+                        repeat task.wait()
+                            task.wait(5)
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+                        until placeid == 4442272183 
+                    end
+
+                break
+            end
+            if _G.MaruHubIsloaded then
+                
+                -- Scripts Maru V3
+                repeat task.wait() until game:IsLoaded()
+
+                    getgenv().Key = "MARU-VWVI-ET16W-DYJ7-97NJB-K6BV"
+                    getgenv().id = "354662781859004417"
+
+                    local Players = game:GetService("Players")
+                    local lp = Players.LocalPlayer
+
+                    -- เตรียมโฟลเดอร์
+                    local base = "Maru Hub Premium Scripts/Blox Fruits/settings"
+                    if not isfolder("Maru Hub Premium Scripts") then makefolder("Maru Hub Premium Scripts") end
+                    if not isfolder("Maru Hub Premium Scripts/Blox Fruits") then makefolder("Maru Hub Premium Scripts/Blox Fruits") end
+                    if not isfolder(base) then makefolder(base) end
+
+                    -- JSON ต้นฉบับ (คงรูป 100%)
+                    local json = [[{"objects":[{"idx":"AutoFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoFishing","type":"Toggle","value":false},{"idx":"AutoKenV2Quest","type":"Toggle","value":false},{"idx":"AutoRaceV2","type":"Toggle","value":false},{"idx":"Hold_X","type":"Slider","value":"0"},{"idx":"HopFarmSoulReaper","type":"Toggle","value":false},{"idx":"StopHopFarmElite","type":"Toggle","value":false},{"idx":"AutoTouchPlate","type":"Toggle","value":false},{"idx":"AimbotGun","type":"Toggle","value":false},{"idx":"RejoinFarmKen","type":"Toggle","value":false},{"idx":"AutoBuyHakiColor","type":"Toggle","value":false},{"idx":"Hold_Z","type":"Slider","value":"0"},{"idx":"AutoSharkmanKarate","type":"Toggle","value":false},{"idx":"SpawnSoulReaper","type":"Toggle","value":false},{"idx":"AutoRainbowHaki","type":"Toggle","value":false},{"idx":"RemoveFog","type":"Toggle","value":false},{"idx":"AutoFarmKen","type":"Toggle","value":false},{"idx":"AutoCollectBone","type":"Toggle","value":false},{"idx":"AutoAcceptBossQuest","type":"Toggle","value":false},{"idx":"SelectNpc","type":"Dropdown"},{"idx":"AutoBartiloQuest","type":"Toggle","value":false},{"idx":"AimbotSkill","type":"Toggle","value":false},{"idx":"Distance_Y","type":"Slider","value":"15"},{"idx":"SelectStats","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoZouQuest","type":"Toggle","value":false},{"idx":"AutoBuyLegendarySwrod","type":"Toggle","value":false},{"idx":"AutoFarmBerry","type":"Toggle","value":false},{"idx":"AutoTrainDracoQuest","type":"Toggle","value":false},{"idx":"HopFarmElite","type":"Toggle","value":false},{"idx":"SelectBoss","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoRipIndra","type":"Toggle","value":false},{"idx":"AutoFishSlapMinigame","type":"Toggle","value":false},{"idx":"SelectFruit","type":"Dropdown","mutli":true,"value":[]},{"idx":"HopFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoGhoulRace","type":"Toggle","value":false},{"idx":"SelectWeapon","type":"Dropdown"},{"idx":"AutoElectricClaw","type":"Toggle","value":false},{"idx":"AutoFarmBone","type":"Toggle","value":false},{"idx":"AutoFindFruit","type":"Toggle","value":false},{"idx":"AutoFarmLevel","type":"Toggle","value":false},{"idx":"AutoHalloweenDoorEvent","type":"Toggle","value":false},{"idx":"AutoFarmMasteryFruit","type":"Toggle","value":false},{"idx":"FindChestFarmDarkbeard","type":"Toggle","value":false},{"idx":"AutoResetCharacter","type":"Toggle","value":false},{"idx":"AutoKillAura","type":"Toggle","value":false},{"idx":"Hold_C","type":"Slider","value":"0"},{"idx":"AutoFindMirageIsland","type":"Toggle","value":false},{"idx":"SelectRelicWeapon","type":"Dropdown","mutli":true,"value":[]},{"idx":"FarmEliteIndra","type":"Toggle","value":false},{"idx":"AutoPullLever","type":"Toggle","value":false},{"idx":"HopFarmEliteIndra","type":"Toggle","value":false},{"idx":"AutoFarmEctoplasm","type":"Toggle","value":false},{"idx":"AutoActiveRaceWithHost","type":"Toggle","value":false},{"idx":"SelectAimbotIgnore","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoFinishDracoTrial","type":"Toggle","value":false},{"idx":"AutoCraftSharkAnchor","type":"Toggle","value":false},{"idx":"AutoTushita","type":"Toggle","value":false},{"idx":"AutoOpenLeviathanGate","type":"Toggle","value":false},{"idx":"SelectMaterials","type":"Dropdown"},{"idx":"TPPlayer","type":"Toggle","value":false},{"idx":"Hold_V","type":"Slider","value":"0"},{"idx":"TeleportNpc","type":"Toggle","value":false},{"idx":"AutoKillLeviathan","type":"Toggle","value":false},{"idx":"AutoRaceV3","type":"Toggle","value":true},{"idx":"JobId","type":"Input","text":""},{"idx":"AutoRengoku","type":"Toggle","value":false},{"idx":"AutoCollectAzureEmber","type":"Toggle","value":false},{"idx":"AutoUpgradeGunInventory","type":"Toggle","value":false},{"idx":"SelectAimbotMethod","type":"Dropdown"},{"idx":"RemoveNotifyText","type":"Toggle","value":true},{"idx":"SelectSeaSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"MobAura","type":"Toggle","value":false},{"idx":"BuyChipLawBoss","type":"Toggle","value":false},{"idx":"SpeedBoat","type":"Slider","value":"250"},{"idx":"AutoTurnOnPvP","type":"Toggle","value":false},{"idx":"AutoMidnightBlade","type":"Toggle","value":false},{"idx":"AutoUseKen","type":"Toggle","value":true},{"idx":"AutoKillPlayerV4","type":"Toggle","value":false},{"idx":"InfSoru","type":"Toggle","value":false},{"idx":"AutoCastleRaid","type":"Toggle","value":false},{"idx":"AutoTradeSpy","type":"Toggle","value":false},{"idx":"DodgeNoCD","type":"Toggle","value":false},{"idx":"HopFarmBerry","type":"Toggle","value":false},{"idx":"InfGeppo","type":"Toggle","value":false},{"idx":"AutoRandomFruit","type":"Toggle","value":false},{"idx":"ESP_Gear","type":"Toggle","value":false},{"idx":"DamageAura","type":"Toggle","value":false},{"idx":"Fly","type":"Toggle","value":false},{"idx":"SafeMode","type":"Toggle","value":false},{"idx":"FarmQuestBone","type":"Toggle","value":false},{"idx":"SelectPlayerAimbot","type":"Dropdown"},{"idx":"AutoDeathStep","type":"Toggle","value":false},{"idx":"AutoRandomFruitSummer","type":"Toggle","value":false},{"idx":"AutoCraftVolcanicMagnet","type":"Toggle","value":false},{"idx":"ESP_Players","type":"Toggle","value":false},{"idx":"AutoSnipeFruit","type":"Toggle","value":false},{"idx":"AutoSuperhuman","type":"Toggle","value":false},{"idx":"AutoDragonHunter","type":"Toggle","value":false},{"idx":"AutoYama","type":"Toggle","value":false},{"idx":"TradeSweetChalice","type":"Toggle","value":false},{"idx":"HopFindFruit","type":"Toggle","value":false},{"idx":"AutoUnstoreFruit","type":"Toggle","value":false},{"idx":"FruitPrice","type":"Input","text":""},{"idx":"SelectHost","type":"Dropdown"},{"idx":"AutoFarmLawBoss","type":"Toggle","value":false},{"idx":"FullBright","type":"Toggle","value":false},{"idx":"WalkOnWater","type":"Toggle","value":false},{"idx":"AllowAttackPlayers","type":"Toggle","value":false},{"idx":"TeleportMirage","type":"Toggle","value":false},{"idx":"KillAura","type":"Toggle","value":false},{"idx":"AutoUpgradeSwordInventory","type":"Toggle","value":false},{"idx":"AutoSGT","type":"Toggle","value":false},{"idx":"AutoFarmMasteryGun","type":"Toggle","value":false},{"idx":"AutoGodhuman","type":"Toggle","value":false},{"idx":"AutoFarmTyrant","type":"Toggle","value":false},{"idx":"Distance_X","type":"Slider","value":"0"},{"idx":"AutoBuyChip","type":"Toggle","value":false},{"idx":"SelectSeaWeapon","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoTurnOnRaceV3","type":"Toggle","value":false},{"idx":"SelectIsland","type":"Dropdown"},{"idx":"AutoRandomFruitHalloween","type":"Toggle","value":false},{"idx":"AutoStartRaid","type":"Toggle","value":false},{"idx":"AutoKillMonster","type":"Toggle","value":false},{"idx":"SelectChip","type":"Dropdown"},{"idx":"SelectBait","type":"Dropdown"},{"idx":"AutoCollectEgg","type":"Toggle","value":false},{"idx":"AutoFarmFactory","type":"Toggle","value":false},{"idx":"AutoFarmInventoryMastery","type":"Toggle","value":false},{"idx":"AutoFindPrehistoricEventIsland","type":"Toggle","value":false},{"idx":"AutoFarmSoulReaper","type":"Toggle","value":false},{"idx":"TweenUntilFindMonster","type":"Toggle","value":false},{"idx":"AutoCDK","type":"Toggle","value":false},{"idx":"AutoEliteHunter","type":"Toggle","value":false},{"idx":"AutoDragonTalon","type":"Toggle","value":false},{"idx":"AutoFarmBoss","type":"Toggle","value":false},{"idx":"FarmQuestCake","type":"Toggle","value":false},{"idx":"AutoFarmMaterials","type":"Toggle","value":false},{"idx":"AutoFindLeviathanGate","type":"Toggle","value":false},{"idx":"ResetCharacterBoatBroke","type":"Toggle","value":false},{"idx":"AutoBuyGearDraco","type":"Toggle","value":false},{"idx":"AutoDressrosaQuest","type":"Toggle","value":false},{"idx":"BringMob","type":"Toggle","value":true},{"idx":"AutoCyborgRace","type":"Toggle","value":false},{"idx":"TeleportKitsuneIsland","type":"Toggle","value":false},{"idx":"AutoStats","type":"Toggle","value":false},{"idx":"SelectRelicSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoFarmSeaEvent","type":"Toggle","value":false},{"idx":"SelectSkill","type":"Dropdown","mutli":true,"value":[]},{"idx":"RemoveRock","type":"Toggle","value":false},{"idx":"HoldingSkill","type":"Toggle","value":false},{"idx":"TeleportIsland","type":"Toggle","value":false},{"idx":"AutoTurnOnRaceV4","type":"Toggle","value":false},{"idx":"ESP_DevilFruit","type":"Toggle","value":false},{"idx":"SelectMasteryMethod","type":"Dropdown"},{"idx":"SelectZone","type":"Dropdown"},{"idx":"AutoSaber","type":"Toggle","value":false},{"idx":"UseM1SeaEvent","type":"Toggle","value":false},{"idx":"EscapeRoughSea","type":"Toggle","value":false},{"idx":"AutoFarmCakePrince","type":"Toggle","value":false},{"idx":"AutoFinishTrain","type":"Toggle","value":false},{"idx":"HopFarmChest","type":"Toggle","value":false},{"idx":"AutoCollectFireFlower","type":"Toggle","value":false},{"idx":"AutoRelicEvent","type":"Toggle","value":false},{"idx":"AutoChooseGear","type":"Toggle","value":false},{"idx":"AutoStoreFruit","type":"Toggle","value":false},{"idx":"AutoFarmChest","type":"Toggle","value":false},{"idx":"AutoBuyBait","type":"Toggle","value":false},{"idx":"SelectSeaMob","type":"Dropdown","mutli":true,"value":[]},{"idx":"AutoUseBuso","type":"Toggle","value":true},{"idx":"AutoTeleportToDoor","type":"Toggle","value":false},{"idx":"AutoFinishTrial","type":"Toggle","value":false},{"idx":"AutoRandomBone","type":"Toggle","value":false},{"idx":"SpawnCakePrince","type":"Toggle","value":false},{"idx":"AutoGhoulRaceHOP","type":"Toggle","value":false},{"idx":"AutoCitizenQuest","type":"Toggle","value":false},{"idx":"Distance_Z","type":"Slider","value":"0"},{"idx":"AutoAwakeFruit","type":"Toggle","value":false},{"idx":"Kill_At","type":"Slider","value":"25"}]}]]
+                    -- บันทึกไฟล์ (ใช้ UserId เป็นชื่อไฟล์)
+                    local path = ("%s/%s.json"):format(base, lp.UserId)
+                    writefile(path, json)
+
+                    -- ถ้าต้องการใช้งานในสคริปต์ต่อ: แปลงกลับเป็นตาราง Lua ได้
+                    --local MaruhubConfig = game:GetService("HttpService"):JSONDecode(json)
+
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+
+                    local placeid = game.PlaceId
+                    
+                    while true do task.wait()
+                        repeat task.wait()
+                            task.wait(5)
+                            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelDressrosa")
+                        until placeid == 4442272183 
+                    end
+
+                break
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do task.wait(5)
+        if _G.SuccessAll and _G.BananaIsloaded then
+            print('Rejoining...')
+            game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+            break
+        end
+    end
+end)
