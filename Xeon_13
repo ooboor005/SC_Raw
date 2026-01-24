@@ -1,4 +1,43 @@
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+repeat
+	task.wait()
+until game:IsLoaded() and game:GetService("Players").LocalPlayer
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+if
+	(
+		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+		and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")
+	) or LocalPlayer.Team == nil
+then
+	repeat
+		task.wait()
+		if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
+			for i, v in
+				pairs(
+					getconnections(
+						LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated
+					)
+				)
+			do
+				for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do
+					b:Fire()
+				end
+				v.Function()
+			end
+		end
+	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+end
+if game.PlaceId ~= 7449423635  then
+    repeat task.wait()
+        game.ReplicatedStorage.Remotes.CommF_:InvokeServer("TravelZou")
+    until game.PlaceId == 7449423635
+end
 getgenv().Key = "0f1e217cb31f3d2d3fb45540"
 getgenv().Config = {
 	["Auto Join Dungeon"] = false,
