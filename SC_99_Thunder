@@ -1,3 +1,2 @@
-_G.WebhookLink = nil
-_G.NoHideNameWebhook = false
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/26272949f21bd5a5d463bbbea4ec7ae4.lua"))()
+script_key="OuMzbuUIOvWjsrAAGQJrpXrOdQuYlprw";
+loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/1ffd16632b5058268d3a501f3bb6bdb4.lua"))()
