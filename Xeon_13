@@ -7,7 +7,7 @@ _G.Settings_V4 = {
         ""
     },
     ['RaceSettings'] = { -- รีเผ่า ต้องมีเงินม่วงพร้อมรีเท่านั้น
-        ["Enabled"] = true, -- เปิด/ปิด
+        ["Enabled"] = flase, -- เปิด/ปิด
         ["RaceTarget"] = {"Mink"} -- เผ่าที่อยากให้รีได้
     },
     ["V4FarmList"] = { -- ตัวฟาร์มใส่ได้ 10 ตัวเผ่าไม่ซ้ำตัวช่วยพอ / Put account name u want to farm v4
