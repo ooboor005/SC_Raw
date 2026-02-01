@@ -33,10 +33,12 @@ end
 
 local TargetRace = "Skypiea"
 
+if not game.Players.LocalPlayer.Data.Race.Value == TargetRace then
 repeat task.wait()
     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","Reroll", "2")
     task.wait(5)
 until game.Players.LocalPlayer.Data.Race.Value == TargetRace
+end
 
 getgenv().Config = {
 	["Auto Join Dungeon"] = false,
