@@ -3,8 +3,8 @@ _G.Settings_V4 = {
     ["Lever"] = true, -- ออโต้ดึงคันโยก / Auto Pull Lever
     ["InVIPServ"] = true, -- รีเซิฟให้ฟูลมูนรี / Crash when full moon end
     ["HelperNameList"] = { -- ตัวช่วยได้ 2 ตัว / Put the helper account name
-        "",
-        ""
+        "Yohaceg95114",
+        "Yohaceg951114"
     },
     ['RaceSettings'] = { -- รีเผ่า ต้องมีเงินม่วงพร้อมรีเท่านั้น
         ["Enabled"] = false, -- เปิด/ปิด
@@ -278,8 +278,10 @@ _G.Settings_V4 = {
     "Cahuh1549917",
     "Qoqac8351419",
     "Ketun6348890",
-    "Kevuc0289832"
-	},
+    "Kevuc0289832"},
 
     ["AutoFindFarmList"] = true -- ปรับเป็น true จะหาตัวฟาร์มเองโดยที่ไม่จำเป็นต้องเติมชื่อตัวฟาร์มลงใน V4FarmList แต่อาจจะฟาร์มช้าลงเพราะสุ่มตำแหน่งฟาร์ม
 }
+
+script_key="GOjWDoEBajyanAthekRkmWhjTXtfXQhW";
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MasterPClient/refs/heads/main/Loader.lua"))()
