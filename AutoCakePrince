@@ -7,7 +7,7 @@ local Players = game:GetService("Players")
 local lp = Players.LocalPlayer
 
 -- เตรียมโฟลเดอร์
-local base = "Maru Hub Premium Scripts/Blox Fruits/settings"
+local base = "Maru Hub Premium Scripts/Blox Fruits New Ver/settings"
 if not isfolder("Maru Hub Premium Scripts") then makefolder("Maru Hub Premium Scripts") end
 if not isfolder("Maru Hub Premium Scripts/Blox Fruits") then makefolder("Maru Hub Premium Scripts/Blox Fruits") end
 if not isfolder(base) then makefolder(base) end
