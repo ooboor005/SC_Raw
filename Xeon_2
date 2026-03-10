@@ -4,40 +4,41 @@ until game:IsLoaded() and game:GetService("Players").LocalPlayer
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-if
-	(
-		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
-		and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")
-	) or LocalPlayer.Team == nil
-then
-	repeat
-		task.wait()
-		pcall(function()
-		    if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
-    			for i, v in
-    				pairs(
-    					getconnections(
-    						LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated
-    					)
-    				)
-    			do
-    				for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do
-    					b:Fire()
-    				end
-    				v.Function()
-    			end
-    		end
-		end)
-	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
-end
-local TargetRace = {"Fishman","Skypiea"}
+-- if
+-- 	(
+-- 		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+-- 		and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")
+-- 	) or LocalPlayer.Team == nil
+-- then
+-- 	repeat
+-- 		task.wait()
+-- 		pcall(function()
+-- 		    if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
+--     			for i, v in
+--     				pairs(
+--     					getconnections(
+--     						LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated
+--     					)
+--     				)
+--     			do
+--     				for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do
+--     					b:Fire()
+--     				end
+--     				v.Function()
+--     			end
+--     		end
+-- 		end)
+-- 	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+-- end
 
-if not table.find(TargetRace, game.Players.LocalPlayer.Data.Race.Value) then
-    repeat task.wait()
-        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","Reroll","2")
-        task.wait(5)
-    until table.find(TargetRace, game.Players.LocalPlayer.Data.Race.Value)
-end
+-- local TargetRace = {"Fishman","Skypiea"}
+
+-- if not table.find(TargetRace, game.Players.LocalPlayer.Data.Race.Value) then
+--     repeat task.wait()
+--         game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","Reroll","2")
+--         task.wait(5)
+--     until table.find(TargetRace, game.Players.LocalPlayer.Data.Race.Value)
+-- end
 
 getgenv().Config = {
 	["Auto Join Dungeon"] = false,
