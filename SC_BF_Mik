@@ -1,7 +1,7 @@
 getgenv().Mode = "OneClick"
 getgenv().Setting = {
     ["Team"] = "Pirates", -- Options "Pirates", "Marines"
-    ["FucusOnLevel"] = true,
+    ["FucusOnLevel"] = False,
     ["Fruits"] = {  -- setting for fruits u want
         ["Primary"] = { -- if current fruit is not in this list, eat/buy
             "",
