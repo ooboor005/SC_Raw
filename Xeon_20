@@ -30,7 +30,7 @@ then
 		end)
 	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
 end
-local TargetRace = "Skypiea"
+local TargetRace = "Fishman"
 if not (game.Players.LocalPlayer.Data.Race.Value == TargetRace) then
 repeat task.wait()
     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","Reroll", "2")
