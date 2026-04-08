@@ -13,3 +13,6 @@ getgenv().QuartyzV4Config = {
         end
     end
 }
+
+getgenv().license_key = "7d9e3b3e99f7392e69539b1fb55d5442"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/OneClick/loader.lua"))()
