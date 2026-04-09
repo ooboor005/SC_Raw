@@ -1,2 +1,1169 @@
-script_key="OuMzbuUIOvWjsrAAGQJrpXrOdQuYlprw";
-loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/1ffd16632b5058268d3a501f3bb6bdb4.lua"))()
+if game.PlaceId == 79546208627805 then
+    --
+    a = require(game:GetService("ReplicatedStorage").Databases.BadgeDatabase)
+    local function interact1(path)
+        if path then
+            game:GetService("GuiService").SelectedObject = path
+            task.wait(0.1)
+            game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            task.wait(0.1)
+            game:GetService("VirtualInputManager"):SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+            task.wait(0.1)
+            game:GetService("GuiService").SelectedObject = nil
+        end
+    end
+    while task.wait(3) do
+        for i,v in pairs(workspace:GetChildren()) do
+            if v.Name:find("Teleporter") then
+                if v.BillboardHolder.BillboardGui.Players.Text == "0/5" then
+                    local args = {
+                        "Add",
+                        tonumber(v.Name:sub(#v.Name,#v.Name))
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("TeleportEvent"):FireServer(unpack(args))
+        
+                    --
+                    task.wait(.3)
+                    interact1(game:GetService("Players").LocalPlayer.PlayerGui.Interface.LobbyCreate.ButtonList.Button1)
+                    interact1(game:GetService("Players").LocalPlayer.PlayerGui.Interface.LobbyCreate.HeaderFrame.CreateButton)
+                end
+            end
+        end
+        for i,v in pairs(a.Badges) do
+
+            local args = {
+                v.ID
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestClaimBadgeDiamonds"):FireServer(unpack(args))
+            
+        end
+    end
+    --
+else
+
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedFirst = game:GetService("ReplicatedFirst")
+local Lighting = game:GetService("Lighting")
+local Terrain = workspace:FindFirstChildOfClass("Terrain")
+
+-- 🔧 ลดกราฟิกให้เบาสุด
+local function UltraLowGraphics()
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") or obj:IsA("Sparkles") or
+           obj:IsA("PointLight") or obj:IsA("SpotLight") or obj:IsA("SurfaceLight") or
+           obj:IsA("Decal") or obj:IsA("Texture") or
+           obj:IsA("Accessory") or obj:IsA("Clothing") or obj:IsA("Shirt") or
+           obj:IsA("Pants") or obj:IsA("ShirtGraphic") then
+            obj:Destroy()
+        elseif obj:IsA("BasePart") then
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+            obj.CastShadow = false
+        end
+    end
+
+    if Terrain then
+        Terrain.WaterWaveSize = 0
+        Terrain.WaterTransparency = 1
+        Terrain.WaterReflectance = 0
+        Terrain.WaterColor = Color3.new(0, 0, 0)
+    end
+
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 1e6
+    Lighting.Brightness = 1
+
+    print("✅ Ultra Low Graphics Enabled! FPS Ready 🚀")
+end
+
+-- 🔁 เรียกใช้เมื่อโหลดเสร็จ
+UltraLowGraphics()
+		
+EnemyHandler = require(game:GetService("Players").LocalPlayer.PlayerScripts.Client.EnemyHandler)
+
+_G.AutoEat = true
+_G.KillAura = true
+_G.TPLOOP = false
+_G.Tween = true
+_G.AutoFillCamp = true
+_G.AutoCutTree = true
+_G.ON = true
+_G.Equip = true
+
+-- Tracking variables
+local sessionStats = {
+    treescut = 0,
+    fuelAdded = 0,
+    chestsOpened = 0,
+    battles = 0,
+    diamonds = 0,
+    itemsCrafted = 0,
+    foodEaten = 0
+}
+
+-- Session start time
+local sessionStartTime = tick()
+
+-- Fill Camp with tracking
+Fuels = {
+    "Fuel Canister",
+	"Coal",
+	"Log",
+    "Chair",
+    "Oil Barrel",
+}
+
+spawn(function() 
+    while task.wait(.3) do
+        if _G.AutoFillCamp then
+            for i,v in pairs(workspace.Items:GetChildren()) do
+                if table.find(Fuels , v.Name) and v.PrimaryPart and v.PrimaryPart.CFrame and tonumber(workspace.Map.Campground.MainFire:GetAttribute("FuelRemaining")) < tonumber(workspace.Map.Campground.MainFire:GetAttribute("FuelTarget")) * (workspace:GetAttribute("Progress") == 6 and 80/100 or 1) then
+                    local args = {
+                        v
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestStartDraggingItem"):FireServer(unpack(args))
+                    
+                    v.PrimaryPart.CFrame = workspace.Map.Campground.MainFire.Center.CFrame * CFrame.new(0,30,0)
+                    sessionStats.fuelAdded = sessionStats.fuelAdded + 1
+                    task.wait(.3)
+
+                    local args = {
+                        v
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("StopDraggingItem"):FireServer(unpack(args))
+                    
+                end
+            end
+        end
+    end
+end)
+
+local NoclipNotDup = tostring(math.random(10000000,99999999))
+local shp = sethiddenproperty or set_hidden_property or set_hidden_prop or sethiddenprop
+spawn(function()
+    game:GetService("RunService").Stepped:Connect(function()
+        local HumNoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+        local HumNoidRoot = game.Players.LocalPlayer.Character.PrimaryPart
+        
+        if _G.NoClip then
+            if HumNoid:GetState() == Enum.HumanoidStateType.Seated or HumNoid.Health <= 0 then
+                HumNoid.Jump = true
+                HumNoid.Sit = false
+                if HumNoidRoot:FindFirstChild("NoClip"..NoclipNotDup) then
+                    HumNoidRoot:FindFirstChild("NoClip"..NoclipNotDup):Destroy()
+                end
+            end
+            if HumNoid.Sit == false and HumNoid.Health > 0 then
+                for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = false
+                    end
+                end
+            else
+                HumNoid.Sit = false
+            end
+            HumNoid.PlatformStand = true
+            if not HumNoidRoot:FindFirstChild("NoClip"..NoclipNotDup) and HumNoid.Sit == false then
+                local bv = Instance.new("BodyVelocity")
+                bv.Parent = HumNoidRoot
+                bv.Name = "NoClip"..NoclipNotDup
+                bv.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+                bv.Velocity = Vector3.new(0,0,0)
+            end
+        else
+            HumNoid.PlatformStand = false
+            if HumNoidRoot:FindFirstChild("NoClip"..NoclipNotDup) then
+                HumNoidRoot:FindFirstChild("NoClip"..NoclipNotDup):Destroy()
+            end
+        end
+    end)
+end)
+task.spawn(function()
+    while task.wait(10) do
+        if _G.TPLOOP then
+        _G.Tween = false
+        _G.NoClip = true
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map.Campground.MainFire.Center.CFrame * CFrame.new(0,-40,0)
+        end
+    end
+end)
+
+local vu = game:GetService("VirtualUser")
+	game:GetService("Players").LocalPlayer.Idled:connect(function()
+		vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+		wait(1)
+		vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+	end)
+
+
+    spawn(function()
+        while task.wait(0.1) do
+            pcall(function()
+                for i,v in pairs(workspace.Items:GetChildren()) do
+                    local args = {
+                        v
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestStartDraggingItem"):FireServer(unpack(args))
+                    task.wait(.1)
+                end
+            end)
+        end
+    end)
+
+    Kids = {}
+spawn(function()
+    while task.wait(0.1) do
+        pcall(function()
+
+            if workspace:GetAttribute("StoryDayCounter") >= 110 and not _G.DisableLeave99Days then
+                game:GetService("TeleportService"):Teleport(79546208627805, game.Players.LocalPlayer)
+            end
+           if workspace:GetAttribute("Progress") == 6 and _G.ON then
+                for i,v in pairs(workspace.Items:GetChildren()) do
+                    if v.PrimaryPart and v.PrimaryPart.CFrame and v.Name == "Log" and workspace.Map.Campground:GetAttribute("TotalWood") < 50 then
+                        v.PrimaryPart.CFrame = workspace.Map.Campground.Scrapper.DashedLine.CFrame * CFrame.new(0,30,0)
+                        
+                        task.wait(.4)
+                        
+                    elseif v.PrimaryPart and v.PrimaryPart.CFrame and v:GetAttribute("Scrappable") and workspace.Map.Campground:GetAttribute("TotalScrap") < 50 then
+                        v.PrimaryPart.CFrame = workspace.Map.Campground.Scrapper.DashedLine.CFrame * CFrame.new(0,30,0)
+                        task.wait(.4)
+                    elseif v.PrimaryPart and v.PrimaryPart.CFrame and v.Name:find("Gem") and v.Name ~= "Gem of the Forest Fragment" then
+                        v.PrimaryPart.CFrame = workspace.Map.Campground.Scrapper.DashedLine.CFrame * CFrame.new(0,30,0)
+                        task.wait(.4)
+                    end
+                end
+                for i,v in pairs(game:GetService("ReplicatedStorage").TempStorage:GetChildren()) do
+                    v:Destroy()
+                end
+            end
+
+            c = 0
+            for i,v in pairs(workspace.Items:GetChildren()) do
+                if v.Name:find("Chest") then
+                    c = c + 1
+                end
+            end
+
+            if c >= 40 and not _G.Dungeon then
+                _G.TPLOOP = true
+
+                --
+                
+                for i,v in pairs(workspace.Map.MissingKids:GetAttributes()) do
+                    if not table.find(Kids , tostring(i)) then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.X , v.Y  , v.Z)
+                    end
+                end
+                for i,v in pairs(workspace.Characters:GetChildren()) do
+                    if v.Name:find("Lost Child") and v.PrimaryPart and v.PrimaryPart.CFrame and v:GetAttribute("Lost") == true then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                        wait(0.5)
+                        fireproximityprompt(v.Head.ProximityAttachment.ProximityInteraction)
+                        --
+                        table.insert(Kids , v:GetAttribute("KidId"))
+                    end
+                end
+
+                for i,v in pairs(game:GetService("Players").LocalPlayer.ItemBag:GetChildren()) do
+                    if v.Name:find("Lost Child") then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace.Map.Campground.MainFire.Center.CFrame * CFrame.new(0,30,0)
+                        task.wait(0.5)
+                        local args = {
+                            game:GetService("Players").LocalPlayer:WaitForChild("Inventory"):WaitForChild("Old Sack"),
+                            v
+                        }
+                        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBagDropItem"):FireServer(unpack(args))
+                    end
+                end
+
+            end
+        end)
+    end
+end)
+workspace.Characters:FindFirstChild("Important")
+Equip = require(game:GetService("Players").LocalPlayer.PlayerScripts.Client.InventoryHandler)
+
+spawn(function()
+    while task.wait(.4) do
+        pcall(function()
+            if _G.Equip then 
+                task.spawn(function()
+                    if workspace.Items:FindFirstChild("Stronghold Diamond Chest") and workspace.Items:FindFirstChild("Stronghold Diamond Chest"):GetAttribute(tostring(game.Players.LocalPlayer.UserId).."Opened") then
+                        _G.Dungeon = nil
+                        _G.TPLOOP = true
+                    end
+                    if workspace.Map.Landmarks.Stronghold.Functional.EntryDoors.DoorRight.Main.ProximityAttachment.ProximityInteraction.Enabled == true then
+                        repeat task.wait()
+                            _G.Dungeon = true
+                            _G.TPLOOP = false
+                            fireproximityprompt(workspace.Map.Landmarks.Stronghold.Functional.EntryDoors.DoorRight.Main.ProximityAttachment.ProximityInteraction)
+                            fireproximityprompt(workspace.Map.Landmarks.Stronghold.Functional.Doors.LockedDoorsFloor2.DoorLeft.Main.ProximityAttachment.ProximityInteraction)
+                            fireproximityprompt(workspace.Map.Landmarks.Stronghold.Functional.Doors.LockedDoorsFloor1.DoorRight.Main.ProximityAttachment.ProximityInteraction)
+                            for i,v in pairs(workspace.Map.Landmarks.Stronghold.Functional:GetDescendants()) do
+                                if v.Name == "TriggerZone" then
+                                    if v:FindFirstChild("TouchInterest") then
+                                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v, 0)
+                                        task.wait(.1)
+                                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart ,v, 1)
+                                    end
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame * CFrame.new(0,90,0)
+                                end
+                            end
+
+                        until workspace.Items:FindFirstChild("Stronghold Diamond Chest") and workspace.Items:FindFirstChild("Stronghold Diamond Chest"):GetAttribute(tostring(game.Players.LocalPlayer.UserId).."Opened")
+                    end
+                end)
+               
+                    for i,v in pairs(game:GetService("Players").LocalPlayer:WaitForChild("Inventory"):GetChildren()) do
+                        if v.Name:find("Axe") then
+                            Equip.RequestEquipItem(v)
+                        end
+                    end
+                
+            end
+        end)
+    end
+end)
+
+-- Initialize crafting tracker
+DataCraft = require(game:GetService("ReplicatedStorage").Databases.CraftingDatabase)
+
+function getwoodprice(name)
+for ii,vv in pairs(DataCraft.PossibleBlueprints) do
+	for i,v in pairs(vv) do
+		if v.Name == name then
+			return v.WoodPrice or 0 , v.ScrapPrice or 0
+		end
+	end
+end
+return nil
+end
+
+--
+_G.Craft = _G.Craft or {}
+spawn(function()
+    while task.wait(.4) do
+        pcall(function()
+
+        -- List of items to craft
+        local itemsToCraft = {
+            "Crafting Bench 2",
+            "Old Bed",
+            "Regular Bed",
+            "Crafting Bench 3",
+            "Good Bed",
+            "Crafting Bench 4",
+            "Giant Bed"
+        }
+
+        -- Get CraftItem remote
+        local CraftItemRemote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CraftItem")
+
+        -- Loop through items and craft each
+        for _, itemName in ipairs(itemsToCraft) do
+            if not _G.Craft[itemName] or itemName == "Farm Plot" then
+               --
+               if getwoodprice(itemName) then
+                    a,b = getwoodprice(itemName)
+                    if workspace.Map.Campground:GetAttribute("TotalWood") >= a + 10 and workspace.Map.Campground:GetAttribute("TotalScrap") >= b + 10 then
+                        cc = CraftItemRemote:InvokeServer(itemName)
+                        print("Crafting ",itemName , cc)
+                        if cc == true then
+                            _G.Craft[itemName] = true
+                            sessionStats.itemsCrafted = sessionStats.itemsCrafted + 1
+                            print("Crafted " , itemName)
+
+                            --
+                            task.wait(.2)
+                            for i,v in pairs(game.Players.LocalPlayer.Inventory:GetChildren()) do
+                                --
+                                local char = game.Players.LocalPlayer.Character
+                                local hrp = char:WaitForChild("HumanoidRootPart")
+                                local groundY = workspace.Map.Ground.Grass.Position.Y
+
+                                -- สุ่มตำแหน่งรอบ ๆ ตัวละคร
+                                local randX = hrp.Position.X + math.random(0,10)
+                                local randZ = hrp.Position.Z + math.random(0,10)
+                                local placePos = Vector3.new(randX, groundY, randZ)
+                                local placeCF = CFrame.new(placePos)
+
+                                local args = {
+                                    v, -- structure ที่ต้องการสร้าง
+                                    {
+                                        ["Valid"] = true,
+                                        ["CFrame"] = placeCF,
+                                        ["Position"] = placePos
+                                    },
+                                    placeCF
+                                }
+
+                                local a = game:GetService("ReplicatedStorage")
+                                    :WaitForChild("RemoteEvents")
+                                    :WaitForChild("RequestPlaceStructure")
+                                    :InvokeServer(unpack(args))
+                                if typeof(a) == "table" then
+                                    table.foreach(a , print)
+                                end
+                                --
+                            end
+                        end
+                    end
+               else
+                   --
+               end
+            end
+        end
+        end)
+    end
+end)
+
+spawn(function()
+    while task.wait(.2) do
+        if _G.AutoEat then
+            Zero = 0
+            for i,v in pairs(game:GetService("Players").LocalPlayer.Inventory:GetChildren()) do
+                if v:GetAttribute("RestoreHealth") and game.Players.LocalPlayer.Character.Humanoid.Health < 100 then
+                    local args = {
+                        v
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestConsumeItem"):InvokeServer(unpack(args))                    
+                end
+            end
+            for i,v in pairs(workspace.Items:GetChildren()) do
+                if v:GetAttribute("Cookable") then
+                    local args = {
+                        workspace:WaitForChild("Map"):WaitForChild("Campground"):WaitForChild("MainFire"),
+                        v
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestCookItem"):FireServer(unpack(args))
+                end
+
+                task.spawn(function()
+                    if v:GetAttribute("RestoreHealth") and game.Players.LocalPlayer.Character.Humanoid.Health < 100 then
+                        local args = {
+                            v
+                        }
+                        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestHotbarItem"):InvokeServer(unpack(args))                    
+                    end
+                end)
+            end
+            local closestItem = nil
+            local shortestDistance = math.huge
+
+            for _, item in pairs(workspace.Items:GetChildren()) do
+                if item:GetAttribute("RestoreHunger") and not item:GetAttribute("Cookable") and (item.Name == "Cooked Morsel" or item.Name == "Cooked Steak") then
+                    if item:IsA("Model") and item.PrimaryPart then
+                        local character = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
+                        local hrp = character:WaitForChild("HumanoidRootPart")
+                        local distance = (item:GetPivot().Position - hrp.Position).Magnitude
+                        if distance < shortestDistance then
+                            shortestDistance = distance
+                            closestItem = item
+                        end
+                    end
+                end
+            end
+
+            if closestItem and game:GetService("Players").LocalPlayer:GetAttribute("Hunger") < 150 then
+                local character = game:GetService("Players").LocalPlayer.Character or game:GetService("Players").LocalPlayer.CharacterAdded:Wait()
+                local hrp = character:WaitForChild("HumanoidRootPart")
+
+                local dragArgs = {
+                    closestItem
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestStartDraggingItem"):FireServer(unpack(dragArgs))
+
+                closestItem:PivotTo(hrp.CFrame * CFrame.new(0, 2, 0))
+
+                wait(0.3)
+
+                game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("StopDraggingItem"):FireServer(unpack(dragArgs))
+
+                local consumeArgs = {
+                    closestItem
+                }
+                game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestConsumeItem"):InvokeServer(unpack(consumeArgs))
+
+                if sessionStats and typeof(sessionStats.foodEaten) == "number" then
+                    sessionStats.foodEaten = sessionStats.foodEaten + 1
+                end
+            end
+        end
+    end
+end)
+_G.AutoCutTree  = true
+spawn(function()
+    while task.wait(.3) do
+        pcall(function()
+            if _G.AutoCutTree then
+                xx = ""
+                for i,v in pairs(game:GetService("Players").LocalPlayer.Inventory:GetChildren()) do
+                    if v.Name:find("Axe") then
+                        xx = v
+                    end
+                end	
+                for i,v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+                    if v.Name:find("Axe") then
+                        xx = v
+                    end
+                end	
+                for i,v in pairs(workspace.Map.Foliage:GetChildren()) do
+                    if v.Name:find("Small Tree") and v:GetAttribute("Health") > 0 and v.PrimaryPart and v.PrimaryPart.CFrame and workspace.Map.Campground:GetAttribute("TotalWood") < 50 then
+                            
+                            local args = {
+                                v,
+                                xx,
+                                "1_"..tostring(game.Players.LocalPlayer.UserId),
+                                v.PrimaryPart.CFrame * CFrame.new(1,0,1)
+                            }
+                            
+                            a =	game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject"):InvokeServer(unpack(args))
+                            if a then
+                                sessionStats.treescut = sessionStats.treescut + 1
+                            end
+                        
+                        break
+                    end
+                end
+            end
+        end)
+    end
+end)
+
+spawn(function()
+    while task.wait() do
+        pcall(function()
+            for i,v in pairs(workspace.Items:GetChildren()) do
+                if v.Name:find("Strong Axe") and not game:GetService("Players").LocalPlayer.Inventory:FindFirstChild("Strong Axe") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.PrimaryPart.CFrame
+                    task.wait(.2)
+                    local args = {
+                        v
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestHotbarItem"):InvokeServer(unpack(args))
+                end
+            end
+        end)
+    end
+end)
+
+spawn(function()
+    while task.wait(3) do
+        pcall(function()
+        for i,v in pairs(workspace.Items:GetChildren()) do
+            if v.Name:find("Dia") then
+                local success = game:GetService("ReplicatedStorage").RemoteEvents.RequestTakeDiamonds:FireServer(v)
+                if success then
+                    sessionStats.diamonds = sessionStats.diamonds + 1
+                end
+            end
+            if v.Name:find("Coin") then
+                game:GetService("ReplicatedStorage").RemoteEvents.RequestCollectCoints:InvokeServer(v)
+            end
+        end
+        for i,v in pairs(workspace.Items:GetChildren()) do
+            if v:FindFirstChild("Main") and not v:GetAttribute(tostring(game.Players.LocalPlayer.UserId).."Opened") and v.Name:find("Chest") then
+                fireproximityprompt(v.Main.ProximityAttachment.ProximityInteraction)
+                sessionStats.chestsOpened = sessionStats.chestsOpened + 1
+            end
+        end
+    end)
+    end
+end)
+
+game:GetService('RunService').RenderStepped:connect(function()
+    sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+    sethiddenproperty(game.Players.LocalPlayer, "MaxSimulationRadius", math.huge)
+end)
+
+local TweenService = game:GetService("TweenService")
+local player = game.Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local FogFolder = workspace.Map.Boundaries.Fog
+local SPEED = 1000 -- studs/วินาที
+
+-- ฟังก์ชันค้นหา Part ทั้งหมด
+local function getAllParts(parent)
+    local parts = {}
+    for _, obj in ipairs(parent:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            table.insert(parts, obj)
+        end
+    end
+    return parts
+end
+
+local allParts = getAllParts(FogFolder)
+
+-- ฟังก์ชัน Tween ตัวละครไปหา Part เป้าหมาย
+local function tweenToPart(targetPart, callback)
+    if not _G.Tween then return end
+    _G.NoClip = true
+
+    local startPos = humanoidRootPart.Position
+    local targetPos = targetPart.Position + Vector3.new(0, 3, 0)
+
+    local distance = (targetPos - startPos).Magnitude
+    local duration = distance / SPEED
+
+    local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear)
+    local tween = TweenService:Create(humanoidRootPart, tweenInfo, { CFrame = CFrame.new(targetPos) })
+
+    tween.Completed:Connect(function()
+        if _G.Tween and callback then
+            callback()
+        end
+    end)
+
+    tween:Play()
+end
+
+-- ฟังก์ชันวนไปทุก Part ทีละตัว
+local currentIndex = 1
+local function moveToNextPart()
+    if not _G.Tween then return end
+
+    if currentIndex > #allParts then
+        currentIndex = 1
+    end
+
+    local targetPart = allParts[currentIndex]
+    currentIndex = currentIndex + 1
+
+    tweenToPart(targetPart, moveToNextPart)
+end
+
+-- ฟังก์ชันเริ่มต้น Tween
+local function startTween()
+    if not _G.Tween then
+        return
+    end
+    if #allParts > 0 then
+        moveToNextPart()
+    end
+end
+
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local CharactersFolder = workspace:WaitForChild("Characters")
+local ToolDamageEvent = ReplicatedStorage:WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject")
+local TargetNames = { "Bunny","Bear","Alpha Wolf", "Wolf","Crossbow Cultist", "Cultist", "Deer" }
+
+
+task.spawn(function()
+	while task.wait(.2) do
+		pcall(function()
+			if _G.KillAura then
+				if not game:GetService("Players").LocalPlayer.Character or not game:GetService("Players").LocalPlayer:FindFirstChild("Inventory") then return end
+
+				for _, tool in pairs(game:GetService("Players").LocalPlayer:FindFirstChild("Inventory"):GetChildren()) do
+					if tool:GetAttribute("Owner") then
+						for _, model in pairs(workspace:WaitForChild("Characters"):GetChildren()) do
+							if model ~= game:GetService("Players").LocalPlayer.Character 
+								and model:FindFirstChildOfClass("Humanoid") 
+								and model:FindFirstChildOfClass("Humanoid").Health > 0 
+								and model:FindFirstChild("HumanoidRootPart") 
+								and game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart") 
+								and not model:GetAttribute("NotAttackable") then
+								
+								if (game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - model:FindFirstChild("HumanoidRootPart").Position).Magnitude <= 300 then
+									task.spawn(function()
+										game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("ToolDamageObject"):InvokeServer(
+											model,
+											tool,
+											"1_" .. tostring(tool:GetAttribute("Owner")),
+											model:FindFirstChild("HumanoidRootPart").CFrame
+										)
+                                        task.wait(.1)
+									end)
+                                    
+								end
+							end
+						end
+					end
+				end
+			end
+		end)
+	end
+end)
+
+
+
+startTween()
+
+
+-- Thunder Hub GUI - Main Script
+-- Place this in ServerScriptService or StarterGui
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Create main ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ThunderHubGUI"
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
+
+-- GUI State
+local isGUIVisible = true
+
+-- Main Frame (Full Screen)
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.Size = UDim2.new(1, 0, 1, 0)
+mainFrame.Position = UDim2.new(0, 0, 0, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+
+-- Gradient Background
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 15, 20)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(25, 25, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 15, 20))
+}
+gradient.Rotation = 45
+gradient.Parent = mainFrame
+
+-- Header Container
+local headerFrame = Instance.new("Frame")
+headerFrame.Name = "HeaderFrame"
+headerFrame.Size = UDim2.new(0.8, 0, 0.3, 0)
+headerFrame.Position = UDim2.new(0.1, 0, 0.05, 0)
+headerFrame.BackgroundTransparency = 1
+headerFrame.Parent = mainFrame
+
+-- Logo/Icon (using TextLabel as placeholder for logo)
+local logoFrame = Instance.new("Frame")
+logoFrame.Name = "LogoFrame"
+logoFrame.Size = UDim2.new(0, 80, 0, 80)
+logoFrame.Position = UDim2.new(0.5, -40, 0, 20)
+logoFrame.BackgroundColor3 = Color3.fromRGB(100, 50, 255)
+logoFrame.BorderSizePixel = 0
+logoFrame.Parent = headerFrame
+
+-- Logo rounded corners
+local logoCorner = Instance.new("UICorner")
+logoCorner.CornerRadius = UDim.new(0, 20)
+logoCorner.Parent = logoFrame
+
+-- Logo glow effect
+local logoGlow = Instance.new("UIStroke")
+logoGlow.Color = Color3.fromRGB(100, 50, 255)
+logoGlow.Thickness = 3
+logoGlow.Transparency = 0.3
+logoGlow.Parent = logoFrame
+
+-- Thunder Hub logo icon
+local logoIcon = Instance.new("ImageLabel")
+logoIcon.Size = UDim2.new(0.8, 0, 0.8, 0)
+logoIcon.Position = UDim2.new(0.1, 0, 0.1, 0)
+logoIcon.BackgroundTransparency = 1
+logoIcon.Image = "rbxassetid://97345523647519"
+logoIcon.ScaleType = Enum.ScaleType.Fit
+logoIcon.Parent = logoFrame
+
+-- Main Title
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Name = "TitleLabel"
+titleLabel.Size = UDim2.new(1, 0, 0, 60)
+titleLabel.Position = UDim2.new(0, 0, 0, 120)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "THUNDER HUB"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextScaled = true
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextStrokeTransparency = 0.8
+titleLabel.TextStrokeColor3 = Color3.fromRGB(100, 50, 255)
+titleLabel.Parent = headerFrame
+
+-- Subtitle
+local subtitleLabel = Instance.new("TextLabel")
+subtitleLabel.Name = "SubtitleLabel"
+subtitleLabel.Size = UDim2.new(1, 0, 0, 30)
+subtitleLabel.Position = UDim2.new(0, 0, 0, 185)
+subtitleLabel.BackgroundTransparency = 1
+subtitleLabel.Text = "99 NIGHTS IN THE FOREST"
+subtitleLabel.TextColor3 = Color3.fromRGB(180, 180, 200)
+subtitleLabel.TextScaled = true
+subtitleLabel.Font = Enum.Font.Gotham
+subtitleLabel.Parent = headerFrame
+
+-- Stats Container
+local statsFrame = Instance.new("Frame")
+statsFrame.Name = "StatsFrame"
+statsFrame.Size = UDim2.new(0.8, 0, 0.4, 0)
+statsFrame.Position = UDim2.new(0.1, 0, 0.45, 0)
+statsFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+statsFrame.BorderSizePixel = 0
+statsFrame.Parent = mainFrame
+
+-- Stats frame styling
+local statsCorner = Instance.new("UICorner")
+statsCorner.CornerRadius = UDim.new(0, 20)
+statsCorner.Parent = statsFrame
+
+local statsStroke = Instance.new("UIStroke")
+statsStroke.Color = Color3.fromRGB(60, 60, 80)
+statsStroke.Thickness = 2
+statsStroke.Parent = statsFrame
+
+-- Gems Container
+local gemsContainer = Instance.new("Frame")
+gemsContainer.Name = "GemsContainer"
+gemsContainer.Size = UDim2.new(0.3, 0, 0.8, 0)
+gemsContainer.Position = UDim2.new(0.03, 0, 0.1, 0)
+gemsContainer.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+gemsContainer.BorderSizePixel = 0
+gemsContainer.Parent = statsFrame
+
+local gemsCorner = Instance.new("UICorner")
+gemsCorner.CornerRadius = UDim.new(0, 15)
+gemsCorner.Parent = gemsContainer
+
+-- Gems Icon
+local gemsIcon = Instance.new("ImageLabel")
+gemsIcon.Size = UDim2.new(0, 50, 0, 50)
+gemsIcon.Position = UDim2.new(0.5, -25, 0, 20)
+gemsIcon.BackgroundTransparency = 1
+gemsIcon.Image = "rbxassetid://95202171086991"
+gemsIcon.ScaleType = Enum.ScaleType.Fit
+gemsIcon.Parent = gemsContainer
+
+-- Gems Label
+local gemsLabel = Instance.new("TextLabel")
+gemsLabel.Size = UDim2.new(1, 0, 0, 30)
+gemsLabel.Position = UDim2.new(0, 0, 0, 75)
+gemsLabel.BackgroundTransparency = 1
+gemsLabel.Text = "DIAMONDS"
+gemsLabel.TextColor3 = Color3.fromRGB(100, 200, 255)
+gemsLabel.TextScaled = true
+gemsLabel.Font = Enum.Font.GothamBold
+gemsLabel.Parent = gemsContainer
+
+-- Gems Count
+local gemsCount = Instance.new("TextLabel")
+gemsCount.Name = "GemsCount"
+gemsCount.Size = UDim2.new(1, 0, 0, 60)
+gemsCount.Position = UDim2.new(0, 0, 0, 110)
+gemsCount.BackgroundTransparency = 1
+gemsCount.Text = "0"
+gemsCount.TextColor3 = Color3.fromRGB(255, 255, 255)
+gemsCount.TextScaled = true
+gemsCount.Font = Enum.Font.GothamBold
+gemsCount.Parent = gemsContainer
+
+-- Day Container
+local dayContainer = Instance.new("Frame")
+dayContainer.Name = "DayContainer"
+dayContainer.Size = UDim2.new(0.3, 0, 0.8, 0)
+dayContainer.Position = UDim2.new(0.35, 0, 0.1, 0)
+dayContainer.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+dayContainer.BorderSizePixel = 0
+dayContainer.Parent = statsFrame
+
+local dayCorner = Instance.new("UICorner")
+dayCorner.CornerRadius = UDim.new(0, 15)
+dayCorner.Parent = dayContainer
+
+-- Day Icon
+local dayIcon = Instance.new("TextLabel")
+dayIcon.Size = UDim2.new(0, 50, 0, 50)
+dayIcon.Position = UDim2.new(0.5, -25, 0, 20)
+dayIcon.BackgroundTransparency = 1
+dayIcon.Text = "☀️"
+dayIcon.TextScaled = true
+dayIcon.Font = Enum.Font.GothamBold
+dayIcon.Parent = dayContainer
+
+-- Day Label
+local dayLabel = Instance.new("TextLabel")
+dayLabel.Size = UDim2.new(1, 0, 0, 30)
+dayLabel.Position = UDim2.new(0, 0, 0, 75)
+dayLabel.BackgroundTransparency = 1
+dayLabel.Text = "DAY"
+dayLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
+dayLabel.TextScaled = true
+dayLabel.Font = Enum.Font.GothamBold
+dayLabel.Parent = dayContainer
+
+-- Day Count
+local dayCount = Instance.new("TextLabel")
+dayCount.Name = "DayCount"
+dayCount.Size = UDim2.new(1, 0, 0, 60)
+dayCount.Position = UDim2.new(0, 0, 0, 110)
+dayCount.BackgroundTransparency = 1
+dayCount.Text = "1"
+dayCount.TextColor3 = Color3.fromRGB(255, 255, 255)
+dayCount.TextScaled = true
+dayCount.Font = Enum.Font.GothamBold
+dayCount.Parent = dayContainer
+
+-- Time Container
+local timeContainer = Instance.new("Frame")
+timeContainer.Name = "TimeContainer"
+timeContainer.Size = UDim2.new(0.3, 0, 0.8, 0)
+timeContainer.Position = UDim2.new(0.67, 0, 0.1, 0)
+timeContainer.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+timeContainer.BorderSizePixel = 0
+timeContainer.Parent = statsFrame
+
+local timeCorner = Instance.new("UICorner")
+timeCorner.CornerRadius = UDim.new(0, 15)
+timeCorner.Parent = timeContainer
+
+-- Time Icon
+local timeIcon = Instance.new("TextLabel")
+timeIcon.Size = UDim2.new(0, 50, 0, 50)
+timeIcon.Position = UDim2.new(0.5, -25, 0, 20)
+timeIcon.BackgroundTransparency = 1
+timeIcon.Text = "🕐"
+timeIcon.TextScaled = true
+timeIcon.Font = Enum.Font.GothamBold
+timeIcon.Parent = timeContainer
+
+-- Time Label
+local timeLabel = Instance.new("TextLabel")
+timeLabel.Size = UDim2.new(1, 0, 0, 30)
+timeLabel.Position = UDim2.new(0, 0, 0, 75)
+timeLabel.BackgroundTransparency = 1
+timeLabel.Text = "TIME"
+timeLabel.TextColor3 = Color3.fromRGB(255, 150, 100)
+timeLabel.TextScaled = true
+timeLabel.Font = Enum.Font.GothamBold
+timeLabel.Parent = timeContainer
+
+-- Time Display
+local timeDisplay = Instance.new("TextLabel")
+timeDisplay.Name = "TimeDisplay"
+timeDisplay.Size = UDim2.new(1, 0, 0, 60)
+timeDisplay.Position = UDim2.new(0, 0, 0, 110)
+timeDisplay.BackgroundTransparency = 1
+timeDisplay.Text = "00:00"
+timeDisplay.TextColor3 = Color3.fromRGB(255, 255, 255)
+timeDisplay.TextScaled = true
+timeDisplay.Font = Enum.Font.GothamBold
+timeDisplay.Parent = timeContainer
+
+-- Animation functions
+local function createPulseAnimation(object)
+    local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+    local tween = TweenService:Create(object, tweenInfo, {
+        TextStrokeTransparency = 0.5
+    })
+    tween:Play()
+end
+
+local function createFloatAnimation(object)
+    local tweenInfo = TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+    local originalPosition = object.Position
+    local tween = TweenService:Create(object, tweenInfo, {
+        Position = originalPosition + UDim2.new(0, 0, 0, -10)
+    })
+    tween:Play()
+end
+
+-- Apply animations
+createPulseAnimation(titleLabel)
+createFloatAnimation(logoFrame)
+
+-- Toggle Button (Always visible)
+local toggleButton = Instance.new("TextButton")
+toggleButton.Name = "ToggleButton"
+toggleButton.Size = UDim2.new(0, 120, 0, 40)
+toggleButton.Position = UDim2.new(1, -140, 0, 20)
+toggleButton.BackgroundColor3 = Color3.fromRGB(100, 50, 255)
+toggleButton.BorderSizePixel = 0
+toggleButton.Text = "Hide GUI"
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.TextScaled = true
+toggleButton.Font = Enum.Font.GothamBold
+toggleButton.Parent = screenGui
+
+-- Toggle button styling
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 10)
+toggleCorner.Parent = toggleButton
+
+local toggleStroke = Instance.new("UIStroke")
+toggleStroke.Color = Color3.fromRGB(100, 50, 255)
+toggleStroke.Thickness = 2
+toggleStroke.Transparency = 0.5
+toggleStroke.Parent = toggleButton
+
+-- Toggle functionality
+local function toggleGUI()
+    isGUIVisible = not isGUIVisible
+    
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.InOut)
+    
+    if isGUIVisible then
+        -- Show GUI
+        mainFrame.Visible = true
+        toggleButton.Text = "Hide GUI"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(100, 50, 255)
+        
+        local showTween = TweenService:Create(mainFrame, tweenInfo, {
+            Position = UDim2.new(0, 0, 0, 0)
+        })
+        showTween:Play()
+    else
+        -- Hide GUI
+        toggleButton.Text = "Show GUI"
+        toggleButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+        
+        local hideTween = TweenService:Create(mainFrame, tweenInfo, {
+            Position = UDim2.new(0, 0, -1, 0)
+        })
+        hideTween:Play()
+        hideTween.Completed:Connect(function()
+            if not isGUIVisible then
+                mainFrame.Visible = false
+            end
+        end)
+    end
+end
+
+-- Connect toggle button
+toggleButton.MouseButton1Click:Connect(toggleGUI)
+
+-- Hover effects for toggle button
+toggleButton.MouseEnter:Connect(function()
+    local hoverTween = TweenService:Create(toggleButton, TweenInfo.new(0.2), {
+        Size = UDim2.new(0, 130, 0, 45)
+    })
+    hoverTween:Play()
+end)
+
+toggleButton.MouseLeave:Connect(function()
+    local leaveTween = TweenService:Create(toggleButton, TweenInfo.new(0.2), {
+        Size = UDim2.new(0, 120, 0, 40)
+    })
+    leaveTween:Play()
+end)
+
+-- Keyboard shortcut (G key to toggle)
+local UserInputService = game:GetService("UserInputService")
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.G then
+        toggleGUI()
+    end
+end)
+
+olddiamond = game.Players.LocalPlayer:GetAttribute("Diamonds")
+-- Game logic variables
+local diamonds = 0
+local currentDay = 1
+local startTime = tick()
+
+-- Update functions
+local function updateDiamonds()
+    local playerDiamonds = game.Players.LocalPlayer:GetAttribute("Diamonds") or 0
+    if playerDiamonds ~= diamonds then
+        diamonds = playerDiamonds
+        gemsCount.Text = tostring(diamonds) .. " ( +" .. tostring(game.Players.LocalPlayer:GetAttribute("Diamonds") - olddiamond) .. " )"
+        
+        -- Diamond gain animation
+        local originalSize = gemsCount.Size
+        local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out)
+        local scaleTween = TweenService:Create(gemsCount, tweenInfo, {
+            Size = originalSize * 1.2
+        })
+        scaleTween:Play()
+        scaleTween.Completed:Connect(function()
+            local returnTween = TweenService:Create(gemsCount, tweenInfo, {
+                Size = originalSize
+            })
+            returnTween:Play()
+        end)
+    end
+end
+
+local function updateDay()
+    local storyDay = workspace:GetAttribute("StoryDayCounter") or 1
+    if storyDay ~= currentDay then
+        currentDay = storyDay
+        dayCount.Text = tostring(currentDay)
+        
+        -- Day change animation
+        local originalSize = dayCount.Size
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.Out)
+        local scaleTween = TweenService:Create(dayCount, tweenInfo, {
+            Size = originalSize * 1.3
+        })
+        scaleTween:Play()
+        scaleTween.Completed:Connect(function()
+            local returnTween = TweenService:Create(dayCount, tweenInfo, {
+                Size = originalSize
+            })
+            returnTween:Play()
+        end)
+    end
+end
+
+local function updateTime()
+    local currentTime = tick()
+    local elapsedTime = currentTime - startTime
+    local minutes = math.floor(elapsedTime / 60)
+    local seconds = math.floor(elapsedTime % 60)
+    timeDisplay.Text = string.format("%02d:%02d", minutes, seconds)
+end
+
+-- Main update loop
+RunService.Heartbeat:Connect(function()
+    updateTime()
+    updateDiamonds()
+    updateDay()
+end)
+
+-- Utility functions for external use
+function getDiamonds()
+    return player:GetAttribute("Diamonds") or 0
+end
+
+function getCurrentDay()
+    return workspace:GetAttribute("StoryDayCounter") or 1
+end
+
+function showGUI()
+    if not isGUIVisible then
+        toggleGUI()
+    end
+end
+
+function hideGUI()
+    if isGUIVisible then
+        toggleGUI()
+    end
+end
+
+function isGUIOpen()
+    return isGUIVisible
+end
+
+-- Initialize displays
+updateDiamonds()
+updateDay()
+end
