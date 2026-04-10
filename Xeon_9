@@ -1,1 +1,9 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/AutoCakePrince"))()
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players.LocalPlayer
+
+getgenv().Masterp99Night = {
+    ["Enable"] = true,
+    ["Class"] = {"Cyborg"}
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Achitsak/PRRoblox/main/mrn9401/99NightsSniper.lua"))()
