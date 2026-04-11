@@ -1,18 +1,1 @@
-getgenv().QuartyzV4Config = {
-    ["ShutdownOnFullMoonEnd"] = true, -- ปิดเกมทิ้งหลังจบ Full Moon
-    ["Helpers"] = { -- ซื้อตัวช่วย ใส่ทิ้งไว้หลายๆตัวได้ หรือ จะใส่แค่ 2 ตัวก็โอเค
-        "Koyoj0890185",
-        "Vugis5990943",
-        "Qexol0610549",
-        "Poxeg7950974",
-    },
-
-    ["OnCompleted"] = function() -- สร้าง Function ให้มันทำงานหลังจากทำ Tier ครบ 10 ตัวอย่างคือ ให้มันเซ็ท Account Change Done ของ Horst
-        if _G.Horst_AccountChangeDone then
-            _G.Horst_AccountChangeDone()
-        end
-    end
-}
-
-getgenv().license_key = "7d9e3b3e99f7392e69539b1fb55d5442"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/OneClick/loader.lua"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Sailor_Piece"))()
