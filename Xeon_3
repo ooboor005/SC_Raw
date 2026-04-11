@@ -1,1 +1,3 @@
-loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_99_Thunder"))()
+repeat wait() until game:IsLoaded() and game.Players.LocalPlayer 
+getgenv().Key = "1c333a872b02124930ce4e1d" 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaHub.lua"))() (มีการแก้ไข)วันเสาร์ที่ 11 เมษายน 2569 22:14
