@@ -5,19 +5,48 @@ repeat
 	task.wait()
 until game:GetService("Players").LocalPlayer
 
--- แก้ไข: เปลี่ยนเป็น Table ของผลไม้ที่ต้องการ (เรียงตามลำดับความสำคัญ)
-local FruitTrade = {"Kitsune-Kitsune", "Tiger-Tiger"} 
+local FruitTrade = {"Kitsune-Kitsune", "Tiger-Tiger"}
 
+local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-
+local Humanoid : Humanoid? = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+local Character = LocalPlayer.Character
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
     Humanoid = Character:WaitForChild("Humanoid")
 end)
+
+
+if
+	(
+		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+		and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")
+	) or LocalPlayer.Team == nil
+then
+	repeat
+		task.wait()
+		pcall(function()
+			if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
+				for i, v in
+					pairs(
+						getconnections(
+							LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated
+						)
+					)
+				do
+					for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do
+						b:Fire()
+					end
+					v.Function()
+				end
+			end
+		end)
+	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+end
+
 
 function getWorld() 
     local placeId = game.PlaceId
@@ -30,76 +59,236 @@ function getWorld()
     end
     return 0
 end
-local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
 
-local CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
+
+local _CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
 
 if getWorld() ~= 3 then
-	CommF:InvokeServer("TravelZou")
+	_CommF:InvokeServer("TravelZou")
 	repeat task.wait() until getWorld() == 3
-end
-
-if (LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)") and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")) or LocalPlayer.Team == nil then
-	repeat
-		task.wait()
-		pcall(function()
-			if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
-				for i, v in pairs(getconnections(LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated)) do
-					for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do b:Fire() end
-					v.Function()
-				end
-			end
-		end)
-	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
 end
 
 task.spawn(function()
 	while true do
 		task.wait()
-		if not Character or not Character:FindFirstChild("HumanoidRootPart") then continue end
+		if not Character then
+			continue
+		end
 		local torso = Character:FindFirstChild("Torso") or Character:FindFirstChild("UpperTorso")
-		if torso then
-			if not torso:FindFirstChild("AntiFallVelocity") then
-				local bv = Instance.new("BodyVelocity")
-				bv.Name = "AntiFallVelocity"
-				bv.MaxForce = Vector3.new(0, math.huge, 0)
-				bv.Velocity = Vector3.new(0, 0, 0)
-				bv.Parent = torso
-			end
-			for i, v in pairs(Character:GetChildren()) do
-				if v:IsA("BasePart") then v.CanCollide = false end
+		if not torso then
+			continue
+		end
+
+		if not torso:FindFirstChild("AntiFallVelocity") then
+			local bv = Instance.new("BodyVelocity")
+			bv.Name = "AntiFallVelocity"
+			bv.MaxForce = Vector3.new(0, math.huge, 0)
+			bv.Velocity = Vector3.new(0, 0, 0)
+			bv.Parent = torso
+		end
+		local highlight = Character:FindFirstChild("AntiFallHighlight")
+		if not highlight then
+			highlight = Instance.new("Highlight")
+			highlight.Name = "AntiFallHighlight"
+			highlight.FillColor = Color3.fromRGB(107, 180, 107)
+			highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+			highlight.FillTransparency = 0.3
+			highlight.OutlineTransparency = 0
+			highlight.Parent = Character
+		end
+		for i, v in pairs(Character:GetChildren()) do
+			if v:IsA("BasePart") or v:IsA("Part") then
+				v.CanCollide = false
 			end
 		end
 	end
 end)
 
--- [Function Tween และ GetDistance เหมือนเดิม...]
-function getDistance(Endpoint)
-	local part = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-	if not part then return 999999 end
-	local pos = (typeof(Endpoint) == "Vector3" and Endpoint) or (Endpoint.Position)
-	return (pos - part.Position).Magnitude
+function getDistance(Endpoint: CFrame | Vector3 | BasePart | Part)
+	if typeof(Endpoint) == "Vector3" then
+		return (Endpoint - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
 end
 
-function Tween(Position)
-	local Character = LocalPlayer.Character
-	if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
-	local Endpoint = (typeof(Position) == "Instance" and Position.CFrame) or (typeof(Position) == "Vector3" and CFrame.new(Position)) or Position
+function Tween(Position: CFrame | Vector3 | Part | BasePart)
+	local Endpoint = Position
+	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	if not Character then
+		return
+	end
+	if not Humanoid then
+		return
+	end
+	if not Character:FindFirstChild("CharacterReady") then
+		return
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		Endpoint = Endpoint.CFrame
+	elseif typeof(Endpoint) == "Vector3" then
+		Endpoint = CFrame.new(Endpoint)
+	end
+
 	local Distance = getDistance(Endpoint)
+
 	if Distance then
+		if Character.HumanoidRootPart.CFrame.Y ~= Endpoint.Y then
+			Character.HumanoidRootPart.CFrame =
+				CFrame.new(Character.HumanoidRootPart.CFrame.X, Endpoint.Y, Character.HumanoidRootPart.CFrame.Z)
+		end
 		local TweenTime = Distance / 325
-		local t = TweenService:Create(Character.HumanoidRootPart, TweenInfo.new(TweenTime, Enum.EasingStyle.Linear), {CFrame = Endpoint})
-		t:Play()
-		return t
+
+		local TweenInfoz = TweenService:Create(
+			Character.HumanoidRootPart,
+			TweenInfo.new(TweenTime, Enum.EasingStyle.Linear),
+			{ CFrame = Endpoint }
+		)
+
+		TweenInfoz:Play()
+        
+        return TweenInfoz
+	end
+	return nil
+end
+
+repeat task.wait() until Character and Humanoid
+repeat task.wait() until Players:GetPlayers() and #Players:GetPlayers() > 1
+local FruitMapping = {}
+local FruitCostMapping ={}
+local Inventory = _CommF:InvokeServer("getInventory")
+
+for i, v in pairs(Inventory) do 
+    if v.Type == "Blox Fruit" then 
+        table.insert(FruitMapping, v.Name)
+        FruitCostMapping[v.Name] = v.Value
+    end
+end
+
+local TradeFruit = nil
+for i, v in pairs(FruitMapping) do
+	if table.find(FruitTrade, v) then 
+		TradeFruit = v
+		break
 	end
 end
 
--- ไปหาโต๊ะเทรด
-local Map = workspace:WaitForChild("Map")
-local Turtle = Map:WaitForChild("Turtle")
-local TradeTable = Turtle:WaitForChild("TradeTable")
+local TradeValue = FruitCostMapping[TradeFruit] or 0
+local AnotherPlayer : Player? = nil
 
-function getEmptyChair()
+repeat task.wait()
+	for i, v in pairs(Players:GetPlayers()) do 
+		if v ~= LocalPlayer then
+			AnotherPlayer = v
+			break
+		end
+	end
+until AnotherPlayer and AnotherPlayer ~= LocalPlayer
+
+local FruitInventoryAnother = {}
+if not AnotherPlayer then 
+	task.wait(1)
+	return warn("Player not founded")
+end
+
+repeat task.wait()
+	pcall(function()
+		local Data = request({
+			Url = "http://45.136.254.74/api/v1/account",
+			Method = "GET",
+			Headers = {
+				["Authorization"] = "PC-1"
+			}
+		}).Body
+		Data = HttpService:JSONDecode(Data)
+		for i, v in pairs(Data) do 
+			if v.account == AnotherPlayer.Name then
+				for _,f in pairs( v.fruitInv) do 
+					table.insert(FruitInventoryAnother, f .. "-" .. f)
+				end
+				break
+			end
+		end
+	end)
+	task.wait(10)
+until #FruitInventoryAnother > 0
+
+local AnotherPlayerFruitMapping = {}
+local FruitDealer = _CommF:InvokeServer("GetFruits", false)
+for i, v in pairs(FruitDealer) do 
+	if table.find(FruitInventoryAnother, v.Name) then 
+		AnotherPlayerFruitMapping[v.Name] = v.Price
+	end
+end
+
+
+function getIndices(dataTable, targetValue)
+    local entries = {}
+    
+    for k, v in pairs(dataTable) do
+        table.insert(entries, {index = k, value = v})
+    end
+
+    table.sort(entries, function(a, b) return a.value > b.value end)
+
+    local threshold = targetValue * 0.6 
+    local currentSum = 0
+    local resultIndices = {} 
+
+    for i = 1, math.min(4, #entries) do
+        print("Checking:", entries[i].index, "with value:", entries[i].value)
+        currentSum = currentSum + entries[i].value
+        table.insert(resultIndices, entries[i].index)
+        if currentSum > threshold then
+            return resultIndices
+        end
+    end
+    return {} 
+end
+
+for i,v in pairs(AnotherPlayerFruitMapping) do 
+	print(i,v)
+end
+
+local indicesToOffer = getIndices(AnotherPlayerFruitMapping, TradeValue)
+for i, v in pairs(indicesToOffer) do 
+	print(i,v)
+	if table.find(FruitMapping, v) then 
+		_CommF:InvokeServer("LoadFruit", v)
+		task.wait(1)
+		_CommF:InvokeServer("RaidsNpc", "Select", "Flame")
+		task.wait(1)
+		Character = nil
+		if Humanoid then 
+			Humanoid.Health = 0
+		end
+		repeat task.wait() until Character and Humanoid
+		task.wait(1)
+	end
+end
+
+local Map = workspace:WaitForChild("Map")
+local Turtle = Map:FindFirstChild("Turtle")
+if not Turtle then
+    repeat
+        task.wait()
+        Turtle = Map:FindFirstChild("Turtle")
+        Tween(Vector3.new(-6177, 438, -10425))
+    until Turtle
+end
+
+local TradeTable = Turtle:FindFirstChild("TradeTable")
+if not TradeTable then
+    repeat
+        task.wait()
+        TradeTable = Turtle:FindFirstChild("TradeTable")
+        Tween(Vector3.new(-12538, 334, -7574))
+    until TradeTable
+end
+
+function getEmptyChair() : Seat? 
     for i, v in pairs(TradeTable:GetChildren()) do
         if (v.Name == "P1" or v.Name == "P2") and not v:FindFirstChildOfClass("Weld") then
             return v
@@ -107,8 +296,8 @@ function getEmptyChair()
     end
     return nil
 end
-
 local EmptyChair = getEmptyChair()
+
 repeat
     task.wait()
     EmptyChair = getEmptyChair()
@@ -117,51 +306,39 @@ repeat
 	end
 until Humanoid and Humanoid.Sit
 
--- ส่วนการจัดการ Inventory และการเทรด
-local TradeFunction = Remotes:WaitForChild("TradeFunction")
-local TradeEvent = Remotes:WaitForChild("TradeEvent")
+if  Humanoid and not Humanoid.Sit then
+	Character.HumanoidRootPart.CFrame = CFrame.new(EmptyChair.Position)
+end
 
--- ลบ game:Shutdown() และแก้ไข logic การรับ
+local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
+local Trade = Main:WaitForChild("Trade")
+
+repeat task.wait() until Trade.Visible
+local TradeFunction : RemoteFunction = Remotes:WaitForChild("TradeFunction")
+local TradeEvent : RemoteEvent = Remotes:WaitForChild("TradeEvent")
 TradeEvent.OnClientEvent:Connect(function(action, args)
 	if action == "update_state" then
 		local playerNumber = args["Player1"].Name == LocalPlayer.Name and 1 or args["Player2"].Name == LocalPlayer.Name and 2 or nil
-		if not playerNumber then return end
-		
-		local FruitValueSelf, FruitValueOther = 0, 0
-		for i,v in pairs(args.Offer[playerNumber]) do FruitValueSelf += v.Price end
-		for i,v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do FruitValueOther += v.Price end
-		
-		-- ตรวจสอบมูลค่า 60% ตามกฎของเกม
-		local canTrade = FruitValueSelf == 0 or (FruitValueOther / FruitValueSelf) * 100 >= 60
-		if not args.Ready[playerNumber] and canTrade and FruitValueSelf > 0 then
+		if not playerNumber then
+			return
+		end
+		local FruitValueSelf = 0
+		local FruitValueOther = 0
+		for i,v in pairs(args.Offer[playerNumber]) do 
+			FruitValueSelf += v.Price 
+		end
+		for i,v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do 
+			FruitValueOther += v.Price 
+		end
+		local canTrade = (FruitValueOther / FruitValueSelf) * 100 >= 60
+		print("Can trade: ", canTrade, "Value other: ", FruitValueOther, "Value self: ", FruitValueSelf)
+		if not args.Ready[playerNumber] and canTrade then
 			TradeFunction:InvokeServer("accept")
 		end
 	end
 end)
-
--- ค้นหาผลไม้จาก Inventory ตามลำดับใน FruitTrade
-local Inventory = CommF:InvokeServer("getInventory")
-local FruitToInvite = nil
-
-for _, targetName in ipairs(FruitTrade) do
-    for _, item in pairs(Inventory) do
-        if item.Name == targetName and item.Type == "Blox Fruit" then
-            FruitToInvite = item.Name
-            break
-        end
-    end
-    if FruitToInvite then break end
-end
-
--- รอจนกว่าหน้าต่างเทรดจะขึ้น แล้วส่งผลไม้ตัวแรกที่เจอ
-local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
-local TradeUI = Main:WaitForChild("Trade")
-
-repeat task.wait() until TradeUI.Visible
-
-if FruitToInvite then
-    task.wait(0.5)
-    TradeFunction:InvokeServer("addItem", FruitToInvite)
-else
-    warn("ไม่พบผลไม้ที่กำหนดในกระเป๋า")
-end
+task.wait(0.5)
+TradeFunction:InvokeServer(
+	"addItem",
+	TradeFruit
+)
