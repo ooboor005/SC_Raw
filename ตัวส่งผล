@@ -19,7 +19,26 @@ LocalPlayer.CharacterAdded:Connect(function(char)
     Humanoid = Character:WaitForChild("Humanoid")
 end)
 
--- [ส่วน Team Selection และ Anti-Fall เหมือนเดิม...]
+function getWorld() 
+    local placeId = game.PlaceId
+    if placeId == 2753915549  then
+        return 1
+    elseif placeId == 4442272183 or placeId == 79091703265657 then
+        return 2
+    elseif placeId == 7449423635 or placeId == 100117331123089 then
+        return 3
+    end
+    return 0
+end
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+
+local CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
+
+if getWorld() ~= 3 then
+	CommF:InvokeServer("TravelZou")
+	repeat task.wait() until getWorld() == 3
+end
+
 if (LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)") and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")) or LocalPlayer.Team == nil then
 	repeat
 		task.wait()
@@ -99,10 +118,8 @@ repeat
 until Humanoid and Humanoid.Sit
 
 -- ส่วนการจัดการ Inventory และการเทรด
-local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
 local TradeFunction = Remotes:WaitForChild("TradeFunction")
 local TradeEvent = Remotes:WaitForChild("TradeEvent")
-local CommF = Remotes:WaitForChild("CommF_")
 
 -- ลบ game:Shutdown() และแก้ไข logic การรับ
 TradeEvent.OnClientEvent:Connect(function(action, args)
