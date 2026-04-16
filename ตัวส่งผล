@@ -1,0 +1,150 @@
+repeat
+	task.wait()
+until game:IsLoaded()
+repeat
+	task.wait()
+until game:GetService("Players").LocalPlayer
+
+-- แก้ไข: เปลี่ยนเป็น Table ของผลไม้ที่ต้องการ (เรียงตามลำดับความสำคัญ)
+local FruitTrade = {"Ghost-Ghost", "Ice-Ice", "Flame-Flame"} 
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    Character = char
+    Humanoid = Character:WaitForChild("Humanoid")
+end)
+
+-- [ส่วน Team Selection และ Anti-Fall เหมือนเดิม...]
+if (LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)") and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")) or LocalPlayer.Team == nil then
+	repeat
+		task.wait()
+		pcall(function()
+			if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
+				for i, v in pairs(getconnections(LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated)) do
+					for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do b:Fire() end
+					v.Function()
+				end
+			end
+		end)
+	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+end
+
+task.spawn(function()
+	while true do
+		task.wait()
+		if not Character or not Character:FindFirstChild("HumanoidRootPart") then continue end
+		local torso = Character:FindFirstChild("Torso") or Character:FindFirstChild("UpperTorso")
+		if torso then
+			if not torso:FindFirstChild("AntiFallVelocity") then
+				local bv = Instance.new("BodyVelocity")
+				bv.Name = "AntiFallVelocity"
+				bv.MaxForce = Vector3.new(0, math.huge, 0)
+				bv.Velocity = Vector3.new(0, 0, 0)
+				bv.Parent = torso
+			end
+			for i, v in pairs(Character:GetChildren()) do
+				if v:IsA("BasePart") then v.CanCollide = false end
+			end
+		end
+	end
+end)
+
+-- [Function Tween และ GetDistance เหมือนเดิม...]
+function getDistance(Endpoint)
+	local part = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+	if not part then return 999999 end
+	local pos = (typeof(Endpoint) == "Vector3" and Endpoint) or (Endpoint.Position)
+	return (pos - part.Position).Magnitude
+end
+
+function Tween(Position)
+	local Character = LocalPlayer.Character
+	if not Character or not Character:FindFirstChild("HumanoidRootPart") then return end
+	local Endpoint = (typeof(Position) == "Instance" and Position.CFrame) or (typeof(Position) == "Vector3" and CFrame.new(Position)) or Position
+	local Distance = getDistance(Endpoint)
+	if Distance then
+		local TweenTime = Distance / 325
+		local t = TweenService:Create(Character.HumanoidRootPart, TweenInfo.new(TweenTime, Enum.EasingStyle.Linear), {CFrame = Endpoint})
+		t:Play()
+		return t
+	end
+end
+
+-- ไปหาโต๊ะเทรด
+local Map = workspace:WaitForChild("Map")
+local Turtle = Map:WaitForChild("Turtle")
+local TradeTable = Turtle:WaitForChild("TradeTable")
+
+function getEmptyChair()
+    for i, v in pairs(TradeTable:GetChildren()) do
+        if (v.Name == "P1" or v.Name == "P2") and not v:FindFirstChildOfClass("Weld") then
+            return v
+        end
+    end
+    return nil
+end
+
+local EmptyChair = getEmptyChair()
+repeat
+    task.wait()
+    EmptyChair = getEmptyChair()
+    if EmptyChair then
+		Character.HumanoidRootPart.CFrame = CFrame.new(EmptyChair.Position)
+	end
+until Humanoid and Humanoid.Sit
+
+-- ส่วนการจัดการ Inventory และการเทรด
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local TradeFunction = Remotes:WaitForChild("TradeFunction")
+local TradeEvent = Remotes:WaitForChild("TradeEvent")
+local CommF = Remotes:WaitForChild("CommF_")
+
+-- ลบ game:Shutdown() และแก้ไข logic การรับ
+TradeEvent.OnClientEvent:Connect(function(action, args)
+	if action == "update_state" then
+		local playerNumber = args["Player1"].Name == LocalPlayer.Name and 1 or args["Player2"].Name == LocalPlayer.Name and 2 or nil
+		if not playerNumber then return end
+		
+		local FruitValueSelf, FruitValueOther = 0, 0
+		for i,v in pairs(args.Offer[playerNumber]) do FruitValueSelf += v.Price end
+		for i,v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do FruitValueOther += v.Price end
+		
+		-- ตรวจสอบมูลค่า 60% ตามกฎของเกม
+		local canTrade = FruitValueSelf == 0 or (FruitValueOther / FruitValueSelf) * 100 >= 60
+		if not args.Ready[playerNumber] and canTrade and FruitValueSelf > 0 then
+			TradeFunction:InvokeServer("accept")
+		end
+	end
+end)
+
+-- ค้นหาผลไม้จาก Inventory ตามลำดับใน FruitTrade
+local Inventory = CommF:InvokeServer("getInventory")
+local FruitToInvite = nil
+
+for _, targetName in ipairs(FruitTrade) do
+    for _, item in pairs(Inventory) do
+        if item.Name == targetName and item.Type == "Blox Fruit" then
+            FruitToInvite = item.Name
+            break
+        end
+    end
+    if FruitToInvite then break end
+end
+
+-- รอจนกว่าหน้าต่างเทรดจะขึ้น แล้วส่งผลไม้ตัวแรกที่เจอ
+local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
+local TradeUI = Main:WaitForChild("Trade")
+
+repeat task.wait() until TradeUI.Visible
+
+if FruitToInvite then
+    task.wait(0.5)
+    TradeFunction:InvokeServer("addItem", FruitToInvite)
+else
+    warn("ไม่พบผลไม้ที่กำหนดในกระเป๋า")
+end
