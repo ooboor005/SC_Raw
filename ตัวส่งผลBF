@@ -6,7 +6,7 @@ repeat
 until game:GetService("Players").LocalPlayer
 
 -- แก้ไข: เปลี่ยนเป็น Table ของผลไม้ที่ต้องการ (เรียงตามลำดับความสำคัญ)
-local FruitTrade = {"Ghost-Ghost", "Ice-Ice", "Flame-Flame"} 
+local FruitTrade = {"Kitsune-Kitsune", "Tiger-Tiger"} 
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
