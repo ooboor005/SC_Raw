@@ -10,11 +10,25 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local Humanoid : Humanoid? = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 local Character = LocalPlayer.Character
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
     Humanoid = Character:WaitForChild("Humanoid")
 end)
 
+
+function getWorld() 
+    local placeId = game.PlaceId
+    if placeId == 2753915549  then
+        return 1
+    elseif placeId == 4442272183 or placeId == 79091703265657 then
+        return 2
+    elseif placeId == 7449423635 or placeId == 100117331123089 then
+        return 3
+    end
+    return 0
+end
 
 if
 	(
@@ -41,6 +55,12 @@ then
 			end
 		end)
 	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+end
+local _CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
+
+if getWorld() ~= 3 then
+	_CommF:InvokeServer("TravelZou")
+	repeat task.wait() until getWorld() == 3
 end
 
 task.spawn(function()
@@ -180,11 +200,9 @@ local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
 local Trade = Main:WaitForChild("Trade")
 
 repeat task.wait() until Trade.Visible
-local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
 local TradeFunction : RemoteFunction = Remotes:WaitForChild("TradeFunction")
 local TradeEvent : RemoteEvent = Remotes:WaitForChild("TradeEvent")
 local FruitMapping = {}
-local _CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
 local Inventory = _CommF:InvokeServer("getInventory")
 
 for i, v in pairs(Inventory) do 
@@ -218,9 +236,6 @@ function getIndices(dataTable, targetValue)
 end
 
 TradeEvent.OnClientEvent:Connect(function(action, args)
-    if action == "leave" then
-		game:Shutdown()
-	end
 	if action == "update_state" then
 		local playerNumber = args["Player1"].Name == LocalPlayer.Name and 1 or args["Player2"].Name == LocalPlayer.Name and 2 or nil
 		if not playerNumber then
@@ -234,13 +249,14 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 		for i,v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do 
 			FruitValueOther += v.Price 
 		end
+		print(FruitValueOther, FruitValueSelf)
 		if FruitValueSelf == 0 then 
             local fruitIndices = getIndices(FruitMapping, FruitValueOther)
-            if #fruitIndices < 0 then 
-                game:Shutdown()
-            end
+			print(#fruitIndices, "fruits to offer.")
             for i,v in pairs(fruitIndices) do 
                 TradeFunction:InvokeServer("addItem", v)
+				print("Adding", v, "to the trade offer.")
+				task.wait(1)
             end
         end
         if not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 then
