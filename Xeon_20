@@ -224,3 +224,4 @@ getgenv().Config = {
     }
 }
 -- PUT YOUR {KEY TYPE} LOADSTRING HERE
+loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/5e53e03e462e69f749e2c1d56473860a.lua"))()
