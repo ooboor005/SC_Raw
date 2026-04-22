@@ -219,7 +219,7 @@ getgenv().Config = {
         }
     },
     Require_Private_Server = {
-        Kick = false, -- Auto Kick Player if not in Private Server
+        Kick = true, -- Auto Kick Player if not in Private Server
         LeaveServer = false, -- Auto Leave Server and return to home page if not in Private Server
     }
 }
