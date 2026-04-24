@@ -1,227 +1,38 @@
 script_key="BTrhHhybWFHuwlGFWFJnegUWlpXBttMe";
-getgenv().Config = {
+getgenv().ScriptMode = "Diamond"
+getgenv().Configs = {
+    -- แจ้งเตือน ( Notify )
+    WebhookUrl = "",      -- Webhook Discord
+    LimitDiamonds = 0,    -- แจ้งเตือนว่าฟาร์มครบแล้วถ้าเพรชถึงจำนวนนี้
+    EnableLogRam = false, -- เปิด/ปิด Log ของ Account Manager
 
-    --=============== World Configuration ===============--
-    World = "Sea2", -- World to play, set to "Sea1" or "Sea2"
+    -- การฟาร์ม ( Farm )
+    LimitDay = 0,           -- จำกัดวันถ้าถึงแล้วให้เริ่มเกมใหม่
+    MaxStrongholdLevel = 5, -- ระดับสูงสุดของดันถ้าถึงแล้วให้เริ่มเกมใหม่
+    CountStronghold = 3,    -- นับจำนวนสดันที่ผ่านครบแล้วให้เริ่มเกมใหม่
+    ClaimBadges = true,    -- รับเหรียญทั้งหมด
+    HardMode = true,        -- เปิดโหมดยาก
 
-    --=============== BUILD CONFIG ==============--
-    Build = {
-        ["Main"] = "Luck", -- Base on: "Damage", "Luck"
-        ["LockRace"] = "Luckborn", -- Lock to specific race
-        ["Accessory"] = "Auto", -- Accessory to use, set to "None" to ignore accessory
-        ["LockBloodline"] = "Primordial", -- Lock to specific bloodline, set to "None" to ignore bloodline
-        ["LockRelic"] = "LuckRelic", -- Lock to specific relic, set to "None" to ignore relic
-    },
-    Auto_Passive = {
-        ["Enable"] = true, -- Need to enable this to use below features
-        ["Target_Passive"] = "Fortune Chosen", -- Target Passive On Weapon
-        ["MainTool"] = {     -- Tools to use for activating passives
-            "Strongest In History", 
-            "Ice Queen", 
-        },
-    },
-    Auto_Reroll_Stats = { -- Stats to reroll to SSS - Z
-        ["Damage"] = true,
-        ["Luck"] = true,
-        ["CritDamage"] = true,
-        ["CritChance"] = true,
-        ["Defense"] = true,
-        ["CooldownReduction"] = true,
-        ["DamageReduction"] = true,
-    },
-    Specific_Trait = {"Emperor"}, -- Find Target Trait
-    Specific_Clan = {"Eminence"}, -- Left {} if you want any legendary clan
-    Specific_Power = {"Colossus"}, -- Find Target Power
-    Blacklist_Rank = {"Ascend X"}, -- Stop farming rank when reached this rank
+    -- คลาส & ร้านค้า ( Class & Shop )
+    BuyClass = {""},            -- ชื้อคลาส
+    DoFirstTimeReroll = false,  -- รีร้านคลาสครั้งแรกฟรี
+    GuaranteeReroll = false,    -- รีร้านคลาสจนกว่าจะได้คลาสที่ต้องการ
+    AutoEquipClass = "",        -- สวมใส่ Class
+    UpgradeClass = false,       -- อัพเวลคลาสอัตโนมัติ
 
-    --============= WEAPON AND ACCESSORY CONFIG =============--
-    AutoBless_Weapons = {
-        ["Enable"] = true, -- Need to enable this to use below features
-        ["Weapon"] = {
-            "Strongest In History",
-            "Ice Queen",
-        }
-    },
-    Auto_E10_Accessory = {
-        ["Enable"] = true, -- Need to enable this to use below features
-        ["Boss"] = "TheWorldBoss", -- Boss to farm accessory
-        ["Accessory"] = "World Outfit", -- Target Accessory to enchant
+    -- Perks
+    AutoRollTalent = {
+        Enable = false,         -- เปิด/ปิดระบบ
+        DiamondLimit = 200,     -- เพชรขั้นต่ำก่อนสุ่ม
+        ClassToReroll = "",     -- คลาสหลักที่จะสุ่ม
+        BothSlot = false,       -- ต้องตรงทั้งดาวและคลาสรอง
+        TargetClassTalent = "", -- คลาสรอง
+        TargetStar = 1,         -- ดาว
     },
 
-    --============= MULTI-ISLAND FARM CONFIG =============--
-    Multi_Island_Farm = {   -- when no boss teleport to multiple island to farm
-        ["Enable"] = true, -- Need to enable this to use below features
-        ["MainTool"] = "Strongest In History", -- Tool to use for farming mobs on other islands
-        ["WhiteList_Abilities"] = {2}, -- Only use these abilities
-    },
-
-    --============= ADVANCED WORLD BOSS CONFIG =============--
-    WorldBoss_Configuration = {
-        ["Enable"] = true, -- Need to enable this to use below features
-        ["MainTool"] = "True Aizen", -- Tool to use for farming world boss
-        ["WhiteList_Abilities"] = {3,2}, -- Only use these abilities
-    },
-    Blacklist_Bosses = { -- WARNING DISABLE SOME BOSS YOU WON'T GET ITEM FOR WEAPON/RANK ASCEND
-        ["SaberBoss"] = false,
-        ["GojoBoss"] = false,
-        ["SukunaBoss"] = false,
-        ["JinwooBoss"] = false,
-        ["RagnaBoss"] = false,
-        ["AizenBoss"] = false,
-        ["TrueAizenBoss"] = false,
-        ["QinShiBoss"] = false,
-        ["YujiBoss"] = false,
-        ["AlucardBoss"] = false,
-        ["IchigoBoss"] = false,
-        ["StrongestofTodayBoss"] = false,
-        ["StrongestinHistoryBoss"] = false,
-        ["RimuruBoss"] = false,
-        ["MadokaBoss"] = false,
-        ["GilgameshBoss"] = false,
-        ["BlessedMaidenBoss"] = false,
-        ["SaberAlterBoss"] = false,
-        ["AnosBoss"] = false,
-        ["AtomicBoss"] = false,
-        ["YamatoBoss"] = false,
-        ["GreatMageBoss"] = false,
-        ["StrongestShinobiBoss"] = false,
-        ["MoonSlayerBoss"] = false,
-        ["TheWorldBoss"] = false,
-        ["IceQueenBoss"] = false,
-        ["CosmicBeingBoss"] = false,
-    },
-    Keep_Summon_Boss = {  -- Keep Summon Bosses since you got all items
-        ["SaberBoss"] = false,
-        ["IchigoBoss"] = false,
-        ["StrongestofTodayBoss"] = false,
-        ["StrongestinHistoryBoss"] = false,
-        ["RimuruBoss"] = false,
-        ["GilgameshBoss"] = false,
-        ["BlessedMaidenBoss"] = false,
-        ["SaberAlterBoss"] = false,
-        ["MoonSlayerBoss"] = false,
-        ["IceQueenBoss"] = false,
-        ["AnosBoss"] = false,
-        ["GreatMageBoss"] = false,
-        ["TheWorldBoss"] = false,
-        ["AtomicBoss"] = false,
-    },
-
-    --============= DUNGEON CONFIG =============--    
-    Dungeon_Configuration = { -- If reached this rank do BossRush/Tower until out of keys
-        ["Enable"] = false, -- Need to enable this to use below features
-        ["Rank"] = {"Ascend X"}, -- IF RANK MATCHED, DO BOSS RUSH/TOWER
-        ["BossRush"] = {
-            ["Enable"] = false,
-            ["Build"] = "Damage",
-            ["MainTool"] = "Abyssal Empress",
-            ["WhiteList_Abilities"] = {3,2},
-            ["AutoReplay"] = false,
-            ["Difficulty"] = "Easy",
-        },
-        ["Tower"] = {
-            ["Enable"] = false,
-            ["Build"] = "Damage",
-            ["MainTool"] = "Abyssal Empress",
-            ["WhiteList_Abilities"] = {3,2},
-            ["Limit_Floor"] = 100,
-            ["AutoReplay"] = false,
-        },
-    },
-
-    --============= AUTO UPGRADE CONFIG =============--
-    Auto_Upgrade_BossRush = { -- Upgrade boss rush stats when maxed its stop
-        ["Enable"] = false, -- Need to enable this to use below features
-        ["Stats"] = {
-            ["Luck"] = true,
-            ["Damage"] = true,
-            ["CritDamage"] = false,
-            ["CritChance"] = false,
-            ["HP"] = false,
-        }
-    },
-    Auto_Upgrade_Tower = { -- Upgrade tower stats when maxed its stop
-        ["Enable"] = false, -- Need to enable this to use below features
-        ["Stats"] = {
-            ["Luck"] = true,
-            ["Damage"] = true,
-            ["CritDamage"] = false,
-            ["CritChance"] = false,
-            ["HP"] = false,
-        }
-    },
-    Auto_Upgrade_Easter = { -- Upgrade tower stats when maxed its stop
-        ["Enable"] = false, -- Need to enable this to use below features
-        ["Stats"] = {
-            ["EggDropChance"] = true,
-            ["EggBonus"] = true,
-            ["BossLuck"] = true,
-        }
-    },
-    Max_Rune_Level = true, -- Auto Upgrade Rune to max level
-
-    --============= ITEM USING CONFIG =============--
-    Advanced_Item_Config = {
-        ["Use Common Chest"] = true, -- Auto Use Common Chest
-        ["Use Rare Chest"] = true, -- Auto Use Rare Chest
-        ["Use Epic Chest"] = true, -- Auto Use Epic Chest
-        ["Use Legendary Chest"] = true, -- Auto Use Legendary Chest
-        ["Use Cosmetic Crate (Untradeable)"] = true, -- Auto Use Cosmetic Crate (Untradeable)
-        ["Use Aura Crate (Untradeable)"] = true, -- Auto Use Aura Crate (Untradeable)
-        ["Use Secret Chest (Untradeable)"] = true, -- Auto Use Secret Chest (Untradeable)
-    },
-
-    Log = {
-        Horst = false, -- Log Horst
-        RAM = false, -- Log RAM
-        Custom = {
-            ["TrackSea"] = false,
-            ["MainWeapon"] = false,
-            ["Rank"] = false,
-            ["Race"] = false,
-            ["Rune"] = false,
-            ["Clan"] = false,
-            ["Trait"] = false,
-            ["Power"] = false,
-            ["Bloodline"] = false,
-            ["DamagePercent"] = false,
-            ["LuckPercent"] = false,
-            ["Haki"] = false,
-            ["Level"] = false,
-            ["Currencies"] = false,
-            ["Weapon"] = {
-                ["Dark Blade"] = false,
-                ["Gryphon"] = false,
-                ["Ichigo"] = false,
-                ["Aizen"] = false,
-                ["Shadow"] = false,
-                ["Escanor"] = false,
-                ["Rimuru"] = false,
-                ["Strongest In History"] = false,
-                ["Blessed Maiden"] = false,
-                ["Saber Alter"] = false,
-                ["Strongest Shinobi"] = false,
-                ["Abyssal Empress"] = false,
-                ["Moon Slayer"] = false,
-                ["Ice Queen"] = false,
-                ["Great Mage"] = false,
-                ["TheWorld"] = false,
-                ["Cosmic Being"] = false,
-                ["Dragon Goddess"] = false,
-                ["Atomic"] = false,
-                ["True Aizen"] = false,
-            },
-            Items = {
-                "Race Reroll",
-                "Trait Reroll",
-                "Clan Reroll",
-            },
-        }
-    },
-    Require_Private_Server = {
-        Kick = true, -- Auto Kick Player if not in Private Server
-        LeaveServer = false, -- Auto Leave Server and return to home page if not in Private Server
-    }
+    -- Misc
+    UI = true,              -- เปิด/ปิด UI
+    LowGraphics = true,    -- โหมดกราฟฟิคต่ำ
+    FpsCap = 10,             -- จำกัด FPS
 }
--- PUT YOUR {KEY TYPE} LOADSTRING HERE
-loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/5e53e03e462e69f749e2c1d56473860a.lua"))()
+loadstring(game:HttpGet("https://gist.githubusercontent.com/Clehxb/a0512b13f2bcc539e037712e13572d14/raw/Night_Loader"))()
