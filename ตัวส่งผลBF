@@ -68,6 +68,10 @@ if getWorld() ~= 3 then
 	repeat task.wait() until getWorld() == 3
 end
 
+if getWorld() == 3 then 
+    writefile("BF_PlaceId", tostring(game.PlaceId))
+end
+
 task.spawn(function()
 	while true do
 		task.wait()
