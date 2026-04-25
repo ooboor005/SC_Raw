@@ -30,6 +30,11 @@ function getWorld()
     return 0
 end
 
+if getWorld() == 3 and game.PlaceId == 7449423635 then 
+    game:Shutdown()
+    return
+end
+
 if
 	(
 		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
