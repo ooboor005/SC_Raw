@@ -5,7 +5,7 @@ repeat
 	task.wait()
 until game:GetService("Players").LocalPlayer
 
-local FruitTrade = {"Kitsune-Kitsune", "Tiger-Tiger"}
+local FruitTrade = {"Kitsune-Kitsune", "Tiger-Tiger", "Dough-Dough"}
 
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
