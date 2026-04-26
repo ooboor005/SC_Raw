@@ -30,7 +30,7 @@ function getWorld()
     return 0
 end
 
-if getWorld() == 3 and game.PlaceId == 7449423635 then 
+if getWorld() == 3 and game.PlaceId ~= 7449423635 then 
     game:Shutdown()
     return
 end
