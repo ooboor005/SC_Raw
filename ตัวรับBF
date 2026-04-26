@@ -254,10 +254,12 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 		for i,v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do 
 			FruitValueOther += v.Price 
 		end
-		if FruitValueSelf == 0 then 
+		if (FruitValueSelf == 0) or not (not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 ) then 
             local fruitIndices = getIndices(FruitMapping, FruitValueOther)
             for i,v in pairs(fruitIndices) do 
                 TradeFunction:InvokeServer("addItem", v)
+				print("Senting Fruit:", v)
+				task.wait(1)
             end
         end
         if not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 then
