@@ -35,6 +35,82 @@ if getWorld() == 3 and game.PlaceId ~= 7449423635 then
     return
 end
 
+pcall(function() 
+	writefile("BF_JOBID", string.format("%s|%s", tostring(game.PlaceId), game.JobId))
+end)
+
+task.spawn(function() 
+	local Players = game:GetService("Players")
+	local CHECK_INTERVAL = 30
+	local MAX_IDLE_TIME  = 300
+	local MIN_MOVE_DIST  = 5
+	local KICK_MESSAGE   = "You were kicked for being AFK for 5 minutes."
+
+	local player = Players.LocalPlayer
+
+	local lastPosition = nil
+	local idleTime = 0
+
+	local function resetIdle(currentPos)
+		idleTime = 0
+		lastPosition = currentPos
+	end
+
+	local function checkAFK()
+		local character = player.Character
+		if not character then return end
+
+		local hrp = character:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+
+		local currentPos = hrp.Position
+
+		if lastPosition == nil then
+			lastPosition = currentPos
+			return
+		end
+
+		local distance = (currentPos - lastPosition).Magnitude
+
+		if distance > MIN_MOVE_DIST then
+			resetIdle(currentPos)
+		else
+			idleTime += CHECK_INTERVAL
+			lastPosition = currentPos
+
+			if idleTime >= MAX_IDLE_TIME then
+				player:Kick(KICK_MESSAGE)
+			end
+		end
+	end
+
+	-- Reset idle on any input
+	local UserInputService = game:GetService("UserInputService")
+
+	UserInputService.InputBegan:Connect(function()
+		local character = player.Character
+		if character then
+			local hrp = character:FindFirstChild("HumanoidRootPart")
+			if hrp then
+				resetIdle(hrp.Position)
+			end
+		end
+	end)
+
+	-- Reset when character respawns
+	player.CharacterAdded:Connect(function(character)
+		local hrp = character:WaitForChild("HumanoidRootPart")
+		resetIdle(hrp.Position)
+	end)
+
+	-- Main loop
+	while true do
+		task.wait(CHECK_INTERVAL)
+		checkAFK()
+		task.wait()
+	end
+end)
+
 if
 	(
 		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
