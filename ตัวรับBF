@@ -193,12 +193,12 @@ repeat
     task.wait()
     EmptyChair = getEmptyChair()
     if EmptyChair then
-         Tween(EmptyChair.Position)
+         Tween(CFrame.new(-12591, 337, -7545))
     end
 until Humanoid and Humanoid.Sit
 
 if  Humanoid and not Humanoid.Sit then
-	Character.HumanoidRootPart.CFrame = CFrame.new(EmptyChair.Position)
+	Character.HumanoidRootPart.CFrame = CFrame.new(-12591, 337, -7545)
 end
 
 local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
