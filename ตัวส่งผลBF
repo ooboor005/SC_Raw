@@ -6,9 +6,7 @@ repeat
 until game:GetService("Players").LocalPlayer
 
 local FruitTrade = {"Kitsune-Kitsune", "Tiger-Tiger", "Dough-Dough"}
-local IsLoaded = getgenv().IS_LOADED
-if IsLoaded then return end
-getgenv().IS_LOADED = true
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -309,12 +307,12 @@ repeat
     task.wait()
     EmptyChair = getEmptyChair()
     if EmptyChair then
-		Character.HumanoidRootPart.CFrame = CFrame.new(EmptyChair.Position)
+		Character.HumanoidRootPart.CFrame = CFrame.new(-12602, 337, -7545)
 	end
 until Humanoid and Humanoid.Sit
 
 if  Humanoid and not Humanoid.Sit then
-	Character.HumanoidRootPart.CFrame = CFrame.new(EmptyChair.Position)
+	Character.HumanoidRootPart.CFrame = CFrame.new(-12602, 337, -7545)
 end
 
 local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
@@ -328,8 +326,6 @@ Connection = TradeEvent.OnClientEvent:Connect(function(action, args)
     if action == "leave" then
         Connection:Disconnect()
 		task.wait(15)
-        if not getgenv().IS_LOADED then return end
-        getgenv().IS_LOADED = false
         loadstring(game:HttpGet'https://raw.githubusercontent.com/ooboor005/SC_Raw/refs/heads/main/%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%AA%E0%B9%88%E0%B8%87%E0%B8%9C%E0%B8%A5BF')()
     end
 	if action == "update_state" then
