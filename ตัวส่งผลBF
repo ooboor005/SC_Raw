@@ -68,7 +68,7 @@ if getWorld() ~= 3 then
 	repeat task.wait() until getWorld() == 3
 end
 
-if getWorld() == 3 and game.PlaceId == 7449423635 then 
+if getWorld() == 3 and game.PlaceId ~= 7449423635 then 
     game:Shutdown()
     return
 end
