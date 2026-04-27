@@ -335,15 +335,21 @@ local TradeBusy = false
 TradeEvent.OnClientEvent:Connect(function(action, args)
 	if action == "update_state" then
 		if TradeBusy then
+			print("[Trade] ⏸ event received but busy - skipping")
 			return
 		end
 		TradeBusy = true
 
+		print("\n========== [Trade] update_state ==========")
+
 		local playerNumber = args["Player1"].Name == LocalPlayer.Name and 1 or args["Player2"].Name == LocalPlayer.Name and 2 or nil
 		if not playerNumber then
+			print("[Trade] ✗ Cannot determine playerNumber - exit")
 			TradeBusy = false
 			return
 		end
+		print("[Trade] We are Player", playerNumber)
+
 		local FruitValueSelf = 0
 		local FruitValueOther = 0
 		for i,v in pairs(args.Offer[playerNumber]) do 
@@ -353,39 +359,148 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 			FruitValueOther += v.Price 
 		end
 
+		print(("[Trade] Value Self=%d / Other=%d"):format(FruitValueSelf, FruitValueOther))
+		print(("[Trade] Ready: Self=%s / Other=%s"):format(
+			tostring(args.Ready[playerNumber]),
+			tostring(args.Ready[playerNumber == 1 and 2 or 1])
+		))
+
+		-- Check what we already offered
 		local alreadyOffered = {}
+		local selfOfferList = {}
 		for i, v in pairs(args.Offer[playerNumber]) do
 			alreadyOffered[v.Name] = true
+			table.insert(selfOfferList, v.Name.." ("..tostring(v.Price)..")")
+		end
+		if #selfOfferList > 0 then
+			print("[Trade] Our current offer:", table.concat(selfOfferList, ", "))
+		else
+			print("[Trade] We have not offered anything yet")
 		end
 
-		-- ✅ FIX: เก็บมูลค่าที่เพิ่งใส่เพิ่มในรอบนี้ เพื่อใช้คำนวณ Self ใหม่หลัง addItem จบ
+		-- Check what the other side offered
+		local otherOfferList = {}
+		for i, v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do
+			table.insert(otherOfferList, v.Name.." ("..tostring(v.Price)..")")
+		end
+		if #otherOfferList > 0 then
+			print("[Trade] Their current offer:", table.concat(otherOfferList, ", "))
+		else
+			print("[Trade] They have not offered anything yet")
+		end
+
+		-- Show current ratio
+		if FruitValueSelf > 0 and FruitValueOther > 0 then
+			local ratio = (FruitValueOther / FruitValueSelf) * 100
+			print(("[Trade] Current ratio Other/Self = %.1f%% (accept threshold >=60%%)"):format(ratio))
+		end
+
 		local addedValue = 0
+		local conditionA = (FruitValueSelf == 0)
+		local conditionB = not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60
+		local shouldAddItems = conditionA or not conditionB
 
-		if (FruitValueSelf == 0) or not (not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 ) then 
-            refreshFruitMapping()
+		print(("[Trade] Check add-items condition: Self==0?=%s, B(ready to accept)?=%s -> add items?=%s"):format(
+			tostring(conditionA),
+			tostring(conditionB),
+			tostring(shouldAddItems)
+		))
 
-            for name, _ in pairs(alreadyOffered) do
-                FruitMapping[name] = nil
+		if shouldAddItems then 
+			print("[Trade] -> Starting fruit selection")
+			print("[Trade]   refreshing inventory from server...")
+			refreshFruitMapping()
+
+			local mapCount = 0
+			local mapList = {}
+			for k, v in pairs(FruitMapping) do
+				mapCount += 1
+				table.insert(mapList, k.."="..tostring(v))
+			end
+			print(("[Trade]   Inventory contains %d Blox Fruits"):format(mapCount))
+			if mapCount > 0 then
+				print("[Trade]   List:", table.concat(mapList, ", "))
+			end
+
+			-- Remove already-offered items from map
+			local removedCount = 0
+			for name, _ in pairs(alreadyOffered) do
+				if FruitMapping[name] ~= nil then
+					FruitMapping[name] = nil
+					removedCount += 1
+				end
+			end
+			if removedCount > 0 then
+				print(("[Trade]   Removed %d already-offered items from map"):format(removedCount))
+			end
+
+			-- Check if anything left to pick
+			local remaining = 0
+			for _ in pairs(FruitMapping) do remaining += 1 end
+			print(("[Trade]   %d items remaining to pick from, threshold = %d (60%% of Other %d)"):format(
+				remaining, FruitValueOther * 0.6, FruitValueOther
+			))
+
+			if remaining == 0 then
+				print("[Trade] ⚠ No more items to add!")
+			else
+				local fruitIndices = getIndices(FruitMapping, FruitValueOther)
+				print(("[Trade]   getIndices selected %d items"):format(#fruitIndices))
+
+				if #fruitIndices == 0 then
+					print("[Trade] ⚠ getIndices returned nothing (top 4 items combined did not exceed threshold)")
+				end
+
+				for i,v in pairs(fruitIndices) do 
+					local val = FruitMapping[v] or 0
+					print(("[Trade]   -> Sending addItem: %s (value %d)"):format(v, val))
+
+					local ok, err = pcall(function()
+						TradeFunction:InvokeServer("addItem", v)
+					end)
+					if ok then
+						print("[Trade]   ✓ Sent successfully")
+						addedValue += val
+					else
+						print("[Trade]   ✗ Send failed:", err)
+					end
+
+					task.wait(1)
+				end
+			end
+		else
+			print("[Trade] Skipping add-items step (conditions already met)")
+		end
+
+		-- Check accept condition
+		local effectiveSelfValue = FruitValueSelf + addedValue
+		print(("[Trade] effectiveSelf = %d (original Self %d + just added %d)"):format(
+			effectiveSelfValue, FruitValueSelf, addedValue
+		))
+
+		local canAccept = (not args.Ready[playerNumber]) and FruitValueOther > 0 and effectiveSelfValue > 0 and (FruitValueOther / effectiveSelfValue) * 100 >= 60
+		print("[Trade] Accept conditions:")
+		print(("[Trade]   - not ready yet: %s"):format(tostring(not args.Ready[playerNumber])))
+		print(("[Trade]   - Other > 0: %s (=%d)"):format(tostring(FruitValueOther > 0), FruitValueOther))
+		print(("[Trade]   - effectiveSelf > 0: %s (=%d)"):format(tostring(effectiveSelfValue > 0), effectiveSelfValue))
+		if effectiveSelfValue > 0 then
+			local ratio = (FruitValueOther / effectiveSelfValue) * 100
+			print(("[Trade]   - ratio >= 60%%: %s (=%.1f%%)"):format(tostring(ratio >= 60), ratio))
+		end
+
+        if canAccept then
+            print("[Trade] ✓✓ Pressing ACCEPT")
+            local ok, err = pcall(function()
+                TradeFunction:InvokeServer("accept")
+            end)
+            if not ok then
+                print("[Trade] ✗ accept failed:", err)
             end
-
-            local fruitIndices = getIndices(FruitMapping, FruitValueOther)
-            for i,v in pairs(fruitIndices) do 
-                local val = FruitMapping[v] or 0
-                TradeFunction:InvokeServer("addItem", v)
-				print("Senting Fruit:", v, "value:", val)
-				addedValue += val
-				task.wait(1)
-            end
+        else
+            print("[Trade] ✗ Not accepting - conditions not met")
         end
 
-        -- ✅ FIX: ใช้ Self ใหม่ที่รวม addedValue แล้ว ไม่ต้องรอ event รอบถัดไป
-        local effectiveSelfValue = FruitValueSelf + addedValue
-
-        if not args.Ready[playerNumber] and FruitValueOther > 0 and effectiveSelfValue > 0 and (FruitValueOther / effectiveSelfValue) * 100 >= 60 then
-            TradeFunction:InvokeServer("accept")
-            print("Accept trade fired (Self:", effectiveSelfValue, "Other:", FruitValueOther, ")")
-        end
-
+        print("========== End of event processing ==========\n")
 		TradeBusy = false
 	end
 end)
