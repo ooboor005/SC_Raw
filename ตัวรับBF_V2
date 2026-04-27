@@ -334,7 +334,6 @@ local TradeBusy = false
 
 TradeEvent.OnClientEvent:Connect(function(action, args)
 	if action == "update_state" then
-		-- ✅ FIX: ถ้ายังประมวลผลรอบเดิมอยู่ ให้ข้าม event นี้ไป
 		if TradeBusy then
 			return
 		end
@@ -354,33 +353,39 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 			FruitValueOther += v.Price 
 		end
 
-		-- ✅ FIX: เก็บชื่อผลที่เราใส่ไปแล้ว เพื่อไม่ให้ getIndices เลือกซ้ำ
 		local alreadyOffered = {}
 		for i, v in pairs(args.Offer[playerNumber]) do
 			alreadyOffered[v.Name] = true
 		end
 
+		-- ✅ FIX: เก็บมูลค่าที่เพิ่งใส่เพิ่มในรอบนี้ เพื่อใช้คำนวณ Self ใหม่หลัง addItem จบ
+		local addedValue = 0
+
 		if (FruitValueSelf == 0) or not (not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 ) then 
-            -- ✅ FIX: refresh inventory จากเซิร์ฟเวอร์ใหม่ ก่อนเลือกของทุกครั้ง
             refreshFruitMapping()
 
-            -- ✅ FIX: ลบผลที่ใส่ไปแล้วออกจาก map กันเลือกซ้ำ
             for name, _ in pairs(alreadyOffered) do
                 FruitMapping[name] = nil
             end
 
             local fruitIndices = getIndices(FruitMapping, FruitValueOther)
             for i,v in pairs(fruitIndices) do 
+                local val = FruitMapping[v] or 0
                 TradeFunction:InvokeServer("addItem", v)
-				print("Senting Fruit:", v)
+				print("Senting Fruit:", v, "value:", val)
+				addedValue += val
 				task.wait(1)
             end
         end
-        if not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 then
+
+        -- ✅ FIX: ใช้ Self ใหม่ที่รวม addedValue แล้ว ไม่ต้องรอ event รอบถัดไป
+        local effectiveSelfValue = FruitValueSelf + addedValue
+
+        if not args.Ready[playerNumber] and FruitValueOther > 0 and effectiveSelfValue > 0 and (FruitValueOther / effectiveSelfValue) * 100 >= 60 then
             TradeFunction:InvokeServer("accept")
+            print("Accept trade fired (Self:", effectiveSelfValue, "Other:", FruitValueOther, ")")
         end
 
-		-- ✅ FIX: ปลดล็อคหลังประมวลผล event นี้เสร็จ
 		TradeBusy = false
 	end
 end)
