@@ -1,0 +1,386 @@
+repeat
+	task.wait()
+until game:IsLoaded()
+repeat
+	task.wait()
+until game:GetService("Players").LocalPlayer
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Humanoid : Humanoid? = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+local Character = LocalPlayer.Character
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    Character = char
+    Humanoid = Character:WaitForChild("Humanoid")
+end)
+
+
+function getWorld() 
+    local placeId = game.PlaceId
+    if placeId == 2753915549  then
+        return 1
+    elseif placeId == 4442272183 or placeId == 79091703265657 then
+        return 2
+    elseif placeId == 7449423635 or placeId == 100117331123089 then
+        return 3
+    end
+    return 0
+end
+
+if getWorld() == 3 and game.PlaceId ~= 7449423635 then 
+    game:Shutdown()
+    return
+end
+
+pcall(function() 
+	writefile("BF_JOBID", string.format("%s|%s", tostring(game.PlaceId), game.JobId))
+end)
+
+task.spawn(function() 
+	local Players = game:GetService("Players")
+	local CHECK_INTERVAL = 30
+	local MAX_IDLE_TIME  = 120
+	local MIN_MOVE_DIST  = 5
+	local KICK_MESSAGE   = "You were kicked for being AFK for 5 minutes."
+
+	local player = Players.LocalPlayer
+
+	local lastPosition = nil
+	local idleTime = 0
+
+	local function resetIdle(currentPos)
+		idleTime = 0
+		lastPosition = currentPos
+	end
+
+	local function checkAFK()
+		local character = player.Character
+		if not character then return end
+
+		local hrp = character:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+
+		local currentPos = hrp.Position
+
+		if lastPosition == nil then
+			lastPosition = currentPos
+			return
+		end
+
+		local distance = (currentPos - lastPosition).Magnitude
+
+		if distance > MIN_MOVE_DIST then
+			resetIdle(currentPos)
+		else
+			idleTime += CHECK_INTERVAL
+			lastPosition = currentPos
+
+			if idleTime >= MAX_IDLE_TIME then
+				game:Shutdown()
+			end
+		end
+	end
+
+	-- Reset idle on any input
+	local UserInputService = game:GetService("UserInputService")
+
+	UserInputService.InputBegan:Connect(function()
+		local character = player.Character
+		if character then
+			local hrp = character:FindFirstChild("HumanoidRootPart")
+			if hrp then
+				resetIdle(hrp.Position)
+			end
+		end
+	end)
+
+	-- Reset when character respawns
+	player.CharacterAdded:Connect(function(character)
+		local hrp = character:WaitForChild("HumanoidRootPart")
+		resetIdle(hrp.Position)
+	end)
+
+	-- Main loop
+	while true do
+		task.wait(CHECK_INTERVAL)
+		checkAFK()
+		task.wait()
+	end
+end)
+
+if
+	(
+		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+		and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")
+	) or LocalPlayer.Team == nil
+then
+	repeat
+		task.wait()
+		pcall(function()
+			if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
+				for i, v in
+					pairs(
+						getconnections(
+							LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated
+						)
+					)
+				do
+					for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do
+						b:Fire()
+					end
+					v.Function()
+				end
+			end
+		end)
+	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+end
+local _CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
+
+if getWorld() ~= 3 then
+	_CommF:InvokeServer("TravelZou")
+	repeat task.wait() until getWorld() == 3
+end
+
+task.spawn(function()
+	while true do
+		task.wait()
+		if not Character then
+			continue
+		end
+		local torso = Character:FindFirstChild("Torso") or Character:FindFirstChild("UpperTorso")
+		if not torso then
+			continue
+		end
+
+		if not torso:FindFirstChild("AntiFallVelocity") then
+			local bv = Instance.new("BodyVelocity")
+			bv.Name = "AntiFallVelocity"
+			bv.MaxForce = Vector3.new(0, math.huge, 0)
+			bv.Velocity = Vector3.new(0, 0, 0)
+			bv.Parent = torso
+		end
+		local highlight = Character:FindFirstChild("AntiFallHighlight")
+		if not highlight then
+			highlight = Instance.new("Highlight")
+			highlight.Name = "AntiFallHighlight"
+			highlight.FillColor = Color3.fromRGB(107, 180, 107)
+			highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+			highlight.FillTransparency = 0.3
+			highlight.OutlineTransparency = 0
+			highlight.Parent = Character
+		end
+		for i, v in pairs(Character:GetChildren()) do
+			if v:IsA("BasePart") or v:IsA("Part") then
+				v.CanCollide = false
+			end
+		end
+	end
+end)
+
+function getDistance(Endpoint: CFrame | Vector3 | BasePart | Part)
+	if typeof(Endpoint) == "Vector3" then
+		return (Endpoint - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+end
+
+function Tween(Position: CFrame | Vector3 | Part | BasePart)
+	local Endpoint = Position
+	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	if not Character then
+		return
+	end
+	if not Humanoid then
+		return
+	end
+	if not Character:FindFirstChild("CharacterReady") then
+		return
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		Endpoint = Endpoint.CFrame
+	elseif typeof(Endpoint) == "Vector3" then
+		Endpoint = CFrame.new(Endpoint)
+	end
+
+	local Distance = getDistance(Endpoint)
+
+	if Distance then
+		if Character.HumanoidRootPart.CFrame.Y ~= Endpoint.Y then
+			Character.HumanoidRootPart.CFrame =
+				CFrame.new(Character.HumanoidRootPart.CFrame.X, Endpoint.Y, Character.HumanoidRootPart.CFrame.Z)
+		end
+		local TweenTime = Distance / 325
+
+		local TweenInfoz = TweenService:Create(
+			Character.HumanoidRootPart,
+			TweenInfo.new(TweenTime, Enum.EasingStyle.Linear),
+			{ CFrame = Endpoint }
+		)
+
+		TweenInfoz:Play()
+        
+        return TweenInfoz
+	end
+	return nil
+end
+
+local Map = workspace:WaitForChild("Map")
+local Turtle = Map:FindFirstChild("Turtle")
+if not Turtle then
+    repeat
+        task.wait()
+        Turtle = Map:FindFirstChild("Turtle")
+        Tween(Vector3.new(-6177, 438, -10425))
+    until Turtle
+end
+
+local TradeTable = Turtle:FindFirstChild("TradeTable")
+if not TradeTable then
+    repeat
+        task.wait()
+        TradeTable = Turtle:FindFirstChild("TradeTable")
+        Tween(Vector3.new(-12538, 334, -7574))
+    until TradeTable
+end
+
+function getEmptyChair() : Seat? 
+    for i, v in pairs(TradeTable:GetChildren()) do
+        if (v.Name == "P1" or v.Name == "P2") and not v:FindFirstChildOfClass("Weld") then
+            return v
+        end
+    end
+    return nil
+end
+local EmptyChair = getEmptyChair()
+if not EmptyChair then 
+    warn("No empty chair found at the trade table.")
+    return
+end
+
+
+
+repeat
+    task.wait()
+    EmptyChair = getEmptyChair()
+    if EmptyChair then
+         Tween(CFrame.new(-12591, 337, -7545))
+    end
+until Humanoid and Humanoid.Sit
+
+if  Humanoid and not Humanoid.Sit then
+	Character.HumanoidRootPart.CFrame = CFrame.new(-12591, 337, -7545)
+end
+
+local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
+local Trade = Main:WaitForChild("Trade")
+
+repeat task.wait() until Trade.Visible
+local TradeFunction : RemoteFunction = Remotes:WaitForChild("TradeFunction")
+local TradeEvent : RemoteEvent = Remotes:WaitForChild("TradeEvent")
+local FruitMapping = {}
+
+-- ✅ FIX: ทำเป็นฟังก์ชันแยก เพื่อ refresh inventory ใหม่ได้ทุกครั้ง
+function refreshFruitMapping()
+    table.clear(FruitMapping)
+    local ok, Inv = pcall(function()
+        return _CommF:InvokeServer("getInventory")
+    end)
+    if not ok or typeof(Inv) ~= "table" then
+        warn("[Trade] refreshFruitMapping ล้มเหลว:", Inv)
+        return
+    end
+    for i, v in pairs(Inv) do
+        if v.Type == "Blox Fruit" then
+            FruitMapping[v.Name] = v.Value
+        end
+    end
+end
+
+-- โหลด FruitMapping ครั้งแรก (เหมือนเดิม)
+refreshFruitMapping()
+
+function getIndices(dataTable, targetValue)
+    local entries = {}
+    
+    for k, v in pairs(dataTable) do
+        table.insert(entries, {index = k, value = v})
+    end
+
+    table.sort(entries, function(a, b) return a.value > b.value end)
+
+    local threshold = targetValue * 0.6 
+    local currentSum = 0
+    local resultIndices = {} 
+
+    for i = 1, math.min(4, #entries) do
+        print("Checking:", entries[i].index, "with value:", entries[i].value)
+        currentSum = currentSum + entries[i].value
+        table.insert(resultIndices, entries[i].index)
+        if currentSum > threshold then
+            return resultIndices
+        end
+    end
+    return {} 
+end
+
+-- ✅ FIX: lock ป้องกัน update_state event ยิงซ้อนกันขณะกำลังประมวลผล
+local TradeBusy = false
+
+TradeEvent.OnClientEvent:Connect(function(action, args)
+	if action == "update_state" then
+		-- ✅ FIX: ถ้ายังประมวลผลรอบเดิมอยู่ ให้ข้าม event นี้ไป
+		if TradeBusy then
+			return
+		end
+		TradeBusy = true
+
+		local playerNumber = args["Player1"].Name == LocalPlayer.Name and 1 or args["Player2"].Name == LocalPlayer.Name and 2 or nil
+		if not playerNumber then
+			TradeBusy = false
+			return
+		end
+		local FruitValueSelf = 0
+		local FruitValueOther = 0
+		for i,v in pairs(args.Offer[playerNumber]) do 
+			FruitValueSelf += v.Price 
+		end
+		for i,v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do 
+			FruitValueOther += v.Price 
+		end
+
+		-- ✅ FIX: เก็บชื่อผลที่เราใส่ไปแล้ว เพื่อไม่ให้ getIndices เลือกซ้ำ
+		local alreadyOffered = {}
+		for i, v in pairs(args.Offer[playerNumber]) do
+			alreadyOffered[v.Name] = true
+		end
+
+		if (FruitValueSelf == 0) or not (not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 ) then 
+            -- ✅ FIX: refresh inventory จากเซิร์ฟเวอร์ใหม่ ก่อนเลือกของทุกครั้ง
+            refreshFruitMapping()
+
+            -- ✅ FIX: ลบผลที่ใส่ไปแล้วออกจาก map กันเลือกซ้ำ
+            for name, _ in pairs(alreadyOffered) do
+                FruitMapping[name] = nil
+            end
+
+            local fruitIndices = getIndices(FruitMapping, FruitValueOther)
+            for i,v in pairs(fruitIndices) do 
+                TradeFunction:InvokeServer("addItem", v)
+				print("Senting Fruit:", v)
+				task.wait(1)
+            end
+        end
+        if not args.Ready[playerNumber] and FruitValueOther > 0 and FruitValueSelf > 0 and (FruitValueOther / FruitValueSelf) * 100 >= 60 then
+            TradeFunction:InvokeServer("accept")
+        end
+
+		-- ✅ FIX: ปลดล็อคหลังประมวลผล event นี้เสร็จ
+		TradeBusy = false
+	end
+end)
