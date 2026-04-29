@@ -1,8 +1,336 @@
+repeat
+	task.wait()
+until game:IsLoaded()
+repeat
+	task.wait()
+until game:GetService("Players").LocalPlayer
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Humanoid : Humanoid? = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+local Character = LocalPlayer.Character
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    Character = char
+    Humanoid = Character:WaitForChild("Humanoid")
+end)
+
+
+function getWorld() 
+    local placeId = game.PlaceId
+    if placeId == 2753915549  then
+        return 1
+    elseif placeId == 4442272183 or placeId == 79091703265657 then
+        return 2
+    elseif placeId == 7449423635 or placeId == 100117331123089 then
+        return 3
+    end
+    return 0
+end
+
+if getWorld() == 3 and game.PlaceId ~= 7449423635 then 
+    game:Shutdown()
+    return
+end
+
+pcall(function() 
+	writefile("BF_JOBID", string.format("%s|%s", tostring(game.PlaceId), game.JobId))
+end)
+
+task.spawn(function() 
+	local Players = game:GetService("Players")
+	local CHECK_INTERVAL = 30
+	local MAX_IDLE_TIME  = 300
+	local MIN_MOVE_DIST  = 5
+	local KICK_MESSAGE   = "You were kicked for being AFK for 5 minutes."
+
+	local player = Players.LocalPlayer
+
+	local lastPosition = nil
+	local idleTime = 0
+
+	local function resetIdle(currentPos)
+		idleTime = 0
+		lastPosition = currentPos
+	end
+
+	local function checkAFK()
+		local character = player.Character
+		if not character then return end
+
+		local hrp = character:FindFirstChild("HumanoidRootPart")
+		if not hrp then return end
+
+		local currentPos = hrp.Position
+
+		if lastPosition == nil then
+			lastPosition = currentPos
+			return
+		end
+
+		local distance = (currentPos - lastPosition).Magnitude
+
+		if distance > MIN_MOVE_DIST then
+			resetIdle(currentPos)
+		else
+			idleTime += CHECK_INTERVAL
+			lastPosition = currentPos
+
+			if idleTime >= MAX_IDLE_TIME then
+				game:Shutdown()
+			end
+		end
+	end
+
+	-- Reset idle on any input
+	local UserInputService = game:GetService("UserInputService")
+
+	UserInputService.InputBegan:Connect(function()
+		local character = player.Character
+		if character then
+			local hrp = character:FindFirstChild("HumanoidRootPart")
+			if hrp then
+				resetIdle(hrp.Position)
+			end
+		end
+	end)
+
+	-- Reset when character respawns
+	player.CharacterAdded:Connect(function(character)
+		local hrp = character:WaitForChild("HumanoidRootPart")
+		resetIdle(hrp.Position)
+	end)
+
+	-- Main loop
+	while true do
+		task.wait(CHECK_INTERVAL)
+		checkAFK()
+		task.wait()
+	end
+end)
+
+if
+	(
+		LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+		and LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)"):FindFirstChild("ChooseTeam")
+	) or LocalPlayer.Team == nil
+then
+	repeat
+		task.wait()
+		pcall(function()
+			if LocalPlayer.PlayerGui:WaitForChild("Main (minimal)").ChooseTeam.Visible == true then
+				for i, v in
+					pairs(
+						getconnections(
+							LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)").ChooseTeam.Container["Pirates"].Frame.TextButton.Activated
+						)
+					)
+				do
+					for a, b in pairs(getconnections(game:GetService("UserInputService").TouchTapInWorld)) do
+						b:Fire()
+					end
+					v.Function()
+				end
+			end
+		end)
+	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
+end
+local _CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
+
+if getWorld() ~= 3 then
+	_CommF:InvokeServer("TravelZou")
+	repeat task.wait() until getWorld() == 3
+end
+
+task.spawn(function()
+	while true do
+		task.wait()
+		if not Character then
+			continue
+		end
+		local torso = Character:FindFirstChild("Torso") or Character:FindFirstChild("UpperTorso")
+		if not torso then
+			continue
+		end
+
+		if not torso:FindFirstChild("AntiFallVelocity") then
+			local bv = Instance.new("BodyVelocity")
+			bv.Name = "AntiFallVelocity"
+			bv.MaxForce = Vector3.new(0, math.huge, 0)
+			bv.Velocity = Vector3.new(0, 0, 0)
+			bv.Parent = torso
+		end
+		local highlight = Character:FindFirstChild("AntiFallHighlight")
+		if not highlight then
+			highlight = Instance.new("Highlight")
+			highlight.Name = "AntiFallHighlight"
+			highlight.FillColor = Color3.fromRGB(107, 180, 107)
+			highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+			highlight.FillTransparency = 0.3
+			highlight.OutlineTransparency = 0
+			highlight.Parent = Character
+		end
+		for i, v in pairs(Character:GetChildren()) do
+			if v:IsA("BasePart") or v:IsA("Part") then
+				v.CanCollide = false
+			end
+		end
+	end
+end)
+
+function getDistance(Endpoint: CFrame | Vector3 | BasePart | Part)
+	if typeof(Endpoint) == "Vector3" then
+		return (Endpoint - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+end
+
+function Tween(Position: CFrame | Vector3 | Part | BasePart)
+	local Endpoint = Position
+	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	if not Character then
+		return
+	end
+	if not Humanoid then
+		return
+	end
+	if not Character:FindFirstChild("CharacterReady") then
+		return
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		Endpoint = Endpoint.CFrame
+	elseif typeof(Endpoint) == "Vector3" then
+		Endpoint = CFrame.new(Endpoint)
+	end
+
+	local Distance = getDistance(Endpoint)
+
+	if Distance then
+		if Character.HumanoidRootPart.CFrame.Y ~= Endpoint.Y then
+			Character.HumanoidRootPart.CFrame =
+				CFrame.new(Character.HumanoidRootPart.CFrame.X, Endpoint.Y, Character.HumanoidRootPart.CFrame.Z)
+		end
+		local TweenTime = Distance / 325
+
+		local TweenInfoz = TweenService:Create(
+			Character.HumanoidRootPart,
+			TweenInfo.new(TweenTime, Enum.EasingStyle.Linear),
+			{ CFrame = Endpoint }
+		)
+
+		TweenInfoz:Play()
+        
+        return TweenInfoz
+	end
+	return nil
+end
+
+local Map = workspace:WaitForChild("Map")
+local Turtle = Map:FindFirstChild("Turtle")
+if not Turtle then
+    repeat
+        task.wait()
+        Turtle = Map:FindFirstChild("Turtle")
+        Tween(Vector3.new(-6177, 438, -10425))
+    until Turtle
+end
+
+local TradeTable = Turtle:FindFirstChild("TradeTable")
+if not TradeTable then
+    repeat
+        task.wait()
+        TradeTable = Turtle:FindFirstChild("TradeTable")
+        Tween(Vector3.new(-12538, 334, -7574))
+    until TradeTable
+end
+
+function getEmptyChair() : Seat? 
+    for i, v in pairs(TradeTable:GetChildren()) do
+        if (v.Name == "P1" or v.Name == "P2") and not v:FindFirstChildOfClass("Weld") then
+            return v
+        end
+    end
+    return nil
+end
+local EmptyChair = getEmptyChair()
+if not EmptyChair then 
+    warn("No empty chair found at the trade table.")
+    return
+end
+
+
+
+repeat
+    task.wait()
+    EmptyChair = getEmptyChair()
+    if EmptyChair then
+         Tween(CFrame.new(-12591, 337, -7545))
+    end
+until Humanoid and Humanoid.Sit
+
+if  Humanoid and not Humanoid.Sit then
+	Character.HumanoidRootPart.CFrame = CFrame.new(-12591, 337, -7545)
+end
+
+local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
+local Trade = Main:WaitForChild("Trade")
+
+repeat task.wait() until Trade.Visible
+local TradeFunction : RemoteFunction = Remotes:WaitForChild("TradeFunction")
+local TradeEvent : RemoteEvent = Remotes:WaitForChild("TradeEvent")
+local FruitMapping = {}
+
+-- ✅ FIX: refresh inventory ใหม่ทุกครั้ง
+function refreshFruitMapping()
+    table.clear(FruitMapping)
+    local ok, Inv = pcall(function()
+        return _CommF:InvokeServer("getInventory")
+    end)
+    if not ok or typeof(Inv) ~= "table" then
+        warn("[Trade] refreshFruitMapping failed:", Inv)
+        return
+    end
+    for i, v in pairs(Inv) do
+        if v.Type == "Blox Fruit" then
+            FruitMapping[v.Name] = v.Value
+        end
+    end
+end
+
+refreshFruitMapping()
+
+function getIndices(dataTable, targetValue)
+    local entries = {}
+    
+    for k, v in pairs(dataTable) do
+        table.insert(entries, {index = k, value = v})
+    end
+
+    table.sort(entries, function(a, b) return a.value > b.value end)
+
+    local threshold = targetValue * 0.6 
+    local currentSum = 0
+    local resultIndices = {} 
+
+    for i = 1, math.min(4, #entries) do
+        print("Checking:", entries[i].index, "with value:", entries[i].value)
+        currentSum = currentSum + entries[i].value
+        table.insert(resultIndices, entries[i].index)
+        if currentSum > threshold then
+            return resultIndices
+        end
+    end
+    return {} 
+end
+
 -- ========================================
 -- [Trade] UI Console + Diagnostic Logging
 -- ========================================
-
--- ✅ UI Console: หน้าต่างแสดง log ที่เปิด/ปิดได้
 local LogGui
 local LogFrame
 local LogScroll
@@ -10,7 +338,6 @@ local LogList = {}
 local MAX_LOG_LINES = 200
 
 local function buildLogUI()
-	-- ลบของเก่าถ้ามี
 	if LocalPlayer.PlayerGui:FindFirstChild("TradeLogGui") then
 		LocalPlayer.PlayerGui.TradeLogGui:Destroy()
 	end
@@ -21,7 +348,7 @@ local function buildLogUI()
 	LogGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	LogGui.Parent = LocalPlayer.PlayerGui
 
-	-- ปุ่มเปิด/ปิด (ลอยมุมขวาบน)
+	-- ปุ่มเปิด/ปิด
 	local ToggleBtn = Instance.new("TextButton")
 	ToggleBtn.Name = "ToggleBtn"
 	ToggleBtn.Size = UDim2.new(0, 90, 0, 30)
@@ -47,14 +374,13 @@ local function buildLogUI()
 	LogFrame.BorderSizePixel = 0
 	LogFrame.Visible = true
 	LogFrame.Active = true
-	LogFrame.Draggable = true  -- ลากย้ายได้
+	LogFrame.Draggable = true
 	LogFrame.Parent = LogGui
 
 	local frameCorner = Instance.new("UICorner")
 	frameCorner.CornerRadius = UDim.new(0, 8)
 	frameCorner.Parent = LogFrame
 
-	-- หัวข้อ
 	local Header = Instance.new("Frame")
 	Header.Name = "Header"
 	Header.Size = UDim2.new(1, 0, 0, 32)
@@ -77,7 +403,6 @@ local function buildLogUI()
 	Title.TextXAlignment = Enum.TextXAlignment.Left
 	Title.Parent = Header
 
-	-- ปุ่ม clear
 	local ClearBtn = Instance.new("TextButton")
 	ClearBtn.Size = UDim2.new(0, 50, 0, 22)
 	ClearBtn.Position = UDim2.new(1, -76, 0, 5)
@@ -93,7 +418,6 @@ local function buildLogUI()
 	clearCorner.CornerRadius = UDim.new(0, 4)
 	clearCorner.Parent = ClearBtn
 
-	-- ปุ่ม X ปิด
 	local CloseBtn = Instance.new("TextButton")
 	CloseBtn.Size = UDim2.new(0, 22, 0, 22)
 	CloseBtn.Position = UDim2.new(1, -26, 0, 5)
@@ -109,7 +433,6 @@ local function buildLogUI()
 	closeCorner.CornerRadius = UDim.new(0, 4)
 	closeCorner.Parent = CloseBtn
 
-	-- ScrollingFrame สำหรับ log
 	LogScroll = Instance.new("ScrollingFrame")
 	LogScroll.Name = "LogScroll"
 	LogScroll.Size = UDim2.new(1, -16, 1, -42)
@@ -138,7 +461,6 @@ local function buildLogUI()
 	padding.PaddingBottom = UDim.new(0, 4)
 	padding.Parent = LogScroll
 
-	-- Event ปุ่ม
 	ToggleBtn.MouseButton1Click:Connect(function()
 		LogFrame.Visible = not LogFrame.Visible
 	end)
@@ -155,17 +477,14 @@ local function buildLogUI()
 	end)
 end
 
--- เรียกสร้าง UI ครั้งเดียว
 buildLogUI()
 
--- ✅ ฟังก์ชัน log: print + เพิ่มลง UI
 local function logMsg(msg, color)
 	color = color or Color3.fromRGB(220, 220, 220)
 	print(msg)
 
 	if not LogScroll then return end
 
-	-- จำกัดจำนวนบรรทัดเก่า
 	if #LogList >= MAX_LOG_LINES then
 		local oldest = LogList[1]
 		if oldest and oldest.Parent then
@@ -190,13 +509,11 @@ local function logMsg(msg, color)
 
 	table.insert(LogList, lbl)
 
-	-- เลื่อนลงล่างสุด
 	task.defer(function()
 		LogScroll.CanvasPosition = Vector2.new(0, LogScroll.AbsoluteCanvasSize.Y)
 	end)
 end
 
--- สีต่างๆ
 local CL_INFO  = Color3.fromRGB(180, 200, 230)
 local CL_OK    = Color3.fromRGB(120, 220, 130)
 local CL_WARN  = Color3.fromRGB(245, 200, 90)
@@ -207,215 +524,7 @@ local CL_HEAD  = Color3.fromRGB(120, 200, 255)
 logMsg("[Trade] UI Console ready", CL_OK)
 
 -- ========================================
--- [Trade] UI Console + Diagnostic Logging
--- ========================================
-
--- ✅ UI Console: หน้าต่างแสดง log ที่เปิด/ปิดได้
-local LogGui
-local LogFrame
-local LogScroll
-local LogList = {}
-local MAX_LOG_LINES = 200
-
-local function buildLogUI()
-	-- ลบของเก่าถ้ามี
-	if LocalPlayer.PlayerGui:FindFirstChild("TradeLogGui") then
-		LocalPlayer.PlayerGui.TradeLogGui:Destroy()
-	end
-
-	LogGui = Instance.new("ScreenGui")
-	LogGui.Name = "TradeLogGui"
-	LogGui.ResetOnSpawn = false
-	LogGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-	LogGui.Parent = LocalPlayer.PlayerGui
-
-	-- ปุ่มเปิด/ปิด (ลอยมุมขวาบน)
-	local ToggleBtn = Instance.new("TextButton")
-	ToggleBtn.Name = "ToggleBtn"
-	ToggleBtn.Size = UDim2.new(0, 90, 0, 30)
-	ToggleBtn.Position = UDim2.new(1, -100, 0, 10)
-	ToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 120, 200)
-	ToggleBtn.BorderSizePixel = 0
-	ToggleBtn.Text = "Trade Log"
-	ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	ToggleBtn.TextSize = 14
-	ToggleBtn.Font = Enum.Font.GothamBold
-	ToggleBtn.Parent = LogGui
-
-	local btnCorner = Instance.new("UICorner")
-	btnCorner.CornerRadius = UDim.new(0, 6)
-	btnCorner.Parent = ToggleBtn
-
-	-- หน้าต่าง log
-	LogFrame = Instance.new("Frame")
-	LogFrame.Name = "LogFrame"
-	LogFrame.Size = UDim2.new(0, 500, 0, 400)
-	LogFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
-	LogFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-	LogFrame.BorderSizePixel = 0
-	LogFrame.Visible = true
-	LogFrame.Active = true
-	LogFrame.Draggable = true  -- ลากย้ายได้
-	LogFrame.Parent = LogGui
-
-	local frameCorner = Instance.new("UICorner")
-	frameCorner.CornerRadius = UDim.new(0, 8)
-	frameCorner.Parent = LogFrame
-
-	-- หัวข้อ
-	local Header = Instance.new("Frame")
-	Header.Name = "Header"
-	Header.Size = UDim2.new(1, 0, 0, 32)
-	Header.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
-	Header.BorderSizePixel = 0
-	Header.Parent = LogFrame
-
-	local headerCorner = Instance.new("UICorner")
-	headerCorner.CornerRadius = UDim.new(0, 8)
-	headerCorner.Parent = Header
-
-	local Title = Instance.new("TextLabel")
-	Title.Size = UDim2.new(1, -80, 1, 0)
-	Title.Position = UDim2.new(0, 12, 0, 0)
-	Title.BackgroundTransparency = 1
-	Title.Text = "Trade Log Console"
-	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Title.TextSize = 14
-	Title.Font = Enum.Font.GothamBold
-	Title.TextXAlignment = Enum.TextXAlignment.Left
-	Title.Parent = Header
-
-	-- ปุ่ม clear
-	local ClearBtn = Instance.new("TextButton")
-	ClearBtn.Size = UDim2.new(0, 50, 0, 22)
-	ClearBtn.Position = UDim2.new(1, -76, 0, 5)
-	ClearBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-	ClearBtn.BorderSizePixel = 0
-	ClearBtn.Text = "Clear"
-	ClearBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	ClearBtn.TextSize = 12
-	ClearBtn.Font = Enum.Font.Gotham
-	ClearBtn.Parent = Header
-
-	local clearCorner = Instance.new("UICorner")
-	clearCorner.CornerRadius = UDim.new(0, 4)
-	clearCorner.Parent = ClearBtn
-
-	-- ปุ่ม X ปิด
-	local CloseBtn = Instance.new("TextButton")
-	CloseBtn.Size = UDim2.new(0, 22, 0, 22)
-	CloseBtn.Position = UDim2.new(1, -26, 0, 5)
-	CloseBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
-	CloseBtn.BorderSizePixel = 0
-	CloseBtn.Text = "X"
-	CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-	CloseBtn.TextSize = 12
-	CloseBtn.Font = Enum.Font.GothamBold
-	CloseBtn.Parent = Header
-
-	local closeCorner = Instance.new("UICorner")
-	closeCorner.CornerRadius = UDim.new(0, 4)
-	closeCorner.Parent = CloseBtn
-
-	-- ScrollingFrame สำหรับ log
-	LogScroll = Instance.new("ScrollingFrame")
-	LogScroll.Name = "LogScroll"
-	LogScroll.Size = UDim2.new(1, -16, 1, -42)
-	LogScroll.Position = UDim2.new(0, 8, 0, 36)
-	LogScroll.BackgroundColor3 = Color3.fromRGB(15, 15, 18)
-	LogScroll.BorderSizePixel = 0
-	LogScroll.ScrollBarThickness = 6
-	LogScroll.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 100)
-	LogScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-	LogScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
-	LogScroll.Parent = LogFrame
-
-	local scrollCorner = Instance.new("UICorner")
-	scrollCorner.CornerRadius = UDim.new(0, 4)
-	scrollCorner.Parent = LogScroll
-
-	local listLayout = Instance.new("UIListLayout")
-	listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-	listLayout.Padding = UDim.new(0, 1)
-	listLayout.Parent = LogScroll
-
-	local padding = Instance.new("UIPadding")
-	padding.PaddingTop = UDim.new(0, 4)
-	padding.PaddingLeft = UDim.new(0, 6)
-	padding.PaddingRight = UDim.new(0, 6)
-	padding.PaddingBottom = UDim.new(0, 4)
-	padding.Parent = LogScroll
-
-	-- Event ปุ่ม
-	ToggleBtn.MouseButton1Click:Connect(function()
-		LogFrame.Visible = not LogFrame.Visible
-	end)
-	CloseBtn.MouseButton1Click:Connect(function()
-		LogFrame.Visible = false
-	end)
-	ClearBtn.MouseButton1Click:Connect(function()
-		for _, child in pairs(LogScroll:GetChildren()) do
-			if child:IsA("TextLabel") then
-				child:Destroy()
-			end
-		end
-		table.clear(LogList)
-	end)
-end
-
--- เรียกสร้าง UI ครั้งเดียว
-buildLogUI()
-
--- ✅ ฟังก์ชัน log: print + เพิ่มลง UI
-local function logMsg(msg, color)
-	color = color or Color3.fromRGB(220, 220, 220)
-	print(msg)
-
-	if not LogScroll then return end
-
-	-- จำกัดจำนวนบรรทัดเก่า
-	if #LogList >= MAX_LOG_LINES then
-		local oldest = LogList[1]
-		if oldest and oldest.Parent then
-			oldest:Destroy()
-		end
-		table.remove(LogList, 1)
-	end
-
-	local lbl = Instance.new("TextLabel")
-	lbl.Size = UDim2.new(1, -8, 0, 0)
-	lbl.AutomaticSize = Enum.AutomaticSize.Y
-	lbl.BackgroundTransparency = 1
-	lbl.Text = msg
-	lbl.TextColor3 = color
-	lbl.TextSize = 12
-	lbl.Font = Enum.Font.Code
-	lbl.TextXAlignment = Enum.TextXAlignment.Left
-	lbl.TextYAlignment = Enum.TextYAlignment.Top
-	lbl.TextWrapped = true
-	lbl.LayoutOrder = tick() * 1000
-	lbl.Parent = LogScroll
-
-	table.insert(LogList, lbl)
-
-	-- เลื่อนลงล่างสุด
-	task.defer(function()
-		LogScroll.CanvasPosition = Vector2.new(0, LogScroll.AbsoluteCanvasSize.Y)
-	end)
-end
-
--- สีต่างๆ
-local CL_INFO  = Color3.fromRGB(180, 200, 230)
-local CL_OK    = Color3.fromRGB(120, 220, 130)
-local CL_WARN  = Color3.fromRGB(245, 200, 90)
-local CL_ERR   = Color3.fromRGB(245, 100, 100)
-local CL_DIM   = Color3.fromRGB(140, 140, 160)
-local CL_HEAD  = Color3.fromRGB(120, 200, 255)
-
-logMsg("[Trade] UI Console ready", CL_OK)
-
--- ========================================
--- Trade event handler with full diagnostics
+-- Trade event handler
 -- ========================================
 local TradeBusy = false
 
@@ -452,7 +561,6 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 			tostring(args.Ready[playerNumber == 1 and 2 or 1])
 		), CL_INFO)
 
-		-- ของที่เราใส่
 		local alreadyOffered = {}
 		local selfOfferList = {}
 		for i, v in pairs(args.Offer[playerNumber]) do
@@ -465,7 +573,6 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 			logMsg("[Trade] We have not offered anything yet", CL_DIM)
 		end
 
-		-- ของที่อีกฝ่ายใส่
 		local otherOfferList = {}
 		for i, v in pairs(args.Offer[playerNumber == 1 and 2 or 1]) do
 			table.insert(otherOfferList, v.Name.." ("..tostring(v.Price)..")")
@@ -506,7 +613,6 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 				logMsg("[Trade]   List: " .. table.concat(mapList, ", "), CL_DIM)
 			end
 
-			-- ลบของที่ใส่ไปแล้ว
 			local removedCount = 0
 			for name, _ in pairs(alreadyOffered) do
 				if FruitMapping[name] ~= nil then
@@ -527,7 +633,6 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 			if remaining == 0 then
 				logMsg("[Trade] ! No more items to add", CL_WARN)
 			else
-				-- ✅ DEBUG: print sorted entries ก่อนเรียก getIndices
 				local sortedDebug = {}
 				for k, v in pairs(FruitMapping) do
 					table.insert(sortedDebug, {name = k, val = v})
@@ -538,7 +643,6 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 					logMsg(("[Trade]     #%d %s = %d"):format(i, sortedDebug[i].name, sortedDebug[i].val), CL_DIM)
 				end
 
-				-- คำนวณว่าถ้าใส่ 4 ตัวแรกจะได้เท่าไหร่
 				local sumTop4 = 0
 				for i = 1, math.min(4, #sortedDebug) do
 					sumTop4 += sortedDebug[i].val
@@ -574,7 +678,6 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
 			logMsg("[Trade] Skipping add-items (already met)", CL_DIM)
 		end
 
-		-- เช็คเงื่อนไข accept
 		local effectiveSelfValue = FruitValueSelf + addedValue
 		logMsg(("[Trade] effectiveSelf=%d (Self %d + added %d)"):format(
 			effectiveSelfValue, FruitValueSelf, addedValue
@@ -602,7 +705,7 @@ TradeEvent.OnClientEvent:Connect(function(action, args)
             logMsg("[Trade] X Not accepting yet", CL_WARN)
         end
 
-        logMsg("========== End ==========\n", CL_HEAD)
+        logMsg("========== End ==========", CL_HEAD)
 		TradeBusy = false
 	end
 end)
