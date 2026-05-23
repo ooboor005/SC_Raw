@@ -31,7 +31,7 @@ then
 	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
 end
 
-local TargetRace = "Fishman"
+local TargetRace = "Skypiea"
 
 if not (game.Players.LocalPlayer.Data.Race.Value == TargetRace) then
 repeat task.wait()
