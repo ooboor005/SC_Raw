@@ -1,0 +1,8 @@
+local placeid = game.PlaceId
+ 
+while true do task.wait()
+    repeat task.wait()
+        task.wait(5)
+        game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("TravelZou")
+    until placeid == 7449423635
+end
