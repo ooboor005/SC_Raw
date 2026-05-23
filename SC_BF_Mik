@@ -10,7 +10,6 @@ getgenv().Setting = {
         ["Normal"] = { -- it just a normal fruit list   
             "Magma-Magma",
             "Blizzard-Blizzard",
-            "Buddha-Buddha",
             "Pain-Pain",
             "Lightning-Lightning",
             "Dark-Dark"
