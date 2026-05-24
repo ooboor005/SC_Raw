@@ -30,16 +30,6 @@ then
 		end)
 	until Players.LocalPlayer.Team ~= nil and game:IsLoaded()
 end
-
-local TargetRace = "Skypiea"
-
-if not (game.Players.LocalPlayer.Data.Race.Value == TargetRace) then
-repeat task.wait()
-    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BlackbeardReward","Reroll", "2")
-    task.wait(5)
-until game.Players.LocalPlayer.Data.Race.Value == TargetRace
-end
-
 getgenv().Config = {
 	["Auto Join Dungeon"] = false,
 	["Auto Fire Shoot Heart Leviathan"] = false,
@@ -112,7 +102,7 @@ getgenv().Config = {
 	["Tween Safe if have Items"] = false,
 	["Auto Yama"] = false,
 	["Attack Dough King"] = false,
-	["Auto Get Ghoul"] = false,
+	["Auto Get Ghoul"] = true,
 	["Hop Find Dough King"] = false,
 	["Summon Darkbeard"] = false,
 	["Teleport Y"] = false,
@@ -189,7 +179,7 @@ getgenv().Config = {
 	["Auto Find Leviathan"] = false,
 	["Auto Repair Ur Ship"] = false,
 	["Ignore Attack Katakuri"] = false,
-	["Hop Server Get Ghoul"] = false,
+	["Hop Server Get Ghoul"] = true,
 	["Kill Boss"] = false,
 	["Select Skills Gun"] = {
 		["Z"] = true,
