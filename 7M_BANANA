@@ -23,7 +23,7 @@ getgenv().Config = {
 	["Auto Chest Hop"] = false,
 	["Webhook Find Leviathan"] = false,
 	["Auto Craft Scroll"] = false,
-	["Account Buy Boat"] = true,
+	["Account Buy Boat"] = false,
 	["Auto Store Fruit"] = false,
 	["Start Hunt Leviathan"] = true
 }
