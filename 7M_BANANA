@@ -17,13 +17,13 @@ getgenv().Config = {
 	["Use Click M1 Fruit"] = false,
 	["Use New Method Shoot Heart"] = true,
 	["Destroy IDK only Owner Boat"] = false,
-	["Select Owner Boat Beast Hunter"] = "",
-	["Boost Fps"] = false,
+	["Select Owner Boat Beast Hunter"] = "Balob3168260",
+	["Boost Fps"] = true,
 	["Use New  Method Drive"] = false,
 	["Auto Chest Hop"] = false,
 	["Webhook Find Leviathan"] = false,
 	["Auto Craft Scroll"] = false,
-	["Account Buy Boat"] = false,
+	["Account Buy Boat"] = true,
 	["Auto Store Fruit"] = false,
 	["Start Hunt Leviathan"] = true
 }
