@@ -9,7 +9,7 @@ while not CoreGui:FindFirstChild(buttonName) do
     end)
 
     local retries = 0
-    local maxRetries = 120
+    local maxRetries = 80
 
     repeat
         task.wait(1)
