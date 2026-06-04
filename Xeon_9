@@ -4,5 +4,5 @@ _G.TaskAfterHaveSanguineArt = function() -- ใส่สิ่งที่จะ
   -- ตัวอย่าง, ex. ( game.Players.LocalPlayer:Kick(), _G.Horst_AccountChangeDone()
 end
 
-script_key="vODOramitLPrFrBCCmDQJJNsDIMLhSdR";
+script_key="PIcLgcCjdRVpNTDAZZsJsQdvEgZgahLx";
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/33b6dbf71688afa2b1b390274e84c987.lua"))()
