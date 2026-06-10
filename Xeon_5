@@ -1,8 +1,1 @@
-_G.CrewCaptain = {"", ""} -- ใส่ชื่อตัวที่มีเรือไว้ดึงหัวใจหรือกัปตันเรือ
-_G.FarmMode = "sanguine" -- ใช้ heart เพื่อฟาร์มหัวใจอย่างเดียว, ใช้ sanguine เพื่อทำหมัด
-_G.TaskAfterHaveSanguineArt = function() -- ใส่สิ่งที่จะให้สคริปต์ทำหลังจากได้หมัดมาส 350+ แล้ว, put thing u want script to do after got Sanguine Art
-  -- ตัวอย่าง, ex. ( game.Players.LocalPlayer:Kick(), _G.Horst_AccountChangeDone()
-end
-
-script_key="PIcLgcCjdRVpNTDAZZsJsQdvEgZgahLx";
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/33b6dbf71688afa2b1b390274e84c987.lua"))()
+loadstring(game:HttpGet("https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/SC_BF_Mik"))()
