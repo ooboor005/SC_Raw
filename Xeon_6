@@ -1,18 +1,1 @@
-local url = "https://github.com/ooboor005/SC_Raw/raw/refs/heads/main/Banana_Ghoul"
-
-local CoreGui = game:GetService("CoreGui")
-local buttonName = "Nousigi Hub Btn"
-
-while not CoreGui:FindFirstChild(buttonName) do
-    pcall(function()
-        loadstring(game:HttpGet(url))()
-    end)
-
-    local retries = 0
-    local maxRetries = 80
-
-    repeat
-        task.wait(1)
-        retries += 1
-    until CoreGui:FindFirstChild(buttonName) or retries >= maxRetries
-end
+loadstring(game:HttpGet("https://github.com/ooboor005/V4T10/raw/refs/heads/main/V4.2"))()
