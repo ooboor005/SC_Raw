@@ -1,44 +1,42 @@
-getgenv().Mode = "OneClick"
-getgenv().Setting = {
-    ["Team"] = "Pirates", -- Options "Pirates", "Marines"
-    ["FucusOnLevel"] = true,
-    ["Fruits"] = {  -- setting for fruits u want
-        ["Primary"] = { -- if current fruit is not in this list, eat/buy
-            "Magma-Magma",
-            "Blizzard-Blizzard",
-            "Pain-Pain",
-            "Lightning-Lightning",
-            "Dark-Dark",
-            -- u can configs add mores/remove and must end with , (comma symbol)
-        },
-        ["Normal"] = { -- it just a normal fruit list   
-            "Magma-Magma",
-            "Blizzard-Blizzard",
-            "Pain-Pain",
-            "Lightning-Lightning",
-            "Dark-Dark",
-            -- u can configs add mores/remove and must end with , (comma symbol)
-        }
-        -- run this for get all fruit name `local t={};for _,v in pairs(game.ReplicatedStorage.Remotes.CommF_:InvokeServer("GetFruits"))do table.insert(t,v.Name)end;setclipboard(table.concat(t, "\n"))`
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+print("Hello, world!");getgenv().Script_Mode = "Kaitun_Script"
+_G.OneClickSettings = {
+    ["MainIsFarmLevel"] = true,
+    ["LockFruits"] = {
+    "Dough-Dough",
+    "Dragon-Dragon",
+    "Tiger-Tiger",
+    "Mammoth-Mammoth",
+    "Kitsune-Kitsune",
+    "Buddha-Buddha",
+    "Portal-Portal",
+    "T-Rex-T-Rex",
+    "Shadow-Shadow",
+    "Venom-Venom",
+    "Control-Control",
+    "Spirit-Spirit",
+    "Yeti-Yeti"
     },
-    ["Lock Fruits"] = { -- don't use or eat fruits in this list
-        "Dough-Dough",
-        "Dragon-Dragon",
-        "Yeti-Yeti",
-        "Tiger-Tiger",
-        "Mammoth-Mammoth",
-        "Kitsune-Kitsune",
-        "Buddha-Buddha",
-        "Portal-Portal",
-        "T-Rex-T-Rex",
-        "Shadow-Shadow",
-        "Venom-Venom",
-        "Control-Control",
-        "Spirit-Spirit"
+    ["MainFruits"] = {
     },
-    ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
-};
+    ["RegularFruits"] = {
+        "Flame-Flame",
+        "Magmag-Magma",
+        "Dark-Dark",
+        "Light-Light"
+    },
+    ["FragmentsCap"] = 40000,
+    ["Upgrade Race"] = true,
+    ["Pull Lever"] = true,
+    ["Farm Shark Anchor"] = false,
+    ["Cursed Dual Katana"] = true
+}
+-- Script Here !!!
 
--- script here
-getgenv().license_key = "7d9e3b3e99f7392e69539b1fb55d5442"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/main/OneClick/loader.lua"))()
+getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
+getgenv().id = "354662781859004417"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
