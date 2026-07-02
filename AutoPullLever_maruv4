@@ -1,0 +1,34 @@
+_G.Settings_V4 = {
+["LockTiers"] = 11, -- เตะตอนเทียร์เท่านั้นหรือมากกว่า ( ออโต้ปิด ระบบรีจอยในสคริปต์ ) ถ้าอยากปิด หรือตัวช่วย T10 ปรับเป็น11 / Kick when tier more than your settings ( If u not want to kick just set to 11 )
+["Lever"] = true, -- ออโต้ดึงคันโยก / Auto Pull Lever
+["InVIPServ"] = true, -- รีเซิฟให้ฟูลมูนรี / Crash when full moon end
+
+    ["HelperNameList"] = { -- ตัวช่วยได้ 2 ตัว / Put the helper account name
+        "Vomin1474581",
+        "Zobon0618180"
+    },
+
+    ['RaceSettings'] = { 
+        ["Enabled"] = false,
+        ["RaceTarget"] = Mink
+    },
+
+    ["V4FarmList"] = { -- ตัวฟาร์มใส่ได้ 10 ตัวเผ่าไม่ซ้ำตัวช่วยพอ
+        "Guhuv7782453",
+        "Hinax3885548",
+        "Miket9238585",
+        "Bajig3383358",
+        "Toyam2238394",
+        "Fonep6578284",
+        "Dujid8693256",
+        "Zukes7384251",
+        "Gapiq7383795",
+        "Hadem7968145",
+        "Haked2672848"
+    },
+
+    ["AutoFindFarmList"] = false -- ปรับเป็น true จะหาตัวฟาร์มเองโดยที่ไม่จำเป็นต้องเติมชื่อตัวฟาร์มลงใน V4FarmList แต่อาจจะฟาร์มช้าลงเพราะสุ่มตำแหน่งฟาร์ม
+}
+script_key= "FXVtjtRMfrFkiMYZIolIOrETlTCUMUjj";
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MasterPClient/refs/heads/main/Loader.lua"))()
+            
