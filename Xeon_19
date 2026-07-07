@@ -5,7 +5,7 @@ local buttonName = "Nousigi Hub Btn"
 while not CoreGui:FindFirstChild(buttonName) do
     pcall(function()
         repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-        getgenv().Key = "622025ebe6659bab66994176"
+        getgenv().Key = "014b435c390d21d1b37d757b"
             getgenv().SettingFarm ={
                 ["Hide UI"] = false,
                 ["Reset Teleport"] = {
