@@ -77,12 +77,3 @@ while not CoreGui:FindFirstChild(buttonName) do
             }
         loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
     end)
-
-    local retries = 0
-    local maxRetries = 80
-
-    repeat
-        task.wait(1)
-        retries += 1
-    until CoreGui:FindFirstChild(buttonName) or retries >= maxRetries
-end
