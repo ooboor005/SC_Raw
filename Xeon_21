@@ -39,4 +39,4 @@ _G.OneClickSettings = {
 getgenv().Key = "MARU-8ZZHM-9KLR5-DBXY-A2VON-GM1YB"
 getgenv().id = "570898113682866176"
 getgenv().Script_Mode = "Kaitun_Script"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+loadstring(game:HttpGet("https://cdn.maruhub.online/s/mobile"))()
