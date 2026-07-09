@@ -1,88 +1,42 @@
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game.Players
+repeat task.wait() until game.Players.LocalPlayer
+repeat task.wait() until game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+print("Hello, world!");getgenv().Script_Mode = "Kaitun_Script"
+_G.OneClickSettings = {
+    ["MainIsFarmLevel"] = true,
+    ["LockFruits"] = {
+    "Dough-Dough",
+    "Dragon-Dragon",
+    "Tiger-Tiger",
+    "Mammoth-Mammoth",
+    "Kitsune-Kitsune",
+    "Buddha-Buddha",
+    "Portal-Portal",
+    "T-Rex-T-Rex",
+    "Shadow-Shadow",
+    "Venom-Venom",
+    "Control-Control",
+    "Spirit-Spirit",
+    "Yeti-Yeti"
+    },
+    ["MainFruits"] = {
+    },
+    ["RegularFruits"] = {
+        "Flame-Flame",
+        "Magmag-Magma",
+        "Dark-Dark",
+        "Light-Light"
+    },
+    ["FragmentsCap"] = 40000,
+    ["Upgrade Race"] = true,
+    ["Pull Lever"] = true,
+    ["Farm Shark Anchor"] = false,
+    ["Cursed Dual Katana"] = true
+}
+-- Script Here !!!
 
-local CoreGui = game:GetService("CoreGui")
-local buttonName = "Nousigi Hub Btn"
-
-while not CoreGui:FindFirstChild(buttonName) do
-    pcall(function()
-        repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-        getgenv().Key = "e4e76463a6905f0ebd39db0d"
-            getgenv().SettingFarm ={
-                ["Hide UI"] = false,
-                ["Reset Teleport"] = {
-                    ["Enabled"] = false,
-                    ["Delay Reset"] = 3,
-                    ["Item Dont Reset"] = {
-                        ["Fruit"] = {
-                            ["Enabled"] = true,
-                            ["All Fruit"] = true, 
-                            ["Select Fruit"] = {
-                                ["Enabled"] = false,
-                                ["Fruit"] = {},
-                            },
-                        },
-                    },
-                },
-                ["White Screen"] = false,
-                ["Lock Fps"] = {
-                    ["Enabled"] = true,
-                    ["FPS"] = 10,
-                },
-                ["Get Items"] = {
-                    ["Saber"] = true,
-                    ["Godhuman"] =  true,
-                    ["Skull Guitar"] = false,
-                    ["Mirror Fractal"] = true,
-                    ["Cursed Dual Katana"] = true,
-                    ["Upgrade Race V2-V3"] = false,
-                    ["Auto Pull Lever"] = true,
-                },
-                ["Farm Fragments"] = {
-                    ["Enabled"]  = true,
-                    ["Fragment"] = 50000,
-                },
-                ["Auto Chat"] = {
-                    ["Enabled"] = false,
-                    ["Text"] = "joejoeshop.xyz",
-                },
-                ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
-                ["Select Hop"] = { -- 70% will have it
-                    ["Hop Server If Have Player Near"] = true, 
-                    ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = true, 
-                    ["Hop Find Dough King Get Mirror Fractal"] = true,
-                    ["Hop Find Raids Castle [CDK]"] = true,
-                    ["Hop Find Cake Queen [CDK]"] = true,
-                    ["Hop Find Soul Reaper [CDK]"] = true,
-                    ["Hop Find Darkbeard [SG]"] = false,
-                    ["Hop Find Mirage [ Pull Lever ]"] = false,
-                },
-                ["Farm Mastery"] = {
-                    ["Melee"] = true,
-                    ["Sword"] = true,
-                },
-                ["Buy Haki"] = {
-                    ["Enhancement"] = true,
-                    ["Skyjump"] = true,
-                    ["Flash Step"] = true,
-                    ["Observation"] = true,
-                },
-                ["Sniper Fruit Shop"] = {
-                    ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
-                    ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas","Dough-Dough","Tiger-Tiger","Mammoth-Mammoth","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
-                },
-                ["Lock Fruit"] = {"Dough-Dough","Dragon-Dragon","Leopard-Leopard","Mammoth-Mammoth","Kitsune-Ribbon","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
-                ["Webhook"] = {
-                    ["Enabled"] = false,
-                    ["WebhookUrl"] = "",
-                }
-            }
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
-    end)
-
-    local retries = 0
-    local maxRetries = 80
-
-    repeat
-        task.wait(1)
-        retries += 1
-    until CoreGui:FindFirstChild(buttonName) or retries >= maxRetries
-end
+getgenv().Key = "MARU-8ZZHM-9KLR5-DBXY-A2VON-GM1YB"
+getgenv().id = "570898113682866176"
+getgenv().Script_Mode = "Kaitun_Script"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
