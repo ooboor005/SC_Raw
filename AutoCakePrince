@@ -1,7 +1,7 @@
 repeat task.wait() until game:IsLoaded()
 
-getgenv().Key = "MARU-VWVI-ET16W-DYJ7-97NJB-K6BV"
-getgenv().id = "354662781859004417"
+getgenv().Key = "MARU-8ZZHM-9KLR5-DBXY-A2VON-GM1YB"
+getgenv().id = "570898113682866176"
 
 local Players = game:GetService("Players")
 local lp = Players.LocalPlayer
