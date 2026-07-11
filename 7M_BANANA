@@ -28,5 +28,5 @@ getgenv().Config = {
 	["Start Hunt Leviathan"] = true
 }
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
-getgenv().Key = "bda1fa885fa575b0cc8dacd5" 
+getgenv().Key = "968deeb80cc08240a59d5776" 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/refs/heads/main/BananaCat-KaitunLevi.lua"))()
