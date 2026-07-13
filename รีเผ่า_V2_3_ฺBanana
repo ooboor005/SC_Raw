@@ -272,5 +272,5 @@ getgenv().Config = {
 }
 
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer 
-getgenv().Key = "bda1fa885fa575b0cc8dacd5" 
+getgenv().Key = "57621e501ddaec79931d1275" 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaHub.lua"))() 
