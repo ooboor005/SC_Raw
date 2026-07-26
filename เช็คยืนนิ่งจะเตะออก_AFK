@@ -1,0 +1,98 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local IDLE_LIMIT = 120 -- เวลาที่ยืนอยู่กับที่ก่อนปิดเกม
+local CHECK_INTERVAL = 1    -- ตรวจทุกกี่วินาที
+local MOVE_THRESHOLD = 3    -- ต้องขยับเกินกี่ Stud จึงถือว่าเคลื่อนที่
+
+-- ป้องกันการรันตัวตรวจซ้ำ
+getgenv().IdleWatcherID = (getgenv().IdleWatcherID or 0) + 1
+local CurrentWatcherID = getgenv().IdleWatcherID
+
+local function CloseGame()
+    warn("[IDLE] ยืนอยู่กับที่เกิน 60 วินาที กำลังปิดเกม...")
+
+    -- วิธีปิดเกมของ Executor บางตัว
+    local executorShutdown = nil
+
+    pcall(function()
+        executorShutdown = getgenv().shutdown
+    end)
+
+    if type(executorShutdown) == "function" then
+        pcall(executorShutdown)
+        task.wait(2)
+    end
+
+    -- วิธีปิด Roblox
+    pcall(function()
+        game:Shutdown()
+    end)
+
+    task.wait(2)
+
+    -- สำรอง หาก Executor ไม่อนุญาตให้ปิดโปรแกรม
+    pcall(function()
+        LocalPlayer:Kick("[IDLE] ยืนอยู่กับที่เกิน 60 วินาที")
+    end)
+
+    -- หยุดสคริปต์ทั้งหมดใน Thread นี้
+    while true do
+        task.wait(10)
+    end
+end
+
+task.spawn(function()
+    local LastPosition = nil
+    local IdleStartTime = os.clock()
+
+    while getgenv().IdleWatcherID == CurrentWatcherID do
+        task.wait(CHECK_INTERVAL)
+
+        local Character = LocalPlayer.Character
+        local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
+        local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+
+        -- ยังไม่มีตัวละคร หรือตัวละครตาย ให้เริ่มนับใหม่
+        if not Character
+            or not Humanoid
+            or not HumanoidRootPart
+            or Humanoid.Health <= 0
+        then
+            LastPosition = nil
+            IdleStartTime = os.clock()
+            continue
+        end
+
+        local CurrentPosition = HumanoidRootPart.Position
+
+        if LastPosition == nil then
+            LastPosition = CurrentPosition
+            IdleStartTime = os.clock()
+            continue
+        end
+
+        local MovedDistance = (CurrentPosition - LastPosition).Magnitude
+
+        if MovedDistance >= MOVE_THRESHOLD then
+            -- ตัวละครเคลื่อนที่ ให้เริ่มจับเวลาใหม่
+            IdleStartTime = os.clock()
+            LastPosition = CurrentPosition
+        else
+            local IdleSeconds = os.clock() - IdleStartTime
+
+            warn(
+                "[IDLE] ยืนอยู่กับที่ "
+                    .. tostring(math.floor(IdleSeconds))
+                    .. "/"
+                    .. tostring(IDLE_LIMIT)
+                    .. " วินาที"
+            )
+
+            if IdleSeconds >= IDLE_LIMIT then
+                CloseGame()
+                return
+            end
+        end
+    end
+end)
