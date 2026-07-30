@@ -1,3 +1,4 @@
+repeat task.wait() until game:IsLoaded()
 local mt = getrawmetatable(game)
 setreadonly(mt, false)
 local old = mt.__namecall
