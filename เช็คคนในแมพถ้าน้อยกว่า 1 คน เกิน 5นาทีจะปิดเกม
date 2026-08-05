@@ -1,0 +1,62 @@
+repeat task.wait() until game:IsLoaded()
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local MIN_PLAYERS = 2
+local MAX_WAIT_TIME = 5 * 60 -- 5 นาที
+local CHECK_INTERVAL = 1
+
+local lowPlayerStartTime = nil
+
+local function closeGame(reason)
+	warn("[Auto Close] " .. reason)
+
+	local success, err = pcall(function()
+		game:Shutdown()
+	end)
+
+	-- สำรองกรณี Executor ไม่รองรับ game:Shutdown()
+	if not success then
+		warn("[Auto Close] game:Shutdown() Error:", err)
+		LocalPlayer:Kick(reason)
+	end
+end
+
+while task.wait(CHECK_INTERVAL) do
+	local playerCount = #Players:GetPlayers()
+
+	if playerCount < MIN_PLAYERS then
+		if not lowPlayerStartTime then
+			lowPlayerStartTime = os.clock()
+
+			warn(string.format(
+				"[Player Check] มีผู้เล่นเพียง %d คน เริ่มจับเวลา 5 นาที",
+				playerCount
+			))
+		end
+
+		local elapsedTime = os.clock() - lowPlayerStartTime
+		local remainingTime = math.max(0, MAX_WAIT_TIME - elapsedTime)
+
+		print(string.format(
+			"[Player Check] ผู้เล่น: %d คน | เหลือเวลา: %d วินาที",
+			playerCount,
+			math.ceil(remainingTime)
+		))
+
+		if elapsedTime >= MAX_WAIT_TIME then
+			closeGame("มีผู้เล่นน้อยกว่า 2 คนติดต่อกันเกิน 5 นาที")
+			break
+		end
+	else
+		if lowPlayerStartTime then
+			print(string.format(
+				"[Player Check] มีผู้เล่น %d คนแล้ว ยกเลิกและรีเซ็ตตัวจับเวลา",
+				playerCount
+			))
+		end
+
+		lowPlayerStartTime = nil
+	end
+end
