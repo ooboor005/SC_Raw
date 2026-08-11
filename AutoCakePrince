@@ -110,7 +110,7 @@ if not getMelee() and getWorld() ~= 3 then
 	end
 
 	return
-elseif getWorld() == 3 then 
+elseif getWorld() == 3 and not getMelee() then 
 
 	local u33 = true
 	 task.spawn(function()
