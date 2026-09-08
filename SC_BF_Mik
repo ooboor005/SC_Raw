@@ -1,5 +1,5 @@
 getgenv().Mode = "OneClick"
-getgenv().Setting = {
+getgenv().QuartyzScript = {
     ["Team"] = "Pirates", -- Options "Pirates", "Marines"
     ["FucusOnLevel"] = true,
     ["Fruits"] = {  -- setting for fruits u want
@@ -7,15 +7,15 @@ getgenv().Setting = {
             "Magma-Magma",
             "Blizzard-Blizzard",
             "Pain-Pain",
-            "Lightning-Lightning",
+            "Light-Light",
             "Dark-Dark",
             -- u can configs add mores/remove and must end with , (comma symbol)
         },
-        ["Normal"] = { -- it just a normal fruit list   
+        ["Normal"] = { -- it just a normal fruit list
             "Magma-Magma",
             "Blizzard-Blizzard",
             "Pain-Pain",
-            "Lightning-Lightning",
+            "Light-Light",
             "Dark-Dark",
             -- u can configs add mores/remove and must end with , (comma symbol)
         }
@@ -37,7 +37,14 @@ getgenv().Setting = {
         "Spirit-Spirit"
     },
     ["IdleCheck"] = 300, -- every (x) seconds if not moving rejoin
+    ["Swords"] = {
+        ["Shark Anchor"] = false
+    },
+
+    ["Fragments Cap"] = 10000
 };
+
+-- script here
 
 -- script here
 getgenv().license_key = "7d9e3b3e99f7392e69539b1fb55d5442"
