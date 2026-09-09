@@ -1,72 +1,98 @@
 repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Key = "968deeb80cc08240a59d5776"
-    getgenv().SettingFarm ={
-        ["Hide UI"] = false,
-        ["Reset Teleport"] = {
-            ["Enabled"] = false,
-            ["Delay Reset"] = 3,
-            ["Item Dont Reset"] = {
-                ["Fruit"] = {
-                    ["Enabled"] = true,
-                    ["All Fruit"] = true, 
-                    ["Select Fruit"] = {
-                        ["Enabled"] = false,
-                        ["Fruit"] = {},
-                    },
+getgenv().GoodConfigKaituBF3NN = {
+    ["Hide UI Kaitun"] = false,
+    ["Fast Attack BF"] = {
+        ["Enable"] = true,
+        ["Mode"] = "Remote", -- Remote / Legit
+    },
+    ["Magic M1 Fruits"] = true,
+    ["Exit When Full Items"] = true,
+    ["Reset Teleport"] = {
+        ["Enabled"] = false,
+        ["Delay Reset"] = 3,
+        ["Item Dont Reset"] = {
+            ["Fruit"] = {
+                ["Enabled"] = true,
+                ["All Fruit"] = true,
+
+                ["Select Fruit"] = {
+                    ["Enabled"] = false,
+                    ["Fruit"] = {},
                 },
             },
         },
+    },
+    ["Optimize Fix Lag"] = {
         ["White Screen"] = false,
+        ["Black Screen"] = false,
+        ["Clean Map"] = true,
         ["Lock Fps"] = {
             ["Enabled"] = true,
             ["FPS"] = 10,
         },
-        ["Get Items"] = {
-            ["Saber"] = true,
-            ["Godhuman"] =  true,
-            ["Skull Guitar"] = false,
-            ["Mirror Fractal"] = true,
-            ["Cursed Dual Katana"] = true,
-            ["Upgrade Race V2-V3"] = false,
-            ["Auto Pull Lever"] = true,
-        },
-        ["Farm Fragments"] = {
-            ["Enabled"]  = true,
-            ["Fragment"] = 50000,
-        },
-        ["Auto Chat"] = {
-            ["Enabled"] = false,
-            ["Text"] = "joejoeshop.xyz",
-        },
-        ["Auto Summon Rip Indra"] = true, --- auto buy haki and craft haki legendary 
-        ["Select Hop"] = { -- 70% will have it
-            ["Hop Server If Have Player Near"] = true, 
-            ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = true, 
-            ["Hop Find Dough King Get Mirror Fractal"] = true,
-            ["Hop Find Raids Castle [CDK]"] = true,
-            ["Hop Find Cake Queen [CDK]"] = true,
-            ["Hop Find Soul Reaper [CDK]"] = true,
-            ["Hop Find Darkbeard [SG]"] = false,
-            ["Hop Find Mirage [ Pull Lever ]"] = false,
-        },
-        ["Farm Mastery"] = {
-            ["Melee"] = true,
-            ["Sword"] = true,
-        },
-        ["Buy Haki"] = {
-            ["Enhancement"] = true,
-            ["Skyjump"] = true,
-            ["Flash Step"] = true,
-            ["Observation"] = true,
-        },
-        ["Sniper Fruit Shop"] = {
-            ["Enabled"] = true, -- Auto Buy Fruit in Shop Mirage and Normal
-            ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas","Dough-Dough","Tiger-Tiger","Mammoth-Mammoth","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
-        },
+    },
+    ["Auto Get Items"] = {
+        ["Saber"] = true,
+        ["Godhuman"] = true,
+        ["Skull Guitar"] = false,
+        ["Mirror Fractal"] = true,
+        ["Valkyrie Helm"] = true, -- Auto Collect berry, craft haki, summon and attack rip indra
+        ["Cursed Dual Katana"] = true,
+        ["Upgrade Race V2-V3"] = true,
+        ["Auto Pull Lever"] = true,
+        ["Shark Anchor"] = false, -- auto get after have god,cdk,sg
+        ["Rengoku"] = false,
+        ["Dragon Trident"] = false,
+        ["Pole (1st Form)"] = false,
+        ["Gravity Blade"] = false,
+    },
+    ["Farm Fragments"] = {
+        ["Enabled"] = false,
+        ["Fragment"] = 50000,
+    },
+    ["Auto Chat"] = {
+        ["Enabled"] = false,
+        ["Text"] = "NatAov Hub On Top !",
+        ["Delay"] = 20, -- second (s)
+    },
+    ["Select Hop"] = {
+        ["Hop Server If Have Player Near"] = false,
+        ["Hop Server If Admin Join Server"] = true,
+        ["Hop Server If High Ping"] = false,
+        ["Hop Find Rip Indra Get Valkyrie Helm or Get Tushita"] = true,
+        ["Hop Find Dough King Get Mirror Fractal"] = true,
+        ["Hop Find Raids Castle [CDK]"] = true,
+        ["Hop Find Cake Queen [CDK]"] = true,
+        ["Hop Find Soul Reaper [CDK]"] = true,
+        ["Hop Find Darkbeard [SG]"] = false,
+        ["Hop Find Mirage [Pull Lever]"] = false,
+    },
+    ["Farm Mastery"] = {
+        ["Melee"] = true,
+        ["Sword"] = true,
+    },
+    ["Shopping"] = {
+        ["Buy Haki"] = true, -- auto buyy haki lengndary 
+        ["Enhancement"] = true,
+        ["Skyjump"] = true,
+        ["Flash Step"] = true,
+        ["Observation"] = true,
+        ["Buy All Sword"] = true,
+        ["Buy All Gun"] = true,
+        ["Sword Legendary"] = true,
+    },
+    ["Sniper Fruit Shop"] = {
+        ["Enabled"] = true,
+        ["Fruit"] = {"Leopard-Leopard","Kitsune-Kitsune","Dragon-Dragon","Yeti-Yeti","Gas-Gas","Dough-Dough","Tiger-Tiger","Mammoth-Mammoth","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
         ["Lock Fruit"] = {"Dough-Dough","Dragon-Dragon","Leopard-Leopard","Mammoth-Mammoth","Kitsune-Ribbon","Buddha-Buddha","Portal-Portal","T-Rex-T-Rex","Shadow-Shadow","Venom-Venom","Control-Control","Spirit-Spirit"},
-        ["Webhook"] = {
-            ["Enabled"] = false,
-            ["WebhookUrl"] = "",
-        }
-    }
+    },
+    ["Webhook"] = {
+        ["Enabled"] = false,
+        ["WebhookUrl"] = "",
+    },
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-AnhTuanSiTinkk/Module/refs/heads/main/BloxFruitsModule/GoodConfigBananaKaitunBF.lua"))()
+task.wait(3)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/obiiyeuem/vthangsitink/main/BananaCat-kaitunBF.lua"))()
