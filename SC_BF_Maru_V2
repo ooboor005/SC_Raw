@@ -1,6 +1,11 @@
+
+
+if not game:IsLoaded() then repeat game.Loaded:Wait() until game:IsLoaded() end
 getgenv().Script_Mode = "Kaitun_Script"
 _G.OneClickSettings = {
-    ["MainIsFarmLevel"] = true,
+    ["MainIsFarmLevel"] = false, -- โฟกัสฟาร์มเวลเป็นหลัก
+
+    -- กันโดนใช้ไปกินหรือลงดันหรือต่างๆ
     ["LockFruits"] = {
         "Dough-Dough",
         "Dragon-Dragon",
@@ -25,15 +30,23 @@ _G.OneClickSettings = {
         "Dark-Dark",
         "Light-Light"
     },
-    ["FragmentsCap"] = 10000,
-    ["Upgrade Race"] = true,
+    ["FragmentsCap"] = 50000,
+    ["Upgrade Race"] = false,
     ["Pull Lever"] = true,
-    ["Farm Shark Anchor"] = true,
-    ["Cursed Dual Katana"] = true
+    ["Saber"] = true, -- ถ้าเป็น true จะย้อนไปทำถ้ามันข้ามมา เป็น false จะทำ ถ้ามีโอกาสตีบอสตอนฟาร์มโลก 1 ถ้าไม่ต้องการ Ken กับ Saber ขนาดนั้นปิดไว้ได้
+    ["Farm Shark Anchor"]  = false,
+    ["Cursed Dual Katana"] = false,
+    ["Skull Guitar"] = false,
+    ["Farm Sword Mastery"] = {
+        ["Enabled"] = true,
+        ["Mode"] = "Selected", -- "All" = ทุกเล่มที่มี · "Selected" = เฉพาะที่ใส่ชื่อไว้ข้างล่าง
+        ["Swords"] = { "Yama", "Tushita", "Shark Anchor"  ,"Cursed Dual Katana"},  -- ใช้ตอน Mode = "Selected" เช่น { "Yama", "Tushita", "Shark Anchor" }
+        -- 0 = Common · 1 = Uncommon · 2 = Rare · 3 = Legendary · 4 = Mythical
+        ["MinRarity"] = 3, -- 3 = เอาตั้งแต่ Legendary ขึ้นไป (เท่ากับของเดิมที่ฮาร์ดโค้ด > 2)
+    }
 }
-
 
 getgenv().Key = "MARU-6Z7T-6BL64-SA97-L4KAQ-YS0X"
 getgenv().id = "354662781859004417"
 getgenv().Script_Mode = "Kaitun_Script"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/xshiba/MaruBitkub/main/Mobile.lua"))()
+loadstring(game:HttpGet("https://cdn.maruhub.online/s/mobile"))()
