@@ -21,15 +21,9 @@ _G.OneClickSettings = {
     },
     -- ซื้อ (จาก NPC) + กิน — ลำดับแรกก่อน Regular
     -- ถ้าตอนนี้กินผลที่อยู่ในลิสต์นี้อยู่แล้ว = ไม่ไปกินผลอื่น
-    ["MainFruits"] = {
-        "Magmag-Magma"
-    },
+    ["MainFruits"] = { },
     -- ซื้อ + กิน ตัวสำรองระหว่างรอ MainFruits ใส่ { } = ไม่กิน
-    ["RegularFruits"] = {
-        "Flame-Flame",
-        "Dark-Dark",
-        "Light-Light"
-    },
+    ["RegularFruits"] = { },
     ["FragmentsCap"] = 50000,
     ["Upgrade Race"] = true,
     ["Pull Lever"] = true,
