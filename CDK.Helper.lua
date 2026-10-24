@@ -1,0 +1,337 @@
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+
+local IP = "localhost"
+local PORT = "4135"
+local BaseURL = string.format("http://%s:%s", IP, PORT)
+local HttpService = game:GetService("HttpService")
+
+local function debugRequest(options)
+    local response = request(options)
+    return response
+end
+
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local ReplicatedStorage =  game:GetService("ReplicatedStorage")
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local AnalyticsUtil = require(game.ReplicatedStorage.Util.AnalyticsUtil);
+task.spawn(function()
+    if LocalPlayer.Team == nil then
+            repeat task.wait() until Players.LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+            repeat task.wait() until LocalPlayer.PlayerGui["Main (minimal)"]:FindFirstChild("TeamSelect")
+            while Players.LocalPlayer.Team == nil do
+                if Players.LocalPlayer.Team == nil then
+                    AnalyticsUtil.reportActivity("TeamSelect/Team/Pirates");
+                    local success, _ = pcall(function()
+                        Remotes.CommF_:InvokeServer("SetTeam2", "Pirates");
+                    end);
+
+                    if success then
+                        repeat
+                            task.wait();
+                        until LocalPlayer.Character and LocalPlayer.Character:IsDescendantOf(workspace.Characters);
+                    end;
+                end
+                task.wait(2)
+            end
+            repeat task.wait() until Players.LocalPlayer.Team ~= nil
+    end
+    repeat task.wait() until (LocalPlayer.Neutral == false) == true
+	if game.PlaceId ~= 7449423635 then
+		ReplicatedStorage.Remotes.CommF_:InvokeServer("TravelZou")
+		repeat
+			task.wait()
+		until game.PlaceId == 7449423635
+	end
+end)
+
+task.spawn(function()
+    while true do task.wait()
+
+        pcall(function()
+                        for i, v in pairs(LocalPlayer.Character:GetDescendants()) do
+                           if v:IsA("BasePart") or v:IsA("Part") or v:IsA("MeshPart") then
+                               v.CanCollide = false
+                           end
+                       end
+                       local Torso : Part? = LocalPlayer.Character.UpperTorso
+                       if Torso then
+                            if not Torso:FindFirstChildOfClass('BodyVelocity') then
+                               local BodyVelocity = Instance.new("BodyVelocity", Torso)
+                               BodyVelocity.Velocity, BodyVelocity.MaxForce, BodyVelocity.P = Vector3.new(0, 0, 0), Vector3.new(10000, 10000, 10000), 1000
+                           end
+                           if not Torso:FindFirstChildOfClass('BodyAngularVelocity') then
+                               local BodyGyro = Instance.new("BodyAngularVelocity", Torso)
+                               BodyGyro.AngularVelocity, BodyGyro.MaxTorque, BodyGyro.P = Vector3.new(0, 0, 0), Vector3.new(10000, 10000, 10000), 1000
+                           end
+                       end
+                   end)
+    end
+end)
+
+local tween
+
+function Tween(...)
+    local RealtargetPos = {...}
+    local targetPos = RealtargetPos[1]
+    local RealTarget
+    if type(targetPos) == "vector" then
+        RealTarget = CFrame.new(targetPos)
+    elseif type(targetPos) == "userdata" then
+        RealTarget = targetPos
+    elseif type(targetPos) == "number" then
+        RealTarget = CFrame.new(RealtargetPos[1], RealtargetPos[2], RealtargetPos[3])
+    end
+    local InstanceTarget = nil
+    if typeof(RealtargetPos[4]) == "Instance" then
+        InstanceTarget = RealtargetPos[4]
+    elseif typeof(RealtargetPos[2]) == "Instance" then
+        InstanceTarget = RealtargetPos[2]
+    end
+    RealtargetPos = RealTarget.Position
+    if LocalPlayer.Character:WaitForChild("Humanoid").Health == 0 then if tween then tween:Cancel() end repeat wait() until LocalPlayer.Character:WaitForChild("Humanoid").Health > 0; wait(0.2) end
+
+
+    if LocalPlayer.Character.Humanoid.Sit == true and InstanceTarget == nil  then
+        LocalPlayer.Character.Humanoid.Sit = false
+    end
+
+    local TweenService = game:GetService("TweenService")
+    local err, tween = pcall(function(RealTarget, Speed, InstanceTarget)
+        local info = TweenInfo.new((RealTarget.Position - LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).Magnitude/350, Enum.EasingStyle.Linear)
+        local tween = TweenService:Create(InstanceTarget or LocalPlayer.Character["HumanoidRootPart"], info, {CFrame = RealTarget})
+        tween:Play()
+        return tween;
+    end, RealTarget, 150, InstanceTarget)
+    if not err then warn(tween); return tween; end
+    return tween
+end
+
+
+
+task.spawn(function()
+    while true do task.wait(math.random(1,10))
+		if game.PlaceId ~= 7449423635 and game.PlaceId ~= 100117331123089 then
+			repeat
+				task.wait()
+			until game.PlaceId == 7449423635 or game.PlaceId == 100117331123089
+		end
+        repeat task.wait()
+            Tween(Vector3.new(-5033, 315, -3011))
+        until LocalPlayer:DistanceFromCharacter(Vector3.new(-5033, 315, -3011)) <= 10
+        local IsJoin = debugRequest({
+            Url = BaseURL .. '/actions/'  .. LocalPlayer.Name .. "/" .. game.JobId .. "/" .. game.PlaceId,
+            Method = "GET"
+        })
+        if IsJoin.Body == "REQUIRED_HOP" then
+            local Respone = debugRequest({
+                Url = BaseURL .. "/actions/" .. game.PlaceId,
+                Method = "GET"
+            })
+            for i, v in pairs(HttpService:JSONDecode(Respone.Body)) do
+                if v ~= "" then
+                   local Queued = debugRequest({
+                        Url  = BaseURL .. "/actions/queue/" .. LocalPlayer.Name .. '/' .. v .. "/" .. game.PlaceId,
+                        Method = "GET"
+                   })
+                   if Queued.Body == "OK" then
+                        local Retry = 0
+                        repeat task.wait()
+                            game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",v)
+                            task.wait(10)
+                            Retry += 1
+                        until Retry > 10
+                        debugRequest({
+                            Url = BaseURL .. "/actions/delete/" .. v .. "/" .. game.PlaceId,
+                            Method = "GET",
+                        })
+                   end
+                end
+            end
+        elseif IsJoin.Body == "DO_ACTION" then
+            local ServerTarget = debugRequest({
+                Url = BaseURL .. "/actions/check/" .. LocalPlayer.Name .. "/" .. game.PlaceId,
+                Method = "GET"
+            })
+            if ServerTarget.Body ~= "" then
+                if game.JobId ~= ServerTarget.Body then
+                    local Retry = 0
+                    repeat task.wait()
+                        game:GetService("ReplicatedStorage").__ServerBrowser:InvokeServer("teleport",ServerTarget.Body)
+                        task.wait(10)
+                        Retry += 10
+                    until Retry > 10
+                    debugRequest({
+                        Url = BaseURL .. "/actions/delete/" .. ServerTarget.Body .. "/" .. game.PlaceId,
+                        Method = "GET",
+                    })
+                end
+            end
+            for i, v in pairs(workspace.Map["Boat Castle"].Summoner.Circle:GetChildren()) do
+                if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("TouchInterest") then
+                    if v.Part.Color == Color3.fromRGB(99, 95, 98) then
+                        if v.Color == Color3.fromRGB(255, 0, 0) then
+                            local Event = game:GetService("ReplicatedStorage").Modules.Net["RF/ModificationFunction"]
+                            Event:InvokeServer(
+                                {
+                                    Type = "SetEquip",
+                                    IsEquipped = true,
+                                    ItemId = 287
+                                }
+                            )
+                            task.wait(.5)
+                            __NoClip = true
+                            repeat task.wait()
+                                Tween(v.Part.CFrame)
+                            until v.Part.Color ~= Color3.fromRGB(99, 95, 98)
+                            __NoClip = false
+                        elseif v.Color == Color3.fromRGB(187, 187, 187) then
+                            local Event = game:GetService("ReplicatedStorage").Modules.Net["RF/ModificationFunction"]
+                            Event:InvokeServer(
+                                {
+                                    Type = "SetEquip",
+                                    IsEquipped = true,
+                                    ItemId = 277
+                                }
+                            )
+                            task.wait(.5)
+                            __NoClip = true
+                            repeat task.wait()
+                                Tween(v.Part.CFrame)
+                            until v.Part.Color ~= Color3.fromRGB(99, 95, 98)
+                            __NoClip = false
+                        else
+                            local Event = game:GetService("ReplicatedStorage").Modules.Net["RF/ModificationFunction"]
+                            Event:InvokeServer(
+                                {
+                                    Type = "SetEquip",
+                                    IsEquipped = true,
+                                    ItemId = 292
+                                }
+                            )
+                            task.wait(.5)
+                            __NoClip = true
+                            repeat task.wait()
+                                Tween(v.Part.CFrame)
+                            until v.Part.Color ~= Color3.fromRGB(99, 95, 98)
+                            __NoClip = false
+                        end
+                    end
+                end
+            end
+            pcall(function()
+                LocalPlayer.Character.Humanoid.Health = 0
+            end)
+            debugRequest({
+                Url = BaseURL .. "/actions/delete/" .. game.JobId .. "/" .. game.PlaceId,
+                Method = "GET",
+            })
+            task.wait()
+        else
+            task.wait(30)
+        end
+        task.wait(math.random(2,30))
+    end
+end)
+
+
+wait(0.5)local ba=Instance.new("ScreenGui")
+local ca=Instance.new("TextLabel")local da=Instance.new("Frame")
+local _b=Instance.new("TextLabel")local ab=Instance.new("TextLabel")ba.Parent=game.CoreGui
+ba.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;ca.Parent=ba;ca.Active=true
+ca.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ca.Draggable=true
+ca.Position=UDim2.new(0.698610067,0,0.098096624,0)ca.Size=UDim2.new(0,370,0,52)
+ca.Font=Enum.Font.SourceSansSemibold;ca.Text="Anti Afk"ca.TextColor3=Color3.new(0,1,1)
+ca.TextSize=22;da.Parent=ca
+da.BackgroundColor3=Color3.new(0.196078,0.196078,0.196078)da.Position=UDim2.new(0,0,1.0192306,0)
+da.Size=UDim2.new(0,370,0,107)_b.Parent=da
+_b.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)_b.Position=UDim2.new(0,0,0.800455689,0)
+_b.Size=UDim2.new(0,370,0,21)_b.Font=Enum.Font.Arial;_b.Text="Made by luca#5432"
+_b.TextColor3=Color3.new(0,1,1)_b.TextSize=20;ab.Parent=da
+ab.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ab.Position=UDim2.new(0,0,0.158377,0)
+ab.Size=UDim2.new(0,370,0,44)ab.Font=Enum.Font.ArialBold;ab.Text="Status: Active"
+ab.TextColor3=Color3.new(0,1,1)ab.TextSize=20;local bb=game:GetService("VirtualUser")
+LocalPlayer.Idled:connect(function()
+bb:CaptureController();bb:ClickButton2(Vector2.new())
+ab.Text="Roblox tried kicking you buy I didnt let them!";task.wait(2);ab.Text="Status : Active"end)
+
+task.spawn(function()
+    local GUI = game:GetService("GuiService")
+    while true do task.wait()
+        local ErrorPrompt = game.CoreGui.RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt")
+        if ErrorPrompt then
+            local Code = GUI:GetErrorCode()
+            if string.find(Code.Name, "Teleport") then
+                GUI:ClearError()
+            end
+        end
+    end
+end)
+
+
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- ตรวจสอบการเคลื่อนไหวของผู้เล่น
+local function check_movement()
+    local player = Players.LocalPlayer
+    if not player then
+        warn("LocalPlayer not found.")
+        return
+    end
+
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then
+        warn("HumanoidRootPart not found.")
+        return
+    end
+
+    local last_position = humanoidRootPart.Position
+    local idle_time = 0
+    local check_interval = 5 -- ตรวจสอบทุก 1 วินาที
+    local idle_threshold = 3600 -- อยู่นิ่ง 20 วินาที
+    local movement_threshold = 0.1 -- ระยะทางขั้นต่ำที่ถือว่าเคลื่อนไหว
+
+    while true do
+        task.wait(check_interval)
+
+        -- ตรวจสอบว่า character และ HumanoidRootPart ยังมีอยู่
+        character = player.Character
+        humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then
+            warn("HumanoidRootPart not found. Stopping movement check.")
+            break
+        end
+
+        -- เปรียบเทียบตำแหน่ง
+        local current_position = humanoidRootPart.Position
+        local distance_moved = (current_position - last_position).Magnitude
+
+        if distance_moved < movement_threshold then
+            idle_time = idle_time + check_interval
+            if idle_time >= idle_threshold then
+                game:Shutdown()
+            end
+        else
+            idle_time = 0 -- รีเซ็ตเวลา idle เมื่อเคลื่อนไหว
+        end
+
+        last_position = current_position
+    end
+end
+
+-- จัดการเมื่อตัวละครโหลดใหม่
+Players.LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(1) -- รอให้ตัวละครโหลดสมบูรณ์
+    task.spawn(check_movement)
+end)
+
+-- เริ่มการตรวจสอบหากตัวละครมีอยู่แล้ว
+if Players.LocalPlayer.Character then
+    task.spawn(check_movement)
+end
