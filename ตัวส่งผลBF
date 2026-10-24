@@ -5,7 +5,7 @@ repeat
 	task.wait()
 until game:GetService("Players").LocalPlayer
 
-local FruitTrade = {"Portal-Portal"}
+local FruitTrade = {"Portal-Portal","Buddha-Buddha"}
 local TargetTableIndex = 2 -- table order is stable across sessions; go straight to this one
 
 local HttpService = game:GetService("HttpService")
