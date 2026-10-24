@@ -1,7 +1,7 @@
 task.spawn(function()
     repeat task.wait() until game:IsLoaded()
 
-    local IP = "45.136.254.74"
+    local IP = "127.0.0.1"
     local PORT = "4135"
     local BaseURL = string.format("http://%s:%s", IP, PORT)
     local CacheInventory = {
@@ -14,6 +14,11 @@ task.spawn(function()
 
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local HttpService = game:GetService("HttpService")
+
+    local function debugRequest(options)
+        local response = request(options)
+        return response
+    end
 
     local ItemId = require(ReplicatedStorage.Economy.ItemId)
     local ItemConfig = require(ReplicatedStorage.ItemConfig)
@@ -121,32 +126,36 @@ task.spawn(function()
     end
     task.spawn(function()
         while true do task.wait()
+			print(not findItem("Tushita") and not findAura({287, 292, 277}) )
             if not findItem("Tushita") and not findAura({287, 292, 277}) then
                 if LocalPlayer.Backpack:FindFirstChild("God's Chalice") or (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("God's Chalice")) then
-                    local Action = request({
+                    local Action = debugRequest({
                         Url = BaseURL .. string.format("/actions/%s", LocalPlayer.Name),
                         Method = "GET"
                     })
                     if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12 then
                         if not allPressPlate() then
-                            request({
-                                Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name,
+                            print("Trying to send")
+                            debugRequest({
+                                Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name .. "/" .. game.PlaceId,
                                 Method = "GET",
                             })
                             task.wait(5)
                         else
-                            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                                local BP = LocalPlayer.Backpack:FindFirstChild("God's Chalice")
-                                if BP then
-                                    LocalPlayer.Character:FindFirstChild("Humanoid"):EquipTool(BP)
-                                    task.wait(1)
+                            pcall(function()
+                                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                                    local BP = LocalPlayer.Backpack:FindFirstChild("God's Chalice")
+                                    if BP then
+                                        LocalPlayer.Character:FindFirstChild("Humanoid"):EquipTool(BP)
+                                        task.wait(1)
+                                    end
+                                    if LocalPlayer.Character:FindFirstChild("God's Chalice") then
+                                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 0)
+                                        task.wait(1)
+                                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 1)
+                                    end
                                 end
-                                if LocalPlayer.Character:FindFirstChild("God's Chalice") then
-                                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 0)
-                                    task.wait(1)
-                                    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 1)
-                                end
-                            end
+                            end)
                         end
                     end
                 end
