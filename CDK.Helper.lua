@@ -1,7 +1,7 @@
 repeat task.wait() until game:IsLoaded()
 repeat task.wait() until game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
 
-local IP = "localhost"
+local IP = "45.136.254.74"
 local PORT = "4135"
 local BaseURL = string.format("http://%s:%s", IP, PORT)
 local HttpService = game:GetService("HttpService")
