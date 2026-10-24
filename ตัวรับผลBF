@@ -1,0 +1,631 @@
+repeat
+	task.wait()
+until game:IsLoaded()
+repeat
+	task.wait()
+until game:GetService("Players").LocalPlayer
+
+local TargetTableIndex = 2 -- must match the trader's TargetTableIndex so they meet at the same table
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Humanoid : Humanoid? = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+local Character = LocalPlayer.Character
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+local HttpService = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local Humanoid : Humanoid? = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+local Character = LocalPlayer.Character
+local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+LocalPlayer.CharacterAdded:Connect(function(char)
+    Character = char
+    Humanoid = Character:WaitForChild("Humanoid")
+end)
+local AnalyticsUtil = require(game.ReplicatedStorage.Util.AnalyticsUtil);
+
+
+
+if Players.LocalPlayer.Team == nil then 
+    repeat task.wait() until Players.LocalPlayer.PlayerGui:FindFirstChild("Main (minimal)")
+    repeat task.wait() until game:GetService("Players").LocalPlayer.PlayerGui["Main (minimal)"]:FindFirstChild("TeamSelect")
+    while Players.LocalPlayer.Team == nil do 
+        if Players.LocalPlayer.Team == nil then 
+            AnalyticsUtil.reportActivity("TeamSelect/Team/Pirates");
+               local success, _ = pcall(function()
+                Remotes.CommF_:InvokeServer("SetTeam2", "Pirates");
+            end);
+
+            if success then
+                repeat
+                    task.wait();
+                until LocalPlayer.Character and LocalPlayer.Character:IsDescendantOf(workspace.Characters);
+            end;
+        end
+        task.wait(2)
+    end
+    repeat task.wait() until Players.LocalPlayer.Team ~= nil
+end
+
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+    Character = char
+    Humanoid = Character:WaitForChild("Humanoid")
+end)
+local _CommF : RemoteFunction = Remotes:WaitForChild("CommF_")
+local FruitData = {}
+
+for i,v in pairs(_CommF:InvokeServer(
+    "GetFruits",    
+    false
+)) do 
+    FruitData[v.Name] = v.Price
+end
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ItemReplicationService = require(ReplicatedStorage.ItemReplicationService)
+local ItemId = require(ReplicatedStorage.Economy.ItemId)
+local ItemConfig = require(ReplicatedStorage.ItemConfig)
+
+local function getInventory()
+    local Items = {}
+
+    for _, v in ipairs(ItemReplicationService:GetItems()) do
+        local itemId = v.ItemId
+        local entry = Items[itemId]
+
+        if not entry then
+            local dataResult = ItemId.getDataFromId(itemId) -- was called twice before
+            if dataResult:isOk() then
+                local ItemData = dataResult:unwrap()
+                local ItemConfigData = ItemConfig.match(itemId):unwrap()
+                local Type
+                local Rarity 
+
+                if ItemData.Type == "Accessory" or ItemData.Type == "Material" or ItemData.Type == "Title" then
+                    Type = ItemData.Type
+                elseif ItemData.Type == "Moveset" then
+                    Type = ItemConfigData.Moveset.Type
+                elseif ItemData.Type == "PhysicalMoveset" then
+                    Type = ItemConfigData.Inventory.Brackets[1]
+                else
+                    Type = ItemData.Type
+                end
+
+                if ItemConfigData.Quality and ItemConfigData.Quality.RarityValue then 
+                    Rarity = ItemConfigData.Quality.RarityValue
+                end
+
+
+
+                entry = {
+                    Type = Type,
+                    Name = ItemData.StorageKey,
+                    ItemId = itemId,
+                    NetworkedUID = v.NetworkedUID,
+                    Rarity = Rarity
+                }
+                if entry.Type == "Fruit" then 
+                    entry.Value = FruitData[entry.Name]
+                end
+                Items[itemId] = entry
+            end
+        end
+
+        if entry then
+            entry[v.Key] = v.Value
+        end
+    end
+
+    return Items
+end
+
+
+function getWorld() 
+    local placeId = game.PlaceId
+    if placeId == 2753915549  then
+        return 1
+    elseif placeId == 4442272183 or placeId == 79091703265657 then
+        return 2
+    elseif placeId == 7449423635 or placeId == 100117331123089 then
+        return 3
+    end
+    return 0
+end
+
+task.spawn(function()
+    while true do
+        pcall(function()
+            writefile("BF_JOBID.json", HttpService:JSONEncode({
+                playerName  = Players.LocalPlayer.Name,
+                JobId       = game.JobId,
+                PlayerCount = #Players:GetPlayers(),
+                MaxPlayers  = Players.MaxPlayers,
+            }))
+        end)
+        task.wait(5)  -- อัปเดตทุก 5 วินาที
+    end
+end)
+
+
+if getWorld() ~= 3 then
+	_CommF:InvokeServer("TravelZou")
+	repeat task.wait() until getWorld() == 3
+end
+
+task.spawn(function()
+	while true do
+		task.wait()
+		if not Character then
+			continue
+		end
+		local torso = Character:FindFirstChild("Torso") or Character:FindFirstChild("UpperTorso")
+		if not torso then
+			continue
+		end
+
+		if not torso:FindFirstChild("AntiFallVelocity") then
+			local bv = Instance.new("BodyVelocity")
+			bv.Name = "AntiFallVelocity"
+			bv.MaxForce = Vector3.new(0, math.huge, 0)
+			bv.Velocity = Vector3.new(0, 0, 0)
+			bv.Parent = torso
+		end
+		local highlight = Character:FindFirstChild("AntiFallHighlight")
+		if not highlight then
+			highlight = Instance.new("Highlight")
+			highlight.Name = "AntiFallHighlight"
+			highlight.FillColor = Color3.fromRGB(107, 180, 107)
+			highlight.OutlineColor = Color3.fromRGB(0, 0, 0)
+			highlight.FillTransparency = 0.3
+			highlight.OutlineTransparency = 0
+			highlight.Parent = Character
+		end
+		for i, v in pairs(Character:GetChildren()) do
+			if v:IsA("BasePart") or v:IsA("Part") then
+				v.CanCollide = false
+			end
+		end
+	end
+end)
+
+function getDistance(Endpoint: CFrame | Vector3 | BasePart | Part)
+	if typeof(Endpoint) == "Vector3" then
+		return (Endpoint - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+	end
+	return (Endpoint.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+end
+
+function Tween(Position: CFrame | Vector3 | Part | BasePart)
+	local Endpoint = Position
+	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	if not Character then
+		return
+	end
+	if not Humanoid then
+		return
+	end
+	if not Character:FindFirstChild("CharacterReady") then
+		return
+	end
+	if typeof(Endpoint) == "Instance" and (Endpoint:IsA("BasePart") or Endpoint:IsA("Part")) then
+		Endpoint = Endpoint.CFrame
+	elseif typeof(Endpoint) == "Vector3" then
+		Endpoint = CFrame.new(Endpoint)
+	end
+
+	local Distance = getDistance(Endpoint)
+
+	if Distance then
+		if Character.HumanoidRootPart.CFrame.Y ~= Endpoint.Y then
+			Character.HumanoidRootPart.CFrame =
+				CFrame.new(Character.HumanoidRootPart.CFrame.X, Endpoint.Y, Character.HumanoidRootPart.CFrame.Z)
+		end
+		local TweenTime = Distance / 150
+
+		local TweenInfoz = TweenService:Create(
+			Character.HumanoidRootPart,
+			TweenInfo.new(TweenTime, Enum.EasingStyle.Linear),
+			{ CFrame = Endpoint }
+		)
+
+		TweenInfoz:Play()
+        
+        return TweenInfoz
+	end
+	return nil
+end
+
+local Map = workspace:WaitForChild("Map")
+local Turtle = Map:FindFirstChild("Turtle")
+if Character.HumanoidRootPart and  Character.HumanoidRootPart.Position.Y < -40 then 
+	repeat task.wait() 
+		Tween(Vector3.new(11426, -2156, 9730))
+	until LocalPlayer:DistanceFromCharacter(Vector3.new(11426, -2156, 9730)) <= 5
+	Tween(Vector3.new(11426, -2156, 9730))
+	repeat task.wait()
+		task.wait(2)
+		local Event = game:GetService("ReplicatedStorage").Modules.Net["RF/SubmarineTransportation"]
+		Event:InvokeServer(
+			"InitiateTeleport",
+			"Turtle Entrance"
+		)
+		print("Trigger Teleport")
+		task.wait(3)
+	until  Character.HumanoidRootPart.Position.Y > -40
+	task.wait(1)
+end
+repeat task.wait() 
+    pcall(function() 
+        Tween(Vector3.new(-12553, 337, -7525))
+    end)
+    Turtle = Map:FindFirstChild("Turtle")
+until LocalPlayer:DistanceFromCharacter(Vector3.new(-12553, 337, -7525)) <= 10
+
+
+local COLORS = {
+	Color3.fromRGB(255, 80, 80),   -- 1 red
+	Color3.fromRGB(80, 160, 255),  -- 2 blue
+	Color3.fromRGB(80, 255, 120),  -- 3 green
+	Color3.fromRGB(255, 220, 80),  -- 4 yellow
+	Color3.fromRGB(200, 100, 255), -- 5 purple
+}
+
+function getTradeTables() : {Model}
+	local tables = {}
+	for i, v in pairs(Turtle:GetChildren()) do
+		if v.Name == "TradeTable" then
+			table.insert(tables, v)
+		end
+	end
+	return tables
+end
+
+local Entries = {} -- [index] = { table = Model, highlight = Highlight, label = BillboardGui }
+
+local function makeLabel(index: number, anchor: BasePart) : BillboardGui
+	local gui = Instance.new("BillboardGui")
+	gui.Name = "TradeTableIndexLabel"
+	gui.Size = UDim2.fromOffset(100, 40)
+	gui.StudsOffset = Vector3.new(0, 4, 0)
+	gui.AlwaysOnTop = true
+	gui.Adornee = anchor
+
+	local text = Instance.new("TextLabel")
+	text.BackgroundTransparency = 1
+	text.Size = UDim2.fromScale(1, 1)
+	text.Text = "Table " .. index
+	text.TextScaled = true
+	text.Font = Enum.Font.GothamBold
+	text.TextColor3 = Color3.new(1, 1, 1)
+	text.TextStrokeTransparency = 0
+	text.Parent = gui
+
+	gui.Parent = anchor
+	return gui
+end
+
+local function clearEntries()
+	for _, entry in pairs(Entries) do
+		if entry.highlight then entry.highlight:Destroy() end
+		if entry.label then entry.label:Destroy() end
+	end
+	Entries = {}
+end
+
+function SetupTradeTableHighlights()
+	clearEntries()
+
+	for index, tbl in ipairs(getTradeTables()) do
+		local anchor = tbl:FindFirstChild("P1") or tbl:FindFirstChildWhichIsA("BasePart", true)
+		if anchor then
+			local highlight = Instance.new("Highlight")
+			highlight.Name = "DebugIndexHighlight"
+			highlight.FillColor = COLORS[((index - 1) % #COLORS) + 1]
+			highlight.OutlineColor = Color3.new(1, 1, 1)
+			highlight.FillTransparency = 0.6
+			highlight.OutlineTransparency = 0
+			highlight.Adornee = tbl
+			highlight.Parent = tbl
+
+			local label = makeLabel(index, anchor)
+
+			Entries[index] = { table = tbl, highlight = highlight, label = label }
+		end
+	end
+
+	print(("Indexed %d trade table(s). Call HighlightTradeTable(<index>) to flash one."):format(#Entries))
+end
+
+-- Flash one specific table brighter than the rest for `duration` seconds
+-- (default 3), e.g. HighlightTradeTable(2) to confirm which table index 2 is.
+function HighlightTradeTable(index: number, duration: number?)
+	local entry = Entries[index]
+	if not entry then
+		warn("No trade table at index " .. tostring(index))
+		return
+	end
+	duration = duration or 3
+
+	for i, e in pairs(Entries) do
+		e.highlight.FillTransparency = (i == index) and 0.1 or 0.6
+		e.highlight.OutlineTransparency = (i == index) and 0 or 0.5
+	end
+
+	task.delay(duration, function()
+		for _, e in pairs(Entries) do
+			if e.highlight then
+				e.highlight.FillTransparency = 0.6
+				e.highlight.OutlineTransparency = 0
+			end
+		end
+	end)
+end
+
+function GetTradeTableByIndex(index: number) : Model?
+	local entry = Entries[index]
+	return entry and entry.table
+end
+
+SetupTradeTableHighlights()
+
+
+function getTradeTables() : {Model}
+    local tables = {}
+    for i, v in pairs(Turtle:GetChildren()) do
+        if v.Name == "TradeTable" then
+            table.insert(tables, v)
+        end
+    end
+    return tables
+end
+
+if #getTradeTables() == 0 then
+    repeat
+        task.wait()
+        Tween(Vector3.new(-12538, 334, -7574))
+    until #getTradeTables() > 0
+end
+
+-- Multiplayer trade support: go straight to the configured table index
+-- (same index the trader uses) instead of scanning all tables for any free
+-- seat, so both bots reliably meet at the same table.
+local TargetTable = getTradeTables()[TargetTableIndex]
+if not TargetTable then
+	warn("No trade table at index " .. tostring(TargetTableIndex))
+	return
+end
+
+function getEmptySeat() : Seat?
+	for _, seatName in ipairs({ "P1", "P2" }) do
+		local seat = TargetTable:FindFirstChild(seatName)
+		if seat and not seat.Occupant then
+			return seat
+		end
+	end
+	return nil
+end
+
+local EmptySeat = getEmptySeat()
+if not EmptySeat then
+    warn("No empty seat at Table " .. tostring(TargetTableIndex) .. ".")
+    return
+end
+
+
+
+repeat
+    task.wait()
+    EmptySeat = getEmptySeat()
+    if EmptySeat then
+         Tween(EmptySeat.Position)
+    end
+until Humanoid and Humanoid.Sit
+
+if  Humanoid and not Humanoid.Sit and EmptySeat then
+	Character.HumanoidRootPart.CFrame = EmptySeat.CFrame
+end
+
+local Main = LocalPlayer.PlayerGui:WaitForChild("Main")
+local Trade = Main:WaitForChild("Trade")
+
+repeat task.wait() until Trade.Visible
+local TradeFunction : RemoteFunction = Remotes:WaitForChild("TradeFunction")
+local TradeEvent : RemoteEvent = Remotes:WaitForChild("TradeEvent")
+local FruitMapping = {}
+local Inventory = getInventory()
+
+for i, v in pairs(Inventory) do 
+    if v.Type == "Fruit" then 
+        FruitMapping[v.Name] = v.Value
+    end
+end
+
+function getIndices(dataTable, targetValue)
+    local entries = {}
+
+    for k, v in pairs(dataTable) do
+        table.insert(entries, {index = k, value = v})
+    end
+
+    -- Sort highest → lowest
+    table.sort(entries, function(a, b)
+        return a.value > b.value
+    end)
+
+    local currentSum = 0
+    local resultIndices = {}
+
+    for i = 1, math.min(4, #entries) do
+        local entry = entries[i]
+
+        currentSum += entry.value
+        table.insert(resultIndices, entry.index)
+
+        -- ✅ NEW difference % logic
+        local minValue = math.min(currentSum, targetValue)
+        local maxValue = math.max(currentSum, targetValue, 0.01)
+        local diffPercent = (1 - (minValue / maxValue)) * 100
+        local result = math.ceil(diffPercent)
+
+        print("Checking:", entry.index,
+              "Value:", entry.value,
+              "CurrentSum:", currentSum,
+              "Diff%:", result)
+
+        -- stop when trade becomes acceptable
+        if result <= 40 then
+            return resultIndices
+        end
+    end
+
+    return resultIndices
+end
+
+
+TradeEvent.OnClientEvent:Connect(function(action, args)
+	if action ~= "update_state" then return end
+	--writefile(tick() .. ".json", HttpService:JSONEncode(args))
+
+	local isNewTrade = args.Trader ~= nil
+	if isNewTrade then 
+			print("Is new Trade")
+
+			local otherPlayer = LocalPlayer.UserId == args.Trader[1] and 1 or 2
+			local playerNumber = otherPlayer == 1 and 2 or 1
+
+			local FruitValueSelf = 0
+			local FruitValueOther = 0
+
+			for _, v in pairs(args.Offer[otherPlayer].Items) do 
+				FruitValueOther += v.Price
+			end
+
+			for _, v in pairs(args.Offer[playerNumber].Items) do 
+				FruitValueSelf += v.Price
+			end
+
+			local isReady = args.State.Ready[playerNumber]
+
+			-- ✅ NEW RATIO (difference %)
+			local minValue = math.min(FruitValueOther, FruitValueSelf)
+			local maxValue = math.max(FruitValueOther, FruitValueSelf, 0.01)
+
+			local diffPercent = (1 - (minValue / maxValue)) * 100
+			local result = math.ceil(diffPercent)
+
+			print("Self:", FruitValueSelf,
+				"Other:", FruitValueOther,
+				"Diff%:", result)
+
+			local shouldAccept =
+				(not isReady) and
+				(FruitValueSelf > 0) and
+				(FruitValueOther > 0) and
+				(result <= 40)
+
+			if shouldAccept then
+				print("ACCEPT TRADE")
+				TradeFunction:InvokeServer("accept")
+			else
+				print("ADDING ITEMS")
+
+				local fruitIndices = getIndices(FruitMapping, FruitValueOther)
+				local TradeInventory = _CommF:InvokeServer("getTradeInventory")
+
+				local TradeMapName = {}
+				for _, v in pairs(TradeInventory.Items) do 
+					local Result = ItemConfig.match(v.ItemId):unwrap()
+					local Title = Result.Display.Title or Result.Display.Name or Result.Index.StorageKey
+
+					if Title then 
+						TradeMapName[Title] = v.ItemId
+					end
+				end
+
+				local Items = {}
+
+				for _, v in pairs(fruitIndices) do 
+					for name, id in pairs(TradeMapName) do 
+						if string.find(v, name) then 
+							table.insert(Items, id)
+						end
+					end
+				end
+
+				for _, v in pairs(Items) do 
+					if not args.Offer[playerNumber][tostring(v)] then 
+						TradeFunction:InvokeServer("addItem", v, 1)
+						print("Added:", v)
+					end
+				end
+			end
+
+			return
+	end
+
+	local playerNumber =
+		(args.Player1.Name == LocalPlayer.Name and 1) or
+		(args.Player2.Name == LocalPlayer.Name and 2)
+
+	if not playerNumber then return end
+	local otherPlayer = (playerNumber == 1) and 2 or 1
+
+	local FruitValueSelf = 0
+	local FruitValueOther = 0
+
+	for _, v in pairs(args.Offer[playerNumber]) do 
+		FruitValueSelf += v.Price 
+	end
+	for _, v in pairs(args.Offer[otherPlayer]) do 
+		FruitValueOther += v.Price 
+	end
+
+	local isReady = args.Ready[playerNumber]
+
+	-- Prevent divide-by-zero
+				local minValue = math.min(FruitValueOther, FruitValueSelf)
+			local maxValue = math.max(FruitValueOther, FruitValueSelf, 0.01)
+
+			local diffPercent = (1 - (minValue / maxValue)) * 100
+			local result = math.ceil(diffPercent)
+
+			print("Self:", FruitValueSelf,
+				"Other:", FruitValueOther,
+				"Diff%:", result)
+
+	local shouldAccept =
+		(not isReady) and
+		(FruitValueSelf > 0) and
+		(FruitValueOther > 0) and
+		(result >= 60)
+
+	-- DEBUG (optional)
+    print("==========================================")
+	print("Self:", FruitValueSelf,
+	      "Other:", FruitValueOther,
+	      "Ratio:", result,
+	      "Ready:", isReady,
+	      "Accept:", shouldAccept)
+    print("==========================================")
+	-- LOGIC
+	if shouldAccept then
+		TradeFunction:InvokeServer("accept")
+	else
+		-- Only add items if you have nothing or deal is bad
+		local fruitIndices = getIndices(FruitMapping, FruitValueOther)
+
+		for _, v in pairs(fruitIndices) do 
+			TradeFunction:InvokeServer("addItem", v)
+			print("Sending Fruit:", v)
+			task.wait(1)
+		end
+	end
+end)
