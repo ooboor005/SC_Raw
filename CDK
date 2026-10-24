@@ -1,4 +1,4 @@
-task.spawn(function() 
+task.spawn(function()
     repeat task.wait() until game:IsLoaded()
 
     local IP = "45.136.254.74"
@@ -8,17 +8,80 @@ task.spawn(function()
         Data = {},
         Time = 0
     }
+    repeat task.wait() until game:GetService("Players").LocalPlayer
+    repeat task.wait() until game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+    repeat task.wait() until (game.Players.LocalPlayer.Neutral == false) == true
+
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local HttpService = game:GetService("HttpService")
+
+    local ItemId = require(ReplicatedStorage.Economy.ItemId)
+    local ItemConfig = require(ReplicatedStorage.ItemConfig)
     local Players = game:GetService("Players")
     local LocalPlayer = Players.LocalPlayer
-    local SkinController = require(game:GetService("ReplicatedStorage").Controllers.SkinController)
-    function findAura(AuraList: {string}) 
-        local Skin = SkinController:GetInventory()
+
+    local function getInventory()
+        local ItemReplicationService = require(ReplicatedStorage.ItemReplicationService)
+        local Items = {}
+        for _, v in ipairs(ItemReplicationService:GetItems()) do
+            local itemId = v.ItemId
+            local entry = Items[itemId]
+
+            if not entry then
+                local dataResult = ItemId.getDataFromId(itemId) -- was called twice before
+                if dataResult:isOk() then
+                    local ItemData = dataResult:unwrap()
+                    local ItemConfigData = ItemConfig.match(itemId):unwrap()
+                    local Type
+                    local Rarity
+
+                    if ItemData.Type == "Accessory" or ItemData.Type == "Material" or ItemData.Type == "Title" then
+                        Type = ItemData.Type
+                    elseif ItemData.Type == "Moveset" then
+                        Type = ItemConfigData.Moveset.Type
+                    elseif ItemData.Type == "PhysicalMoveset" then
+                        Type = ItemConfigData.Inventory.Brackets[1]
+                    else
+                        Type = ItemData.Type
+                    end
+
+                    if ItemConfigData.Quality and ItemConfigData.Quality.RarityValue then
+                        Rarity = ItemConfigData.Quality.RarityValue
+                    end
+
+
+
+                    entry = {
+                        Type = Type,
+                        Name = ItemData.StorageKey,
+                        ItemId = itemId,
+                        NetworkedUID = v.NetworkedUID,
+                        Rarity = Rarity
+                    }
+                    Items[itemId] = entry
+                end
+            end
+
+            if entry then
+                entry[v.Key] = v.Value
+                Items[itemId] = entry
+            end
+        end
+
+        return Items
+    end
+    function findAura(AuraList: {number})
+        if (tick() - CacheInventory.Time) > 120 then
+            CacheInventory.Data = getInventory()
+            CacheInventory.Time = tick()
+        end
+        local Skin =  CacheInventory.Data
         if not Skin then
             return false
         end
         local A = 0
-        for i, v in pairs(Skin) do 
-            if v["Type"] == "AuraSkin" and table.find(AuraList, v.DisplayName) and v.Count > 0 then 
+        for i, v in pairs(Skin) do
+            if v["Type"] == "Skin" and table.find(AuraList, v.ItemId) and v.IsOwned then
                 A += 1
             end
         end
@@ -27,57 +90,58 @@ task.spawn(function()
 
     function findItem(item: string)
         if (tick() - CacheInventory.Time) < 120 then
-            for i , v in pairs(CacheInventory.Data) do 
-                if v.Name == item then 
+            for i , v in pairs(CacheInventory.Data) do
+                if v.Name == item then
                     return true
                 end
             end
             return false
         end
-        local RequestGetInvertory = nil
-        RequestGetInvertory = game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventory")
-        CacheInventory.Data = RequestGetInvertory
+        CacheInventory.Data = getInventory()
         CacheInventory.Time = tick()
-        for i , v in pairs(RequestGetInvertory) do 
-            if v.Name == item then 
+        for i , v in pairs(CacheInventory.Data) do
+            if v.Name == item then
                 return true
             end
         end
         return false
-    end 
+    end
     function allPressPlate()
-        for i, v in pairs(workspace.Map["Boat Castle"].Summoner.Circle:GetChildren()) do 
-            if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("TouchInterest") then 
-                if v.Part.Color == Color3.fromRGB(99, 95, 98) then 
-                    return false
+        if workspace.Map:FindFirstChild("Boat Castle") and workspace.Map["Boat Castle"]:FindFirstChild("Summoner") and workspace.Map["Boat Castle"].Summoner:FindFirstChild("Circle") then
+            for i, v in pairs(workspace.Map["Boat Castle"].Summoner.Circle:GetChildren()) do
+                if v:IsA("Part") and v:FindFirstChild("Part") and v:FindFirstChild("TouchInterest") then
+                    if v.Part.Color == Color3.fromRGB(99, 95, 98) then
+                        return false
+                    end
                 end
             end
+            return true
         end
-        return true
+        return false
     end
-    task.spawn(function() 
-        while true do task.wait() 
-            if not findItem("Tushita") and not findAura({"Pure Red", "Winter Sky", "Snow White"}) then 
-                if LocalPlayer.Backpack:FindFirstChild("God's Chalice") or (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("God's Chalice")) then 
+    task.spawn(function()
+        while true do task.wait()
+            if not findItem("Tushita") and not findAura({287, 292, 277}) then
+                if LocalPlayer.Backpack:FindFirstChild("God's Chalice") or (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("God's Chalice")) then
                     local Action = request({
                         Url = BaseURL .. string.format("/actions/%s", LocalPlayer.Name),
                         Method = "GET"
                     })
-                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12 then 
-                        if not allPressPlate() then 
+                    if Action.Body == "SEND_PACKET" and #Players:GetPlayers() < 12 then
+                        if not allPressPlate() then
                             request({
                                 Url = BaseURL .. "/actions/update/" .. game.JobId .. "/" .. game.Players.LocalPlayer.Name,
                                 Method = "GET",
                             })
                             task.wait(5)
-                        else 
-                            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then 
+                        else
+                            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                                 local BP = LocalPlayer.Backpack:FindFirstChild("God's Chalice")
                                 if BP then
                                     LocalPlayer.Character:FindFirstChild("Humanoid"):EquipTool(BP)
                                     task.wait(1)
                                 end
-                                if LocalPlayer.Character:FindFirstChild("God's Chalice") then 
+                                if LocalPlayer.Character:FindFirstChild("God's Chalice") then
                                     firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 0)
                                     task.wait(1)
                                     firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, workspace.Map["Boat Castle"].Summoner.Detection, 1)
@@ -88,7 +152,7 @@ task.spawn(function()
                 end
             else
                 print("Has tushita stop")
-                break 
+                break
             end
         end
     end)
