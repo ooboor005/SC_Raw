@@ -425,7 +425,13 @@ repeat
     task.wait()
     EmptySeat = getEmptySeat()
     if EmptySeat then
-         Tween(EmptySeat.Position)
+        if getDistance(EmptySeat.Position) <= 10 then
+            pcall(function() 
+                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(EmptySeat.Position)
+            end)
+        else
+            Tween(EmptySeat.Position)
+        end
     end
 until Humanoid and Humanoid.Sit
 
